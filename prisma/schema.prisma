@@ -90,15 +90,16 @@ model ORIGIN_SCHEME_USER_SETTLEMENT {
 model ORIGIN_SCHEME_RECEIPT {
   id            Int  @id @default(autoincrement())
   ReceiptNo     String @unique
-  ReceiptDate   DateTime
+  ReceiptDate   String
   CardNo        String
   SchemeType     String 
   SchemeName     String
+  SchemeCode     String
   MobileNo       String
   MemberName    String
   Address        String
   CollectionPoint Boolean
-  PaymentCode      String
+  PaymentMode      String
   AccNo          String
   Description    String
   Amount         Int

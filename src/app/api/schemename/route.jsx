@@ -15,9 +15,9 @@ export async function POST(request) {
     if (isExist) {
       const result = await prisma.oRIGIN_SCHEME_NAME.create({
         data: {
-          SchemeName: body.mode,
-          SchemeCode: body.code,
-          SchemeType: body.type,
+          SchemeName: body.sname,
+          SchemeCode: isExist.SchemeCode,
+          SchemeType: isExist.SchemeType,
           SchemeAmount: body.samount,
           SchemeDuration: body.sduration,
           SchemePersons: body.spersons,
@@ -47,9 +47,8 @@ export async function POST(request) {
 
 // Default export for endpoint
 // {
-//     "type": "hcfeythdg",
-//     "mode": "gsregfyuhg",
 //     "code": "yftvgfsathsjyfhg",
+//     "sname": "gsregfyuhg",
 //     "samount": 123,
 //     "sduration": 12,
 //     "spersons": 10,

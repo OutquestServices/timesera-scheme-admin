@@ -47,16 +47,16 @@ model ORIGIN_SCHEME_USER {
   Mobile1        String
   Mobile2        String
   Email          String
-  Dob            DateTime
-  Anniversary    DateTime
+  Dob            String
+  Anniversary    String
   Nominee        String
   MobileNo       String
   Incharge       String
-  JoinDate       DateTime
+  JoinDate       String
   CollectionPoint Boolean
-  LastDatePaid   DateTime
-  ActualDateToPay DateTime
-  NextDateToPay   DateTime
+  LastDatePaid   String
+  ActualDateToPay String
+  NextDateToPay   String
 }
 
 model ORIGIN_SCHEME_USER_CARD {

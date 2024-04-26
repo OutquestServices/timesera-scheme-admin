@@ -18,6 +18,7 @@ model ORIGIN_SCHEMETYPE {
 
 model ORIGIN_SCHEME_NAME {
   id             Int     @id @default(autoincrement())
+  SchemeCode     String @unique
   SchemeType     String
   SchemeName     String
   SchemeAmount   Int

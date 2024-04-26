@@ -35,6 +35,7 @@ model ORIGIN_SCHEME_USER {
   id             Int    @id @default(autoincrement())
   SchemeType     String 
   SchemeName     String
+  SchemeCode     String
   MemberName     String
   CardNo         String  @unique
   Gender         Boolean
@@ -61,7 +62,7 @@ model ORIGIN_SCHEME_USER {
 
 model ORIGIN_SCHEME_USER_CARD {
   id            Int    @id @default(autoincrement())
-  CardNo        String
+  CardNo        String @unique
   Month         DateTime
   RecNo         String
   RecDate       DateTime

@@ -8,8 +8,10 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
-    const isExist = await prisma.oRIGIN_SCHEME_NAME.findUnique({
-      where: { SchemeCode: body.code },
+    const isExist = await prisma.oRIGIN_SCHEME_USER.findUnique({
+      where: {
+        CardNo: body.cardno,
+      },
     });
 
     if (isExist) {
@@ -20,7 +22,7 @@ export async function POST(request) {
           SchemeType: isExist.SchemeType,
           ReceiptNo: body.rno,
           ReceiptDate: body.rdate,
-          CardNo: body.cardno,
+          CardNo: isExist.CardNo,
           MobileNo: body.mno,
           MemberName: body.mname,
           Address: body.address,
@@ -54,7 +56,6 @@ export async function POST(request) {
 // Default export for endpoint
 
 // {
-//     "code": "yftvgfsathsjyfhg",
 //     "cardno": "1234567890",
 //     "rno": "123",
 //     "rdate": "2021-09-01",

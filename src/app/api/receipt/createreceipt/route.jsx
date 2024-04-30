@@ -56,18 +56,18 @@ export async function POST(request) {
 // Default export for endpoint
 
 // {
-//     "cardno": "1234567890",
-//     "rno": "123",
-//     "rdate": "2021-09-01",
-//     "mno": "1234567890",
-//     "mname": "Test",
-//     "address": "Test",
-//     "cpoint": "Test",
-//     "pmode": "Test",
-//     "accno": "Test",
-//     "desc": "Test",
-//     "amount": 1000,
-//     "gamount": 1000,
-//     "incharge": "Test",
-//     "gweight": 1000,
+//   "rno": "1234",
+//   "cardno": "GW2",
+//   "rdate": "2024-04-26",
+//   "mno": "1234567890",
+//   "mname": "Test",
+//   "address": "Test",
+//   "cpoint": true,
+//   "pmode": "Test",
+//   "accno": "Test",
+//   "desc": "Test",
+//   "amount": 1000,
+//   "gamount": 1000,
+//   "incharge": "Test",
+//   "gweight": 1000
 // }

@@ -1,14 +1,14 @@
 import React from 'react'
 import "./Styling.css";
 
-const MemberList = () => {
+const SchemeSettlement = () => {
     return (
-        <div className='w-full max-h-[98vh] overflow-auto custom-scrollbar'>
+        <div className='w-full max-h-[98vh] overflow-auto custom-scrollbar2'>
             <div className='w-full h-full flex flex-col'>
                 <div className='px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px]'>
                     <div className='w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[20px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]' style={{ background: "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)" }}>
                         <div className='basis-[60%] flex items-center justify-between w-full h-full'>
-                            <h1 className='flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[28px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]'>Member Card</h1>
+                            <h1 className='flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[28px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]'>Scheme Settlement</h1>
 
                             <div className='flex-1 flex items-center text-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]'>
                                 <p className='text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold'>Gold Rate</p>
@@ -61,9 +61,15 @@ const MemberList = () => {
                                 <p className='text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold'>Card No</p>
                                 <input type="text" className='h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                             </div>
-                            <div className='basis-[60%] flex w-full items-center justify-between'>
-                                <p className='basis-[40%] text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold'>Member Name</p>
-                                <input type="text" className='basis-[60%] h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                            <div className='basis-[60%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]'>
+                                <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
+                                    <input type="checkbox" name="receiptpaid" id="" />
+                                    <label htmlFor="receiptpaid" className='text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#000]'>Receipt Paid</label>
+                                </div>
+                                <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
+                                    <label htmlFor="droppers" className='text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#000]'>Droppers</label>
+                                    <input type="checkbox" name="droppers" id="" />
+                                </div>
                             </div>
                         </div>
 
@@ -224,17 +230,48 @@ const MemberList = () => {
                     </div>
                     <div className='basis-[25%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[16px]'>
                         <div className='flex flex-col gap-[2px] sm:gap-[4px] lg:gap-[6px]'>
-                            <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
-                                <label htmlFor="receiptpaid" className='text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#1CBEF1]'>Receipt Paid</label>
-                                <input type="checkbox" name="receiptpaid" id=""/>
+                            <div className='w-full flex flex-col items-center justify-start text-start gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Date</p>
+                                <div className='flex-1'>
+                                    <input type="date" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                </div>
                             </div>
-                            <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
+                            <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
+                                <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
+                                    <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                        <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Member Name</p>
+                                        <div className='flex-1'>
+                                            <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        </div>
+                                    </div>
+                                    <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                        <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Address</p>
+                                        <div className='flex-1'>
+                                            <textarea name="" id="" cols="14" rows="3" className='rounded-lg focus:outline-none border-2 border-black px-[5px] sm:px-[10px]'></textarea>
+                                            {/* <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' /> */}
+                                        </div>
+                                    </div>
+                                    <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                        <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Mobile No1</p>
+                                        <div className='flex-1'>
+                                            <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        </div>
+                                    </div>
+                                    <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                        <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Mobile No2</p>
+                                        <div className='flex-1'>
+                                            <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/* <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
                                 <label htmlFor="droppers" className='text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#FABBFF]'>Droppers</label>
                                 <input type="checkbox" name="droppers" id="" />
-                            </div>
+                            </div> */}
                         </div>
 
-                        <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
+                        <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[5px] px-[10px]'>
                             <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Scheme Details</h1>
                             <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
@@ -262,12 +299,6 @@ const MemberList = () => {
                                     </div>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Bonus Amount</p>
-                                    <div className='flex-1'>
-                                        <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
-                                    </div>
-                                </div>
-                                <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Total Scheme Amount</p>
                                     <div className='flex-1'>
                                         <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
@@ -276,71 +307,47 @@ const MemberList = () => {
                             </div>
                         </div>
 
-                        <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
-                            <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Pending Dues</h1>
-                            <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
-                                <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Pending Dues</p>
-                                    <div className='flex-1'>
-                                        <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
-                                    </div>
-                                </div>
-                                <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Balance Months</p>
-                                    <div className='flex-1'>
-                                        <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
-                            <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Bill Details</h1>
-                            <div className='w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[20px]'>
-                                <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Bill No</p>
-                                    <div className='flex-1'>
-                                        <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
-                                    </div>
-                                </div>
-                                <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Bill Date</p>
-                                    <div className='flex-1'>
-                                        <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
-                                    </div>
-                                </div>
-                                <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Jewel Type</p>
-                                    <div className='flex-1'>
-                                        <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
                             <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Settlement Detail </h1>
                             <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Settlement No.</p>
+                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Paid Amount</p>
                                     <div className='flex-1'>
                                         <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Dropper entry no</p>
+                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Bonus Amount</p>
+                                    <div className='flex-1'>
+                                        <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                    </div>
+                                </div>
+                                <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Incharge</p>
+                                    <div className='flex-1'>
+                                        <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                    </div>
+                                </div>
+                                <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Description</p>
                                     <div className='flex-1'>
                                         <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>      
+
+                        <div className='flex w-full items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
+                            <button type="submit" className='bg-[#172561] rounded-md text-[12px] sm:text-[14px] font-bold px-[15px] sm:px-[20px] lg:px-[25px] py-[5px] sm:py-[10px] text-white '>SAVE</button>
+                            <button type="submit" className='bg-[#172561] rounded-md text-[12px] sm:text-[14px] font-bold px-[15px] sm:px-[20px] lg:px-[25px] py-[5px] sm:py-[10px] text-white '>SAVE & PRINT</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     )
 }
 
-export default MemberList
+export default SchemeSettlement

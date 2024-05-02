@@ -221,10 +221,9 @@ const MemberDiscontinue = () => {
                                                             joinDate.getMonth() +
                                                             (Object.keys(memberData?.receipt || {})
                                                                 ?.length || 0) +
-                                                            index +
-                                                            1
+                                                            index 
                                                         );
-                                                        const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth()}-${joinDate.getFullYear()}`;
+                                                        const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth() + 1}-${joinDate.getFullYear()}`;
                                                         return formattedDate;
                                                     })()}
                                             </th>

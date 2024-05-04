@@ -29,7 +29,7 @@ const MemberDiscontinue = () => {
           >
             <div className="basis-[60%] flex items-center justify-between w-full h-full">
               <h1 className="flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[28px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]">
-                Member Discontinue
+                Due List
               </h1>
 
               <div className="flex-1 flex items-center text-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]">

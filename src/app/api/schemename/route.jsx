@@ -9,15 +9,15 @@ export async function POST(request) {
     const body = await request.json();
 
     const isExist = await prisma.oRIGIN_SCHEMETYPE.findUnique({
-      where: { SchemeCode: body.code },
+      where: { SchemeType: body.schemetype }
     });
 
     if (isExist) {
       const result = await prisma.oRIGIN_SCHEME_NAME.create({
         data: {
+          SchemeType: isExist.SchemeType,
           SchemeName: body.sname,
           SchemeCode: isExist.SchemeCode,
-          SchemeType: isExist.SchemeType,
           SchemeAmount: body.samount,
           SchemeDuration: body.sduration,
           SchemePersons: body.spersons,
@@ -28,7 +28,7 @@ export async function POST(request) {
           Commamt: body.commamt,
         },
       });
-      return NextResponse.json({ message: result });
+      return NextResponse.json({ message: "Added succesfully" });
     }
 
     return NextResponse.error({

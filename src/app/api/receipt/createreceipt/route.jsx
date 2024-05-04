@@ -15,12 +15,17 @@ export async function POST(request) {
     });
 
     if (isExist) {
+      const nextDate = calculateNextDate(body.rdate, 1);
+      const ActualDate = calculateNextDate(isExist.JoinDate, body.months + 1);
+
       await prisma.oRIGIN_SCHEME_USER.update({
         where: {
           CardNo: body.cardno,
         },
         data: {
           LastDatePaid: body.rdate,
+          NextDateToPay: nextDate,
+          ActualDateToPay: ActualDate,
         },
       });
 
@@ -62,21 +67,27 @@ export async function POST(request) {
   }
 }
 
+function calculateNextDate(joinDate, months) {
+  const currentDate = new Date(joinDate);
+  currentDate.setMonth(currentDate.getMonth() + months);
+  return currentDate.toISOString().split("T")[0];
+}
+
 // Default export for endpoint
 
 // {
-  // "rno": "1234",
-  // "cardno": "GW2",
-  // "rdate": "2024-04-26",
-  // "mno": "1234567890",
-  // "mname": "Test",
-  // "address": "Test",
-  // "cpoint": true,
-  // "pmode": "Test",
-  // "accno": "Test",
-  // "desc": "Test",
-  // "amount": 1000,
-  // "gamount": 1000,
-  // "incharge": "Test",
-  // "gweight": 1000
+// "rno": "1234",
+// "cardno": "GW2",
+// "rdate": "2024-04-26",
+// "mno": "1234567890",
+// "mname": "Test",
+// "address": "Test",
+// "cpoint": true,
+// "pmode": "Test",
+// "accno": "Test",
+// "desc": "Test",
+// "amount": 1000,
+// "gamount": 1000,
+// "incharge": "Test",
+// "gweight": 1000
 // }

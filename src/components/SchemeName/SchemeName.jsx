@@ -1,6 +1,78 @@
-import React from 'react'
+"use client";
+
+import React, { useEffect, useState } from 'react'
 
 const SchemeName = () => {
+
+    const [schemeTypes, setSchemeTypes] = useState([]);
+
+    const [schemeType, setSchemeType] = useState('');
+    const [schemeName, setSchemeName] = useState('');
+    const [duration, setDuration] = useState(null);
+    const [amount, setAmount] = useState(null);
+    const [persons, setPersons] = useState(null);
+    const [bonus, setBonus] = useState(null);
+    const [bonusmonths, setBonusMonths] = useState(null);
+    const [comm, setComm] = useState(null);
+    const [schemevalue, setSchemeValue] = useState(0);
+    const [commamt, setCommAmt] = useState(0);
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch('/api/schemetype/gettypes');
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+
+            const data = await response.json();
+
+            setSchemeTypes(data);
+
+            return data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            return null;
+        }
+    };
+
+    const pushScheneName = async () => {
+        try {
+            const response = await fetch("/api/schemename", {
+                method: "POST",
+                body: JSON.stringify({
+                    sname: schemeName,
+                    schemetype: schemeType,
+                    samount: amount,
+                    sduration: duration,
+                    spersons: persons,
+                    bmonth: bonusmonths,
+                    bamount: bonus,
+                    svalue: schemevalue,
+                    commper: comm,
+                    commamt: commamt
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response is not ok in scheme name');
+            }
+
+            const ans = await response.json();
+            alert(ans?.message);
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+
+    }, [duration, amount, bonus, bonusmonths]);
+
     return (
         <div className='w-full h-screen' style={{ background: "url(/banner.png) lightgray 50% / cover no-repeat" }}>
             <div className='w-full h-full'>
@@ -34,15 +106,19 @@ const SchemeName = () => {
                                 <img src="/tlogo.png" alt="" />
                                 <img src="/textLogo.png" alt="" className="max-w-[170px]" />
                             </div>
-                            
+
 
                             <div className="flex items-center justify-center gap-[5px] sm:gap-[10px]">
                                 <p className="font-semibold underline text-[14px] sm:text-[16px] lg:text-[18px]">
                                     Scheme Type:
                                 </p>
-                                <select name="schemetype" id="" className='p-[10px] sm:p-[10px] rounded-lg focus:outline-none border border-black'>
+                                <select name="schemetype" id="" className='p-[10px] sm:p-[10px] rounded-lg focus:outline-none border border-black' onChange={(e) => setSchemeType(e.target.value)}>
                                     <option value="">Select Scheme Type</option>
-                                    <option value="GW">Gold Wallet</option>
+                                    {
+                                        schemeTypes?.map((type) => (
+                                            <option key={type?.id} value={type?.SchemeType}>{type?.SchemeType}</option>
+                                        ))
+                                    }
                                 </select>
                             </div>
                         </div>
@@ -50,47 +126,47 @@ const SchemeName = () => {
                         <div className="w-full p-[10px] sm:p-[15px] lg:p-[20px] font-semibold bg-[#F6F8FF] flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456]">
                             <div className='w-full flex flex-col gap-[5px] items-start justify-center'>
                                 <label htmlFor="schemename">Scheme name</label>
-                                <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Scheme Name' />
+                                <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Scheme Name' value={schemeName} onChange={(e) => setSchemeName(e.target.value)} />
                             </div>
                             <div className='w-full flex items-center justify-center gap-[10px] sm:gap-[15px]'>
                                 <div className='basis-[50%]'>
                                     <label htmlFor="duration">Duration</label>
-                                    <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Duration' />
+                                    <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Duration' value={duration} onChange={(e) => setDuration(e.target.value)} />
                                 </div>
                                 <div className='basis-[50%]'>
                                     <label htmlFor="amount">Amount</label>
-                                    <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Amount' />
+                                    <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Amount' value={amount} onChange={(e) => setAmount(e.target.value)} />
                                 </div>
                             </div>
                             <div className='w-full flex items-center justify-center gap-[10px] sm:gap-[15px]'>
                                 <div className='basis-[50%]'>
                                     <label htmlFor="persons">No.of Persons</label>
-                                    <input type="text" name='persons' className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Capacity' />
+                                    <input type="text" name='persons' value={persons} className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Capacity' onChange={(e) => setPersons(e.target.value)} />
                                 </div>
                                 <div className='basis-[50%]'>
                                     <label htmlFor="amount">Bonus Amount</label>
-                                    <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Bonus Amount' />
+                                    <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Bonus Amount' value={bonus} onChange={(e) => setBonus(e.target.value)} />
                                 </div>
                             </div>
                             <div className='w-full flex items-center justify-center gap-[10px] sm:gap-[15px]'>
                                 <div className='basis-[50%]'>
                                     <label htmlFor="months">Bonus Months</label>
-                                    <input type="text" name='months' className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Bonus Months' />
+                                    <input type="text" name='months' className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Bonus Months' value={bonusmonths} onChange={(e) => setBonusMonths(e.target.value)} />
                                 </div>
                                 <div className='basis-[50%]'>
                                     <label htmlFor="comm">Emp Comm(%)</label>
-                                    <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Emp Comm' />
+                                    <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder='Enter Emp Comm' value={comm} onChange={(e) => setComm(e.target.value)} />
                                 </div>
                             </div>
                             <div className='w-full flex flex-col gap-[5px] items-start justify-center'>
                                 <label htmlFor="schemevalue">Scheme Value</label>
-                                <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder=' Scheme Value' readOnly/>
+                                <input type="text" className='p-[5px] focus:outline-none border border-black rounded-lg w-full' placeholder=' Scheme Value' value={schemevalue} readOnly />
                             </div>
                         </div>
                     </div>
 
                     <div className="w-full flex items-center justify-center gap-[10px] sm:gap-[15px] lg:gap-[20px]">
-                        <button
+                        <button onClick={() => pushScheneName()}
                             className="px-[20px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#52BD91] text-white font-semibold flex items-center justify-center cursor-pointer"
                         >
                             SAVE

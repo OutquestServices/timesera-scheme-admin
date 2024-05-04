@@ -15,6 +15,15 @@ export async function POST(request) {
     });
 
     if (isExist) {
+      await prisma.oRIGIN_SCHEME_USER.update({
+        where: {
+          CardNo: body.cardno,
+        },
+        data: {
+          LastDatePaid: body.rdate,
+        },
+      });
+
       const result = await prisma.oRIGIN_SCHEME_RECEIPT.create({
         data: {
           SchemeName: isExist.SchemeName,
@@ -56,18 +65,18 @@ export async function POST(request) {
 // Default export for endpoint
 
 // {
-//   "rno": "1234",
-//   "cardno": "GW2",
-//   "rdate": "2024-04-26",
-//   "mno": "1234567890",
-//   "mname": "Test",
-//   "address": "Test",
-//   "cpoint": true,
-//   "pmode": "Test",
-//   "accno": "Test",
-//   "desc": "Test",
-//   "amount": 1000,
-//   "gamount": 1000,
-//   "incharge": "Test",
-//   "gweight": 1000
+  // "rno": "1234",
+  // "cardno": "GW2",
+  // "rdate": "2024-04-26",
+  // "mno": "1234567890",
+  // "mname": "Test",
+  // "address": "Test",
+  // "cpoint": true,
+  // "pmode": "Test",
+  // "accno": "Test",
+  // "desc": "Test",
+  // "amount": 1000,
+  // "gamount": 1000,
+  // "incharge": "Test",
+  // "gweight": 1000
 // }

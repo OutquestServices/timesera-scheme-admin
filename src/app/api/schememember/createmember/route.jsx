@@ -10,7 +10,7 @@ export async function POST(request) {
 
     const ifExists = await prisma.oRIGIN_SCHEME_NAME.findUnique({
       where: {
-        SchemeCode: body.code,
+        SchemeName: body.schemename,
       },
     });
 
@@ -51,7 +51,7 @@ export async function POST(request) {
       },
     });
 
-    return NextResponse.json({ message: result });
+    return NextResponse.json({ message: "Data added successfully" });
   } catch (error) {
     return NextResponse.error({
       status: 400,
@@ -72,7 +72,7 @@ export async function POST(request) {
 //   "gender": true,
 //   "city": "Nellore",
 //   "address": "16-1-301-2, Gandhi Bomma",
-//   "pincode": 524001, 
+//   "pincode": 524001,
 //   "state": "AP",
 //   "district": "Nellore",
 //   "landline": "dfsd",

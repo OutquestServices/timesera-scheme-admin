@@ -10,16 +10,16 @@ generator client {
 }
 
 model ORIGIN_SCHEMETYPE {
-  id        Int     @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   SchemeType String? @unique
   SchemeMode String?
 }
 
 model ORIGIN_SCHEME_NAME {
   id             Int     @id @default(autoincrement())
-  SchemeCode     String @unique
+  SchemeCode     String  @unique
   SchemeType     String?
-  SchemeName     String?
+  SchemeName     String? @unique
   SchemeAmount   Float?
   SchemeDuration Float?
   SchemePersons  Float?
@@ -31,79 +31,79 @@ model ORIGIN_SCHEME_NAME {
 }
 
 model ORIGIN_SCHEME_USER {
-  id             Int    @id @default(autoincrement())
-  SchemeType     String? 
-  SchemeName     String?
-  SchemeCode     String?
-  MemberName     String?
-  CardNo         String  @unique
-  Gender         Boolean?
-  City           String?
-  Address        String?
-  Pincode        Float?
-  State          String?
-  District       String?
-  LandLine       String?
-  Mobile1        String?
-  Mobile2        String?
-  Email          String?
-  Dob            String?
-  Anniversary    String?
-  Nominee        String?
-  MobileNo       String?
-  Incharge       String?
-  JoinDate       String?
-  CollectionPoint Boolean?
-  LastDatePaid   String?
+  id              Int     @id @default(autoincrement())
+  SchemeType      String?
+  SchemeName      String?
+  SchemeCode      String?
+  MemberName      String?
+  CardNo          String  @unique
+  Gender          String?
+  City            String?
+  Address         String?
+  Pincode         Float?
+  State           String?
+  District        String?
+  LandLine        String?
+  Mobile1         String?
+  Mobile2         String?
+  Email           String?
+  Dob             String?
+  Anniversary     String?
+  Nominee         String?
+  MobileNo        String?
+  Incharge        String?
+  JoinDate        String?
+  CollectionPoint String?
+  LastDatePaid    String?
   ActualDateToPay String?
   NextDateToPay   String?
 }
 
 model ORIGIN_SCHEME_USER_CARD {
-  id            Int    @id @default(autoincrement())
-  CardNo        String @unique
-  Month         DateTime?
-  RecNo         String?
-  RecDate       DateTime?
-  RecAmt        Float?
-  GoldWt        Float?
-  GoldAmt       Float?
-  ModeOfPay     String?
-  Balance       Float?
+  id        Int       @id @default(autoincrement())
+  CardNo    String    @unique
+  Month     DateTime?
+  RecNo     String?
+  RecDate   DateTime?
+  RecAmt    Float?
+  GoldWt    Float?
+  GoldAmt   Float?
+  ModeOfPay String?
+  Balance   Float?
 }
 
 model ORIGIN_SCHEME_USER_SETTLEMENT {
-  id            Int   @id @default(autoincrement())
-  SchemeType     String? 
-  SchemeName     String?
-  CardNo         String  @unique
-  SchemeAmount   Float?
-  PaidAmount     Float?
-  BalanceAmount  Float?
-  GoldWt         Float?
-  GoldAmt        Float?
-  Settled        Boolean?
-  Discontinue    Boolean?
-  Description    String?
+  id            Int      @id @default(autoincrement())
+  SchemeType    String?
+  SchemeName    String?
+  CardNo        String   @unique
+  SchemeAmount  Float?
+  PaidAmount    Float?
+  BalanceAmount Float?
+  GoldWt        Float?
+  GoldAmt       Float?
+  Settled       Boolean?
+  Discontinue   Boolean?
+  Description   String?
 }
 
 model ORIGIN_SCHEME_RECEIPT {
-  id            Int  @id @default(autoincrement())
-  ReceiptNo     String @unique
-  ReceiptDate   String?
-  CardNo        String?
-  SchemeType     String? 
-  SchemeName     String?
-  SchemeCode     String?
-  MobileNo       String?
-  MemberName    String?
-  Address        String?
+  id              Int      @id @default(autoincrement())
+  ReceiptNo       String   @unique
+  ReceiptDate     String?
+  CardNo          String?
+  SchemeType      String?
+  SchemeName      String?
+  SchemeCode      String?
+  MobileNo        String?
+  MemberName      String?
+  Address         String?
   CollectionPoint Boolean?
-  PaymentMode      String?
-  AccNo          String?
-  Description    String?
-  Amount         Int
-  GoldWt        Float?
-  GoldAmount    Float?
-  Incharge       String?
+  PaymentMode     String?
+  AccNo           String?
+  Description     String?
+  Amount          Int
+  GoldWt          Float?
+  GoldAmount      Float?
+  Incharge        String?
 }

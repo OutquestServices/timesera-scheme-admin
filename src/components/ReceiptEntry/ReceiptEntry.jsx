@@ -52,6 +52,7 @@ const ReceiptEntry = () => {
           gamount: parseFloat(GoldAmount),
           incharge: Incharge,
           gweight: parseFloat(GoldWt),
+          months: ShemeData?.receipt?.length,
         }),
       });
       const data = await response.json();
@@ -85,6 +86,9 @@ const ReceiptEntry = () => {
       setCardNo("");
     }
   };
+
+
+  // console.log(ShemeData?.receipt?.length)
 
   return (
     <div className="w-full max-h-[100000px]">

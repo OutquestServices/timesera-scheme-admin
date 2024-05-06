@@ -9,7 +9,7 @@ export async function POST(request) {
     const body = await request.json();
 
     const isExist = await prisma.oRIGIN_SCHEMETYPE.findUnique({
-      where: { SchemeType: body.schemetype }
+      where: { SchemeType: body.schemetype },
     });
 
     if (isExist) {
@@ -17,7 +17,7 @@ export async function POST(request) {
         data: {
           SchemeType: isExist.SchemeType,
           SchemeName: body.sname,
-          SchemeCode: isExist.SchemeCode,
+          SchemeCode: body.code,
           SchemeAmount: body.samount,
           SchemeDuration: body.sduration,
           SchemePersons: body.spersons,

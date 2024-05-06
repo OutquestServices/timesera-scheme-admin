@@ -11,9 +11,8 @@ generator client {
 
 model ORIGIN_SCHEMETYPE {
   id        Int     @id @default(autoincrement())
-  SchemeType String?
+  SchemeType String? @unique
   SchemeMode String?
-  SchemeCode String @unique
 }
 
 model ORIGIN_SCHEME_NAME {

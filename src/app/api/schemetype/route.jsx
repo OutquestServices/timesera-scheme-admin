@@ -9,14 +9,14 @@ export async function POST(request) {
     const body = await request.json();
 
     const isExist = await prisma.oRIGIN_SCHEMETYPE.findUnique({
-      where: { SchemeCode: body.code },
+      where: { SchemeType: body.type },
     });
+
     if (!isExist) {
       const result = await prisma.oRIGIN_SCHEMETYPE.create({
         data: {
           SchemeType: body.type,
           SchemeMode: body.mode,
-          SchemeCode: body.code,
         },
       });
       return NextResponse.json({ message: result });
@@ -34,8 +34,6 @@ export async function POST(request) {
     await prisma.$disconnect();
   }
 }
-
-
 
 // Default export for endpoint
 // {

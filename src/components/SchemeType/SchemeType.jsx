@@ -4,14 +4,12 @@ import React, { useState } from "react";
 
 const SchemeType = () => {
     const [schemeType, setSchemeType] = useState("");
-    const [groupCode, setGroupCode] = useState("");
     const [goldScheme, setGoldScheme] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
             type: schemeType,
-            code: groupCode,
             mode: goldScheme,
         };
 
@@ -27,18 +25,15 @@ const SchemeType = () => {
             if (response.ok) {
                 alert("Data saved successfully");
                 setGoldScheme("");
-                setGroupCode("");
                 setSchemeType("");
             } else {
                 alert("Failed to save data");
                 setGoldScheme("");
-                setGroupCode("");
                 setSchemeType("");
             }
         } catch (error) {
             console.error(error);
             setGoldScheme("");
-            setGroupCode("");
             setSchemeType("");
         }
     };
@@ -92,7 +87,7 @@ const SchemeType = () => {
                                     onChange={(e) => setSchemeType(e.target.value)}
                                 />
                             </div>
-                            <div className="w-full flex items-center justify-between">
+                            {/* <div className="w-full flex items-center justify-between">
                                 <p className="basis-[40%]  font-semibold underline ">
                                     Group Code:
                                 </p>
@@ -102,7 +97,7 @@ const SchemeType = () => {
                                     className="basis-[60%] w-full focus:outline-none p-[4px] sm:p-[7px] lg:p-[10px] rounded-xl border-2 border-[#182456] "
                                     onChange={(e) => setGroupCode(e.target.value)}
                                 />
-                            </div>
+                            </div> */}
                             <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                                 <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
                                     <input

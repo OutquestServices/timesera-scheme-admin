@@ -13,7 +13,7 @@ const Dashboard = () => {
     return (
         <div className="flex w-full max-h-screen overflow-y-auto custom-scrollbar2 ">
             <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-            <div className={`flex-1 w-full transition-all duration-300 ${isOpen ? 'ml-48' : 'ml-16'}`}>
+            <div className={`flex-1 w-full transition-all duration-300 ${isOpen ? 'ml-64' : 'ml-16'}`}>
                 <div className='p-[20px] w-full flex flex-col gap-[10px]'>
                     {/* Header */}
                     <div className='max-h-full w-full flex justify-between items-center'>

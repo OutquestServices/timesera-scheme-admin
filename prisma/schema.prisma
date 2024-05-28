@@ -85,6 +85,8 @@ model ORIGIN_SCHEME_USER_SETTLEMENT {
   Settled       Boolean?
   Discontinue   Boolean?
   Description   String?
+  Date          String?
+  VoucherNo     String?  @unique
 }
 
 model ORIGIN_SCHEME_RECEIPT {

@@ -29,7 +29,9 @@ export async function POST(request) {
                     GoldAmt: body.goldamt,
                     Settled: body.settled,
                     Discontinue: body.discontinue,
-                    Description: body.description
+                    Description: body.description,
+                    Date: body.date,
+                    VoucherNo: body.voucherNo,
                 }
             });
 

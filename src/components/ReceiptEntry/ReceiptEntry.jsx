@@ -20,18 +20,43 @@ const ReceiptEntry = () => {
 
   const fetchmember = async () => {
     try {
-      const response = await fetch("/api/schememember/fetchmember", {
+      const response = await fetch("/api/memberdiscontinue/checkstatus", {
         method: "POST",
         body: JSON.stringify({
           cardno: CardNo,
         }),
       });
+
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+
       const data = await response.json();
-      setShemeData(data);
-    } catch (e) {
-      console.error(e);
+
+      if (data.settled || data.discontinued) {
+        alert("Member is already settled or discontinued.");
+        window.location.reload(); // Reload the page
+      } else {
+        // Member is not settled or discontinued, proceed with fetching
+        const fetchResponse = await fetch("/api/schememember/fetchmember", {
+          method: "POST",
+          body: JSON.stringify({
+            cardno: CardNo,
+          }),
+        });
+
+        if (!fetchResponse.ok) {
+          throw new Error(`Network response was not ok: ${fetchResponse.statusText}`);
+        }
+
+        const memberData = await fetchResponse.json();
+        setShemeData(memberData);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
+
 
   const createReceipt = async () => {
     try {
@@ -499,11 +524,11 @@ const ReceiptEntry = () => {
                         type="text"
                         value={
                           ShemeData?.scheme?.SchemeValue -
-                            ShemeData?.receipt?.reduce(
-                              (accumulator, currentItem) =>
-                                accumulator + currentItem.Amount,
-                              0
-                            ) || [0]
+                          ShemeData?.receipt?.reduce(
+                            (accumulator, currentItem) =>
+                              accumulator + currentItem.Amount,
+                            0
+                          ) || [0]
                         }
                         className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
                         readOnly

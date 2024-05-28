@@ -1,6 +1,7 @@
 import React from 'react'
 import "./Styling.css";
 import Duelist from './Duelist';
+import Discontinue from './Discontinue';
 
 const MemberList = () => {
 
@@ -13,7 +14,7 @@ const MemberList = () => {
                     <Duelist />
                 </div>
                 <div className='basis-[33%] w-full h-[300px] overflow-y-auto custom-scrollbar border border-black rounded-lg'>
-
+                    <Discontinue />
                 </div>
                 <div className='basis-[34%] w-full h-[300px] overflow-y-auto custom-scrollbar border border-black rounded-lg'>
 

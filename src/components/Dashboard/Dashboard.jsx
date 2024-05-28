@@ -5,6 +5,7 @@ import Sidebar from '../Navbar/Navbar';
 import Banner from './Banner';
 import Payments from './Payments';
 import "./Styling.css";
+import MemberList from './MemberList';
 
 const Dashboard = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -31,6 +32,9 @@ const Dashboard = () => {
 
                     {/* Payments */}
                     <Payments />
+
+                    {/* Settlement, Duelist */}
+                    <MemberList />
                 </div>
             </div>
         </div>

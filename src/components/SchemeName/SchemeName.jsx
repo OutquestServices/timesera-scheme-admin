@@ -47,7 +47,7 @@ const SchemeName = () => {
           spersons: parseFloat(persons),
           bmonth: parseFloat(bonusmonths),
           bamount: parseFloat(bonus),
-          svalue: parseFloat(schemevalue),
+          svalue: parseFloat(duration * amount + bonusmonths * bonus),
           commper: parseFloat(comm),
           commamt: (comm * (duration * amount + bonusmonths * bonus)) / 100,
           code: code,

@@ -17,8 +17,8 @@ const MemberDiscontinue = () => {
   }, []);
 
   return (
-    <div className="w-full max-h-[98vh] overflow-auto custom-scrollbar2">
-      <div className="w-full h-full flex flex-col">
+    <div className="max-w-full max-h-[98vh] overflow-y-auto custom-scrollbar2">
+      <div className="h-full flex flex-col">
         <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px]">
           <div
             className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[20px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"

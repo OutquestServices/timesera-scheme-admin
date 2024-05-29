@@ -1,25 +1,102 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Styling.css";
 
 const SchemeSettlement = () => {
+
+  const currentDate = new Date().toISOString().split('T')[0];
+
+  // Set initial state with current date
+  const [selectedDate, setSelectedDate] = useState(currentDate);
+  const [memberData, setMemberData] = useState({});
+  const [CardNo, setCardNo] = useState('');
+  const [schemetype, setSchemeType] = useState('');
+  const [schemename, setSchemeName] = useState('');
+  const [schemeAmount, setSchemeAmount] = useState('');
+  const [paidamount, setPaidAmount] = useState('');
+  const [balanceamount, setBalanceAmount] = useState('');
+  const [goldwt, setGoldWt] = useState('');
+  const [goldamt, setGoldAmt] = useState(77);
+  const [settled, setSettled] = useState(true);
+  const [discontinue, setDiscontinue] = useState(false);
+  const [description, setDescription] = useState('');
+  const [voucherNo, setVoucherNo] = useState('');
+
   const [SchemeData, setSchemeData] = useState(null);
-  const [CardNo, setCardNo] = useState(null);
+
   const fetchSettlement = async (cardno) => {
     try {
-      const response = await fetch("/api/schememember/fetchmember", {
+      const response = await fetch("/api/memberdiscontinue/getmember", {
         method: "POST",
         body: JSON.stringify({
           cardno: cardno,
         }),
       });
       const data = await response.json();
-      setSchemeData(data);
+      setMemberData(data);
     } catch (e) {
       console.error(e);
     }
   };
+
+  const pushSettlement = async (cardno) => {
+
+    if (!voucherNo) {
+      alert('Voucher number is required');
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/memberdiscontinue/postmember", {
+        method: "POST",
+        body: JSON.stringify({
+          cardno: cardno,
+          schemeamount: schemeAmount,
+          paidamount: paidamount,
+          balanceamount: balanceamount,
+          goldwt: goldwt,
+          goldamt: goldamt,
+          settled: settled,
+          discontinue: discontinue,
+          description: description,
+          date: selectedDate,
+          voucherNo: voucherNo,
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response is not ok');
+      }
+
+      const ans = await response.json();
+      alert("Settled Successfully");
+
+      window.location.reload();
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    if (memberData?.member) {
+      setSchemeType(memberData.member.SchemeType || '');
+      // setSchemeCode(memberData.member.SchemeCode || '');
+      setSchemeName(memberData.member.SchemeName || '');
+      setSchemeAmount(memberData.scheme?.SchemeAmount || '');
+
+      const totalPaid = memberData.receipt?.reduce((acc, item) => acc + item.Amount, 0) || 0;
+      setPaidAmount(totalPaid);
+
+      const totalGoldWt = memberData.receipt?.reduce((acc, item) => acc + item.GoldWt, 0) || 0;
+      setGoldWt(totalGoldWt);
+
+      const schemeAmt = memberData.scheme?.SchemeAmount || 0;
+      setBalanceAmount(schemeAmt - totalPaid);
+    }
+  }, [memberData]);
+
   return (
     <div className="w-full max-h-[98vh] overflow-auto custom-scrollbar2">
       <div className="w-full h-full flex flex-col">
@@ -158,23 +235,12 @@ const SchemeSettlement = () => {
                 Submit
               </button>
               <div className="basis-[60%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]">
-                <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
-                  <input type="checkbox" name="receiptpaid" id="" />
-                  <label
-                    htmlFor="receiptpaid"
-                    className="text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#000]"
-                  >
-                    Receipt Paid
-                  </label>
-                </div>
-                <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
-                  <label
-                    htmlFor="droppers"
-                    className="text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#000]"
-                  >
-                    Droppers
-                  </label>
-                  <input type="checkbox" name="droppers" id="" />
+                <div className='flex items-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]'>
+                  {/* <p className='text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold'>Gold Rate</p> */}
+                  <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
+                    <label htmlFor="voucherNo" className='text-[14px] sm:text-[16px] lg:text-[20px] font-semibold text-[#000]'>Voucher No</label>
+                    <input type="text" id="voucherNo" value={voucherNo} onChange={(e) => setVoucherNo(e.target.value)} className='w-[100px] h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                  </div>
                 </div>
               </div>
             </div>
@@ -187,7 +253,7 @@ const SchemeSettlement = () => {
                 <div className="flex-1">
                   <input
                     type="text"
-                    value={SchemeData?.member?.SchemeType}
+                    value={memberData?.member?.SchemeType}
                     className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
@@ -200,7 +266,7 @@ const SchemeSettlement = () => {
                 <div className="flex-1">
                   <input
                     type="text"
-                    value={SchemeData?.member?.SchemeCode}
+                    value={memberData?.member?.SchemeCode}
                     className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
@@ -213,7 +279,7 @@ const SchemeSettlement = () => {
                 <div className="flex-1">
                   <input
                     type="text"
-                    value={SchemeData?.member?.SchemeName}
+                    value={memberData?.member?.SchemeName}
                     className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
@@ -252,22 +318,21 @@ const SchemeSettlement = () => {
                     Balance
                   </th>
                 </tr>
-                {SchemeData?.receipt?.map((item, index) => (
+                {memberData?.receipt?.map((item, index) => (
                   <>
                     <tr className="bg-[#EAFFF6] text-[#172561]">
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {index + 1}
                       </th>
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                        {SchemeData?.member?.JoinDate &&
+                        {memberData?.member?.JoinDate &&
                           (() => {
                             const joinDate = new Date(
-                              SchemeData?.member?.JoinDate
+                              memberData?.member?.JoinDate
                             );
                             joinDate.setMonth(joinDate.getMonth() + index);
-                            const formattedDate = `${joinDate.getDate()}-${
-                              joinDate.getMonth() + 1
-                            }-${joinDate.getFullYear()}`;
+                            const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth() + 1
+                              }-${joinDate.getFullYear()}`;
                             return formattedDate;
                           })()}
                       </th>
@@ -297,28 +362,28 @@ const SchemeSettlement = () => {
                 ))}
                 {Array.from({
                   length:
-                    (SchemeData?.scheme?.SchemeDuration || 0) -
-                    (Object.keys(SchemeData?.receipt || {})?.length || 0),
+                    (memberData?.scheme?.SchemeDuration || 0) -
+                    (Object.keys(memberData?.receipt || {})?.length || 0),
                 }).map((_, index) => (
                   <>
                     <tr className="bg-[#EAFFF6] text-[#172561]">
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                        {(Object.keys(SchemeData?.receipt || {})?.length || 0) +
+                        {(Object.keys(memberData?.receipt || {})?.length || 0) +
                           index +
                           1}
                       </th>
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                        {SchemeData?.member?.JoinDate &&
+                        {memberData?.member?.JoinDate &&
                           (() => {
                             const joinDate = new Date(
-                              SchemeData?.member?.JoinDate
+                              memberData?.member?.JoinDate
                             );
                             joinDate.setMonth(
                               joinDate.getMonth() +
-                                (Object.keys(SchemeData?.receipt || {})
-                                  ?.length || 0) +
-                                index +
-                                1
+                              (Object.keys(memberData?.receipt || {})
+                                ?.length || 0) +
+                              index +
+                              1
                             );
                             const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth()}-${joinDate.getFullYear()}`;
                             return formattedDate;
@@ -343,7 +408,7 @@ const SchemeSettlement = () => {
                         -
                       </th>
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                        {SchemeData?.scheme?.SchemeAmount}
+                        {memberData?.scheme?.SchemeAmount}
                       </th>
                     </tr>
                   </>
@@ -360,12 +425,12 @@ const SchemeSettlement = () => {
                   <input
                     type="text"
                     value={
-                      (SchemeData &&
-                        SchemeData.receipt &&
-                        Object.keys(SchemeData.receipt).length) *
-                      (SchemeData &&
-                        SchemeData.scheme &&
-                        SchemeData.scheme.SchemeAmount)
+                      (memberData &&
+                        memberData.receipt &&
+                        Object.keys(memberData.receipt).length) *
+                      (memberData &&
+                        memberData.scheme &&
+                        memberData.scheme.SchemeAmount)
                     }
                     className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
@@ -380,7 +445,7 @@ const SchemeSettlement = () => {
                   <input
                     type="text"
                     value={
-                      SchemeData?.receipt?.reduce(
+                      memberData?.receipt?.reduce(
                         (accumulator, currentItem) =>
                           accumulator + currentItem.Amount,
                         0
@@ -399,13 +464,13 @@ const SchemeSettlement = () => {
                   <input
                     type="text"
                     value={
-                      (SchemeData &&
-                        SchemeData.receipt &&
-                        Object.keys(SchemeData.receipt).length) *
-                        (SchemeData &&
-                          SchemeData.scheme &&
-                          SchemeData.scheme.SchemeAmount) -
-                      (SchemeData?.receipt?.reduce(
+                      (memberData &&
+                        memberData.receipt &&
+                        Object.keys(memberData.receipt).length) *
+                      (memberData &&
+                        memberData.scheme &&
+                        memberData.scheme.SchemeAmount) -
+                      (memberData?.receipt?.reduce(
                         (accumulator, currentItem) =>
                           accumulator + currentItem.Amount,
                         0
@@ -424,7 +489,7 @@ const SchemeSettlement = () => {
                   <input
                     type="text"
                     value={
-                      SchemeData?.receipt?.reduce(
+                      memberData?.receipt?.reduce(
                         (accumulator, currentItem) =>
                           accumulator + currentItem.GoldWt,
                         0
@@ -444,10 +509,7 @@ const SchemeSettlement = () => {
                   Date
                 </p>
                 <div className="flex-1">
-                  <input
-                    type="date"
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
-                  />
+                  <input type="date" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={selectedDate} readOnly />
                 </div>
               </div>
               <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
@@ -459,7 +521,7 @@ const SchemeSettlement = () => {
                     <div className="flex-1">
                       <input
                         type="text"
-                        value={SchemeData?.member?.MemberName}
+                        value={memberData?.member?.MemberName}
                         className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                         readOnly
                       />
@@ -475,7 +537,7 @@ const SchemeSettlement = () => {
                         id=""
                         cols="14"
                         rows="3"
-                        value={SchemeData?.member?.Address}
+                        value={memberData?.member?.Address}
                         className="rounded-lg focus:outline-none border-2 border-black px-[5px] sm:px-[10px]"
                         readOnly
                       ></textarea>
@@ -489,7 +551,7 @@ const SchemeSettlement = () => {
                     <div className="flex-1">
                       <input
                         type="text"
-                        value={SchemeData?.member?.Mobile1}
+                        value={memberData?.member?.Mobile1}
                         className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                         readOnly
                       />
@@ -502,7 +564,7 @@ const SchemeSettlement = () => {
                     <div className="flex-1">
                       <input
                         type="text"
-                        value={SchemeData?.member?.Mobile2}
+                        value={memberData?.member?.Mobile2}
                         className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                         readOnly
                       />
@@ -528,7 +590,7 @@ const SchemeSettlement = () => {
                   <div className="flex-1">
                     <input
                       type="text"
-                      value={SchemeData?.scheme?.SchemeDuration}
+                      value={memberData?.scheme?.SchemeDuration}
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
@@ -541,7 +603,7 @@ const SchemeSettlement = () => {
                   <div className="flex-1">
                     <input
                       type="date"
-                      value={SchemeData?.member?.JoinDate}
+                      value={memberData?.member?.JoinDate}
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
@@ -554,7 +616,7 @@ const SchemeSettlement = () => {
                   <div className="flex-1">
                     <input
                       type="text"
-                      value={SchemeData?.scheme?.SchemeAmount}
+                      value={memberData?.scheme?.SchemeAmount}
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
@@ -567,7 +629,7 @@ const SchemeSettlement = () => {
                   <div className="flex-1">
                     <input
                       type="text"
-                      value={SchemeData?.scheme?.SchemeValue}
+                      value={memberData?.scheme?.SchemeValue}
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
@@ -581,8 +643,8 @@ const SchemeSettlement = () => {
                     <input
                       type="text"
                       value={
-                        SchemeData?.scheme?.SchemeAmount +
-                        SchemeData?.scheme?.BonusAmount
+                        memberData?.scheme?.SchemeAmount +
+                        memberData?.scheme?.BonusAmount
                       }
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
@@ -603,6 +665,15 @@ const SchemeSettlement = () => {
                   </p>
                   <div className="flex-1">
                     <input
+                      value={
+                        (memberData &&
+                          memberData.receipt &&
+                          Object.keys(memberData.receipt).length) *
+                        (memberData &&
+                          memberData.scheme &&
+                          memberData.scheme.SchemeAmount)
+                      }
+                      readOnly
                       type="text"
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     />
@@ -614,6 +685,20 @@ const SchemeSettlement = () => {
                   </p>
                   <div className="flex-1">
                     <input
+
+                      value={
+                        (memberData?.receipt?.reduce(
+                          (accumulator, currentItem) =>
+                            accumulator + currentItem.Amount,
+                          0
+                        ) || []) - ((memberData &&
+                          memberData.receipt &&
+                          Object.keys(memberData.receipt).length) *
+                          (memberData &&
+                            memberData.scheme &&
+                            memberData.scheme.SchemeAmount))
+                      }
+                      readOnly
                       type="text"
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     />
@@ -635,10 +720,7 @@ const SchemeSettlement = () => {
                     Description
                   </p>
                   <div className="flex-1">
-                    <input
-                      type="text"
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
-                    />
+                    <textarea name="" id="" value={description} onChange={(e) => setDescription(e.target.value)} cols="15" rows="10" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]'></textarea>
                   </div>
                 </div>
               </div>
@@ -647,6 +729,7 @@ const SchemeSettlement = () => {
             <div className="flex w-full items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
               <button
                 type="submit"
+                onClick={() => pushSettlement(CardNo)}
                 className="bg-[#172561] rounded-md text-[12px] sm:text-[14px] font-bold px-[15px] sm:px-[20px] lg:px-[25px] py-[5px] sm:py-[10px] text-white "
               >
                 SAVE

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import React from 'react';
 import { FaHome, FaUser, FaChartBar, FaCog, FaQuestionCircle, FaEnvelope, FaBell, FaFolder, FaClipboard, FaSignOutAlt } from 'react-icons/fa';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -10,7 +11,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     };
 
     return (
-        <div className={`h-screen bg-gray-800 text-white flex flex-col items-center fixed transition-all duration-300 ${isOpen ? 'w-48' : 'w-16'}`}>
+        <div className={`h-screen bg-gray-800 text-white flex flex-col items-center fixed transition-all duration-300 ${isOpen ? ' w-64' : 'w-16'}`}>
             <button
                 className="bg-gray-700 hover:bg-gray-600 text-white ml-auto py-2 px-2 rounded-full"
                 onClick={toggleSidebar}
@@ -20,7 +21,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
             <div className="-mt-1">
                 <div className={`flex flex-row-reverse ${isOpen ? "p-5" : "p-1"} justify-center items-center`}>
-                    <a href={"/dashboard"} className='max-w-[150px] mx-auto flex flex-col items-center justify-center gap-1'>
+                    <a href={"/"} className='max-w-[150px] mx-auto flex flex-col items-center justify-center gap-1'>
                         <img
                             src="/tlogo.png"
                             alt="Logo"
@@ -31,46 +32,46 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </div>
 
             <div className="mt-2 w-full">
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                <Link href={"/"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaHome />
                     {isOpen && <span className="ml-4">Home</span>}
-                </div>
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                </Link>
+                <Link href={"/schemetype"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaUser />
-                    {isOpen && <span className="ml-4">User</span>}
-                </div>
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    {isOpen && <span className="ml-4">Scheme Type</span>}
+                </Link>
+                <Link href={"/schemename"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaChartBar />
-                    {isOpen && <span className="ml-4">Analytics</span>}
-                </div>
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    {isOpen && <span className="ml-4">Scheme Name</span>}
+                </Link>
+                <Link href={"/schememember"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaCog />
-                    {isOpen && <span className="ml-4">Settings</span>}
-                </div>
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    {isOpen && <span className="ml-4">Scheme Member</span>}
+                </Link>
+                <Link href={"/membercard"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaQuestionCircle />
-                    {isOpen && <span className="ml-4">Help</span>}
-                </div>
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    {isOpen && <span className="ml-4">Member Card</span>}
+                </Link>
+                <Link href={"/memberdiscontinue"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaEnvelope />
-                    {isOpen && <span className="ml-4">Messages</span>}
-                </div>
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    {isOpen && <span className="ml-4">Member Discontinue</span>}
+                </Link>
+                <Link href={"/schemesettlement"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaBell />
-                    {isOpen && <span className="ml-4">Notifications</span>}
-                </div>
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    {isOpen && <span className="ml-4">Scheme Settlement</span>}
+                </Link>
+                <Link href={"/receiptentry"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaFolder />
-                    {isOpen && <span className="ml-4">Files</span>}
-                </div>
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    {isOpen && <span className="ml-4">Receipt Entry</span>}
+                </Link>
+                <Link href={"/memberlist"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaClipboard />
-                    {isOpen && <span className="ml-4">Tasks</span>}
-                </div>
-                <div className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    {isOpen && <span className="ml-4">Member List</span>}
+                </Link>
+                <Link href={"/duelist"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaSignOutAlt />
-                    {isOpen && <span className="ml-4">Logout</span>}
-                </div>
+                    {isOpen && <span className="ml-4">Due List</span>}
+                </Link>
             </div>
         </div>
     );

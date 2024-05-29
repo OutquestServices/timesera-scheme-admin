@@ -106,7 +106,7 @@ const SchemeMember = () => {
 
             const ans = await response.json();
             alert(ans?.message);
-
+            window.location.reload();
             router.refresh();
         } catch (error) {
             console.error(error);

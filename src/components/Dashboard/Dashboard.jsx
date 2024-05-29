@@ -7,13 +7,35 @@ import Payments from './Payments';
 import "./Styling.css";
 import MemberList from './MemberList';
 
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+
+const logoutUser = async (router) => {
+    try {
+        const response = await fetch('/api/logout', {
+            method: 'POST',
+        });
+
+        if (response.ok) {
+            Cookies.remove('username'); // Clear the cookie
+            router.push('/login'); // Redirect to login page
+        } else {
+            alert('Logout failed');
+        }
+    } catch (error) {
+        console.error('Error logging out:', error);
+        alert('An error occurred. Please try again.');
+    }
+};
+
 const Dashboard = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const router = useRouter();
 
     return (
         <div className="flex w-full max-h-screen overflow-y-auto custom-scrollbar2 ">
             <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-            <div className={`flex-1 w-full transition-all duration-300 ${isOpen ? 'ml-48' : 'ml-16'}`}>
+            <div className={`flex-1 w-full transition-all duration-300 ${isOpen ? 'ml-64' : 'ml-16'}`}>
                 <div className='p-[20px] w-full flex flex-col gap-[10px]'>
                     {/* Header */}
                     <div className='max-h-full w-full flex justify-between items-center'>
@@ -23,7 +45,7 @@ const Dashboard = () => {
 
                         <div className='flex items-center justify-between gap-[15px]'>
                             <div className='h-[35px] w-[35px] bg-black rounded-full'></div>
-                            <a href='/' className='bg-[#172561] text-[#52BD91] py-[5px] px-[20px] rounded-md font-semibold'>Logout</a>
+                            <a href='/' onClick={() => logoutUser(router)} className='bg-[#172561] text-[#52BD91] py-[5px] px-[20px] rounded-md font-semibold'>Logout</a>
                         </div>
                     </div>
 

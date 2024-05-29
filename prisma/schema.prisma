@@ -85,6 +85,8 @@ model ORIGIN_SCHEME_USER_SETTLEMENT {
   Settled       Boolean?
   Discontinue   Boolean?
   Description   String?
+  Date          String?
+  VoucherNo     String?  @unique
 }
 
 model ORIGIN_SCHEME_RECEIPT {
@@ -106,4 +108,10 @@ model ORIGIN_SCHEME_RECEIPT {
   GoldWt          Float?
   GoldAmount      Float?
   Incharge        String?
+}
+
+model LOGIN_USER {
+  id       Int    @id @default(autoincrement())
+  UserName String @unique
+  Password String
 }

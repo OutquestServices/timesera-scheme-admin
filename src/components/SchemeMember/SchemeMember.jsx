@@ -106,7 +106,7 @@ const SchemeMember = () => {
 
             const ans = await response.json();
             alert(ans?.message);
-
+            window.location.reload();
             router.refresh();
         } catch (error) {
             console.error(error);
@@ -247,7 +247,7 @@ const SchemeMember = () => {
                                 </div>
                                 <div className='flex items-center justify-between'>
                                     <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>District</p>
-                                    <input type='text' id="" value={district} onChange={(e) => setDistrict(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Member Name'>
+                                    <input type='text' id="" value={district} onChange={(e) => setDistrict(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter District'>
                                     </input>
                                 </div>
 
@@ -259,7 +259,7 @@ const SchemeMember = () => {
                                             name="shop"
                                             id="shop"
                                             value="Shop"
-                                            onChange={(e) => setGender(e.target.value)}
+                                            onChange={(e) => setCollectionPoint(e.target.value)}
                                         />
                                         <label htmlFor="shop" className="font-semibold">
                                             Shop
@@ -271,7 +271,7 @@ const SchemeMember = () => {
                                             name="home"
                                             id="home"
                                             value="Home"
-                                            onChange={(e) => setGender(e.target.value)}
+                                            onChange={(e) => setCollectionPoint(e.target.value)}
                                         />
                                         <label htmlFor="home" className="font-semibold">
                                             Home

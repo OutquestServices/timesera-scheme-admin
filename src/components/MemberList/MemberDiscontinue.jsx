@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "./Styling.css";
 
 const MemberDiscontinue = () => {
@@ -9,9 +9,19 @@ const MemberDiscontinue = () => {
 
     // Set initial state with current date
     const [selectedDate, setSelectedDate] = useState(currentDate);
-
-    const [memberData, setMemberData] = useState(null);
-    const [CardNo, setCardNo] = useState(null);
+    const [memberData, setMemberData] = useState({});
+    const [CardNo, setCardNo] = useState('');
+    const [schemetype, setSchemeType] = useState('');
+    const [schemename, setSchemeName] = useState('');
+    const [schemeAmount, setSchemeAmount] = useState('');
+    const [paidamount, setPaidAmount] = useState('');
+    const [balanceamount, setBalanceAmount] = useState('');
+    const [goldwt, setGoldWt] = useState('');
+    const [goldamt, setGoldAmt] = useState(77);
+    const [settled, setSettled] = useState(false);
+    const [discontinue, setDiscontinue] = useState(true);
+    const [description, setDescription] = useState('');
+    const [voucherNo, setVoucherNo] = useState('');
 
     const fetchMemberDiscontinue = async (cardno) => {
         try {
@@ -29,19 +39,27 @@ const MemberDiscontinue = () => {
     };
 
     const pushDiscontinueMember = async (cardno) => {
+
+        if (!voucherNo) {
+            alert('Voucher number is required');
+            return;
+        }
+
         try {
             const response = await fetch("/api/memberdiscontinue/postmember", {
                 method: "POST",
                 body: JSON.stringify({
                     cardno: cardno,
-                    schemeamount: 2002,
-                    paidamount: 1002,
-                    balanceamount: 1000,
-                    goldwt: 2,
-                    goldamt: 3000,
-                    settled: false,
-                    discontinue: true,
-                    description: "Nothing"
+                    schemeamount: schemeAmount,
+                    paidamount: paidamount,
+                    balanceamount: balanceamount,
+                    goldwt: goldwt,
+                    goldamt: goldamt,
+                    settled: settled,
+                    discontinue: discontinue,
+                    description: description,
+                    date: selectedDate,
+                    voucherNo: voucherNo,
                 })
             });
 
@@ -52,10 +70,30 @@ const MemberDiscontinue = () => {
             const ans = await response.json();
             alert(ans?.message);
 
+            window.location.reload();
+
         } catch (error) {
             console.error(error);
         }
     }
+
+    useEffect(() => {
+        if (memberData?.member) {
+            setSchemeType(memberData.member.SchemeType || '');
+            // setSchemeCode(memberData.member.SchemeCode || '');
+            setSchemeName(memberData.member.SchemeName || '');
+            setSchemeAmount(memberData.scheme?.SchemeAmount || '');
+
+            const totalPaid = memberData.receipt?.reduce((acc, item) => acc + item.Amount, 0) || 0;
+            setPaidAmount(totalPaid);
+
+            const totalGoldWt = memberData.receipt?.reduce((acc, item) => acc + item.GoldWt, 0) || 0;
+            setGoldWt(totalGoldWt);
+
+            const schemeAmt = memberData.scheme?.SchemeAmount || 0;
+            setBalanceAmount(schemeAmt - totalPaid);
+        }
+    }, [memberData]);
 
     return (
         <div className='w-full max-h-[98vh] overflow-auto custom-scrollbar2'>
@@ -128,13 +166,21 @@ const MemberDiscontinue = () => {
                                 Submit
                             </button>
                             <div className='basis-[60%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]'>
-                                <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
+                                {/* <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
                                     <input type="checkbox" name="receiptpaid" id="" />
                                     <label htmlFor="receiptpaid" className='text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#000]'>Receipt Paid</label>
                                 </div>
                                 <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
                                     <label htmlFor="droppers" className='text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#000]'>Droppers</label>
                                     <input type="checkbox" name="droppers" id="" />
+                                </div> */}
+
+                                <div className='flex items-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]'>
+                                    {/* <p className='text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold'>Gold Rate</p> */}
+                                    <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
+                                        <label htmlFor="voucherNo" className='text-[14px] sm:text-[16px] lg:text-[20px] font-semibold text-[#000]'>Voucher No</label>
+                                        <input type="text" id="voucherNo" value={voucherNo} onChange={(e) => setVoucherNo(e.target.value)} className='w-[100px] h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -221,7 +267,7 @@ const MemberDiscontinue = () => {
                                                             joinDate.getMonth() +
                                                             (Object.keys(memberData?.receipt || {})
                                                                 ?.length || 0) +
-                                                            index 
+                                                            index
                                                         );
                                                         const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth() + 1}-${joinDate.getFullYear()}`;
                                                         return formattedDate;
@@ -272,7 +318,7 @@ const MemberDiscontinue = () => {
                             <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                 <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Total Paid</p>
                                 <div className='flex-1'>
-                                    <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
+                                    <input type="number" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
                                         memberData?.receipt?.reduce(
                                             (accumulator, currentItem) =>
                                                 accumulator + currentItem.Amount,
@@ -284,7 +330,7 @@ const MemberDiscontinue = () => {
                             <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                 <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Bal Amount</p>
                                 <div className='flex-1'>
-                                    <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
+                                    <input type="number" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
                                         (memberData &&
                                             memberData.receipt &&
                                             Object.keys(memberData.receipt).length) *
@@ -302,7 +348,7 @@ const MemberDiscontinue = () => {
                             <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                 <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Tot.GoldWT</p>
                                 <div className='flex-1'>
-                                    <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
+                                    <input type="number" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
                                         memberData?.receipt?.reduce(
                                             (accumulator, currentItem) =>
                                                 accumulator + currentItem.GoldWt,
@@ -415,15 +461,16 @@ const MemberDiscontinue = () => {
 
                         <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
                             {/* <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Settlement Detail </h1> */}
+
                             <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
                                 <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
                                     <input type="checkbox" name="droppers" id="" />
-                                    <label htmlFor="droppers" className='text-[18px] sm:text-[22px] lg:text-[26px] font-semibold text-[#000]'>Discontinue</label>
+                                    <label htmlFor="droppers" onClick={() => { setSettled(false); setDiscontinue(true) }} className='text-[18px] sm:text-[22px] lg:text-[26px] font-semibold text-[#000]'>Discontinue</label>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Cause</p>
                                     <div className='flex-1'>
-                                        <textarea name="" id="" cols="15" rows="10" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]'></textarea>
+                                        <textarea name="" id="" value={description} onChange={(e) => setDescription(e.target.value)} cols="15" rows="10" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]'></textarea>
                                     </div>
                                 </div>
                             </div>

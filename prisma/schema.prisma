@@ -109,3 +109,9 @@ model ORIGIN_SCHEME_RECEIPT {
   GoldAmount      Float?
   Incharge        String?
 }
+
+model LOGIN_USER {
+  id       Int    @id @default(autoincrement())
+  UserName String @unique
+  Password String
+}

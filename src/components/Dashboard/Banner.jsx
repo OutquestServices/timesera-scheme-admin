@@ -15,6 +15,40 @@ const Banner = () => {
 
     const [todayRates, setTodayRates] = useState([]);
 
+    const [userAddress, setUserAddress] = useState(null);
+
+    useEffect(() => {
+        const fetchUserAddress = async () => {
+            try {
+                const tenantName = localStorage.getItem('tenantName');
+
+                if (!tenantName) {
+                    throw new Error('Tenant name is not available in local storage');
+                }
+
+                const response = await fetch('https://www.erpser.timeserasoftware.in/GetUserAddress', {
+                    method: 'GET',
+                    headers: {
+                        'tenantName': tenantName
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                setUserAddress(data);
+            } catch (error) {
+                console.error('Error fetching user address:', error);
+                alert('An error occurred while fetching user address. Please try again.');
+            }
+        };
+
+        fetchUserAddress();
+    }, []);
+
+
     function getFormattedDate() {
         const now = new Date();
         const year = now.getFullYear();
@@ -45,6 +79,8 @@ const Banner = () => {
         fetchRates(date);
     }, [date]);
 
+
+
     // console.log(todayRates)
 
     return (
@@ -54,8 +90,8 @@ const Banner = () => {
                     <div className='w-full h-[180px] overflow-hidden rounded-2xl bg-[#EEF2FF] relative -z-30'>
                         <div className='w-full h-full flex items-center justify-center p-[20px] gap-[10px]'>
                             <div className='w-full h-full flex items-start justify-start flex-col'>
-                                <p className='text-[22px] text-[#172561] font-semibold '>Swastik Jwellery</p>
-                                <p className='text-[18px] text-[#172561] font-semibold'>Nellore</p>
+                                <p className='text-[22px] text-[#172561] font-semibold '>{userAddress?.firmName}</p>
+                                <p className='text-[18px] text-[#172561] font-semibold'>{userAddress?.address1}</p>
                             </div>
                         </div>
                     </div>
@@ -90,7 +126,7 @@ const Banner = () => {
                                 </div>
                                 <div className='w-full h-full p-[5px] flex flex-col items-center justify-center text-center  relative z-30 text-black'>
                                     <p className='text-[12px] font-medium text-[#000] '>Financial Year</p>
-                                    <p className='text-[18px] font-bold text-[#182456]'>2024</p>
+                                    <p className='text-[14px] font-bold text-[#182456]'>{userAddress?.fYear}</p>
                                 </div>
                             </div>
                         </div>

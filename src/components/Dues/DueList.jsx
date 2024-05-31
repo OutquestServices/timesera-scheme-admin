@@ -19,28 +19,28 @@ const MemberDiscontinue = () => {
   return (
     <div className="max-w-full max-h-[98vh] overflow-y-auto custom-scrollbar2">
       <div className="h-full flex flex-col">
-        <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px]">
+        <div className="px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[15px]">
           <div
-            className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[20px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
+            className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[15px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
             style={{
               background:
                 "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)",
             }}
           >
             <div className="basis-[60%] flex items-center justify-between w-full h-full">
-              <h1 className="flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[28px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]">
+              <h1 className="flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[20px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]">
                 Due List
               </h1>
 
               <div className="flex-1 flex items-center text-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]">
-                <p className="text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold">
+                <p className="text-white text-[14px] sm:text-[15px] lg:text-[14px] font-semibold">
                   Gold Rate
                 </p>
                 {/* <p className='text-[#52BD91] text-[16px] sm:text-[17px] lg:text-[18px] font-bold'>24-25</p> */}
-                <div className="h-[40px] max-w-[130px] rounded-md w-full px-[5px] sm:px-[10px] lg:px-[15px] bg-white"></div>
+                <div className="h-[30px] max-w-[130px] rounded-md w-full px-[5px] sm:px-[10px] lg:px-[15px] bg-white"></div>
               </div>
             </div>
-            <div className="basis-[40%] w-full h-full flex items-center gap-[10px] sm:gap-[20px] lg:gap-[30px]">
+            {/* <div className="basis-[40%] w-full h-full flex items-center gap-[10px] sm:gap-[20px] lg:gap-[30px]">
               <div className="grid grid-cols-3 w-full h-full items-center justify-center gap-[5px] sm:gap-[8px] lg:gap-[12px]">
                 <div className="cursor-pointer h-[45px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#52BD91] rounded-md">
                   <p className="text-white font-bold">SHOW</p>
@@ -129,97 +129,97 @@ const MemberDiscontinue = () => {
                   </svg>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
-        <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px] w-full max-h-full flex gap-[10px] sm:gap-[15px] lg:gap-[20px]">
+        <div className="px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[15px] w-full max-h-full flex gap-[10px] sm:gap-[15px] lg:gap-[20px]">
           <div className=" w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]">
             <div className="flex w-full gap-[5px] sm:gap-[10px] lg:gap-[15px]">
               <div className="basis-[40%] w-full flex items-center justify-between">
-                <p className="text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="basis-[50%] text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Type
                 </p>
                 <input
                   type="text"
-                  className="h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  className="h-[30px] basis-[50%] w-full focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
               <div className="basis-[40%] w-full flex items-center justify-between">
-                <p className="text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="basis-[50%] text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Group
                 </p>
                 <input
                   type="text"
-                  className="h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  className="h-[30px] basis-[50%] w-full focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
               <div className="basis-[40%] w-full flex items-center justify-between">
-                <p className="text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="basis-[50%] text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Name
                 </p>
                 <input
                   type="text"
-                  className="h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  className="h-[30px] basis-[50%] w-full focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
               <div className="basis-[40%] w-full flex items-center justify-between">
-                <p className="text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="basis-[50%] text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Card No
                 </p>
                 <input
                   type="text"
-                  className="h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  className="h-[30px] basis-[50%] w-full focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
             </div>
 
-            <div className="w-full grid grid-cols-5 gap-[7px] sm:gap-[14px] lg:gap-[20px]">
+            <div className="w-full grid grid-cols-4 gap-[7px] sm:gap-[14px] lg:gap-[20px]">
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   City
                 </p>
                 <div className="flex-1">
                   <input
                     type="text"
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
               </div>
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Member
                 </p>
                 <div className="flex-1">
                   <input
                     type="text"
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
               </div>
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Mobile No
                 </p>
                 <div className="flex-1">
                   <input
                     type="text"
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
               </div>
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Incharge
                 </p>
                 <div className="flex-1">
                   <input
                     type="text"
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
               </div>
-              <div className="w-full">
+              {/* <div className="w-full">
                 <p className="text-lg font-semibold mb-2">Select Option:</p>
                 <div className="basis-[60%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]">
                   <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
@@ -246,7 +246,7 @@ const MemberDiscontinue = () => {
                     </label>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="w-full my-[10px] sm:my-[15px] lg:my-[20px] max-h-[380px] overflow-auto custom-scrollbar2">
@@ -328,7 +328,7 @@ const MemberDiscontinue = () => {
                 <div className="flex-1">
                   <input
                     type="text"
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
               </div>

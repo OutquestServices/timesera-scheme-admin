@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 
 const page = () => {
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
 
     return (
         <div className="flex w-full max-h-screen overflow-y-auto custom-scrollbar2 ">
@@ -17,7 +17,7 @@ const page = () => {
                 </div>
             </div>
         </div>
-        
+
     )
 }
 

@@ -28,6 +28,7 @@ model ORIGIN_SCHEME_NAME {
   SchemeValue    Float?
   Commper        Float?
   Commamt        Float?
+  Continuous     Boolean?
 }
 
 model ORIGIN_SCHEME_USER {

@@ -29,7 +29,7 @@ const logoutUser = async (router) => {
 };
 
 const Dashboard = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
     const router = useRouter();
 
     return (

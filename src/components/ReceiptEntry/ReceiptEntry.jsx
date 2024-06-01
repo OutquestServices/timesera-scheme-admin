@@ -1,22 +1,59 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const ReceiptEntry = () => {
+
+  const [nextReceiptNumber, setNextReceiptNumber] = useState(null);
+
+  useEffect(() => {
+    const fetchNextReceiptNumber = async () => {
+      try {
+        const response = await fetch('/api/receipt/generatereceiptno');
+        if (!response.ok) {
+          throw new Error('Failed to fetch the next receipt number');
+        }
+        const data = await response.json();
+        setNextReceiptNumber(data.nextReceiptNumber);
+      } catch (error) {
+        console.error('Error fetching the next receipt number:', error);
+      }
+    };
+
+    fetchNextReceiptNumber();
+  }, []);
+
   const [CardNo, setCardNo] = useState("");
   const [ShemeData, setShemeData] = useState({});
   const [receiptData, setReceiptData] = useState(
     new Date().toISOString().split("T")[0]
   );
   const [receiptNo, setReceiptNo] = useState("");
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [paymentMode, setPaymentMode] = useState("");
+  const [selectedOption, setSelectedOption] = useState(true);
+  // const [paymentMode, setPaymentMode] = useState("");
   const [amount, setAmount] = useState(null);
   const [GoldWt, setGoldWt] = useState(null);
   const [GoldAmount, setGoldAmount] = useState(null);
   const [Description, setDescription] = useState("");
   const [Incharge, setIncharge] = useState("");
-  const [accno, setAccno] = useState("");
+  // const [accno, setAccno] = useState("");
+
+  const [receipts, setReceipts] = useState([]);
+
+  const [cards, setCards] = useState([]);
+  const [online, setOnline] = useState([]);
+  const [upi, setUpi] = useState([]);
+  const [selectedModes, setSelectedModes] = useState([]);
+
+  useEffect(() => {
+    const fetchReceipts = async () => {
+      const response = await fetch('/api/receipt/getallreceipts');
+      const data = await response.json();
+      setReceipts(data);
+    };
+
+    fetchReceipts();
+  }, []);
 
   const fetchmember = async () => {
     try {
@@ -57,21 +94,71 @@ const ReceiptEntry = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        const response = await fetch('/api/payments/getpaymentmethods');
+        const data = await response.json();
+
+        // Segregate data based on PMODE
+        const cardData = data.filter(item => item.PMODE === 'CARD');
+        const onlineData = data.filter(item => item.PMODE === 'ONLINE');
+        const upiData = data.filter(item => item.PMODE === 'UPI');
+
+        // Update useStates
+        setCards(cardData);
+        setOnline(onlineData);
+        setUpi(upiData);
+      } catch (error) {
+        console.error('Error fetching payment methods:', error);
+      }
+    };
+
+    fetchPaymentMethods();
+  }, []);
+
+  const [cashdesc, setCashdesc] = useState("");
+  const [carddesc, setCarddesc] = useState("");
+  const [onlinedesc, setOnlinedesc] = useState("");
+  const [upidesc, setUpidesc] = useState("");
+  const [cashamount, setCashamount] = useState(0);
+  const [cardamount, setCardamount] = useState(0);
+  const [onlineamount, setOnlineamount] = useState(0);
+  const [upiamount, setUpiamount] = useState(0);
+  const [onlineparticulars, setOnlineparticulars] = useState("");
+  const [upiparticulars, setUpiparticulars] = useState("");
+  const [onlineacc, setOnlineacc] = useState("");
+  const [upiacc, setUpiacc] = useState("");
+
+  
 
   const createReceipt = async () => {
     try {
       const response = await fetch("/api/receipt/createreceipt", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          rno: receiptNo + "-" + ShemeData?.receipt?.length + 1,
+          rno: nextReceiptNumber,
           cardno: CardNo,
           rdate: receiptData,
           mno: ShemeData?.member?.Mobile1,
           mname: ShemeData?.member?.MemberName,
           address: ShemeData?.member?.Address,
           cpoint: selectedOption,
-          pmode: paymentMode,
-          accno: accno,
+          CashDesc: cashdesc,
+          CashAmount: cashamount,
+          CardDesc: carddesc,
+          CardAmount: cardamount,
+          OnlineParticulars: onlineparticulars,
+          OnlineAcc: onlineacc,
+          OnlineDesc: onlinedesc,
+          OnlineAmount: onlineamount,
+          UPIParticulars: upiparticulars,
+          UPIAcc: upiacc,
+          UPIDesc: upidesc,
+          UPIAmount: upiamount,
           desc: Description,
           amount: parseFloat(amount),
           gamount: parseFloat(GoldAmount),
@@ -80,36 +167,44 @@ const ReceiptEntry = () => {
           months: ShemeData?.receipt?.length,
         }),
       });
+
       const data = await response.json();
-      window.alert("Receipt Created Successfully");
-      setAccno("");
-      setAmount("");
-      setDescription("");
-      setGoldAmount("");
-      setGoldWt("");
-      setIncharge("");
-      setPaymentMode("");
-      setReceiptData(new Date().toISOString().split("T")[0]);
-      setReceiptNo("");
-      setSelectedOption(null);
-      setShemeData({});
-      setCardNo("");
+
+      if (response.ok) {
+        window.alert("Receipt Created Successfully");
+        window.location.reload();
+      } else {
+        window.alert("Error Occurred: " + data.error);
+      }
     } catch (e) {
       console.error(e);
-      window.alert("Error Occured while creating Receipt");
-      setAccno("");
-      setAmount("");
-      setDescription("");
-      setGoldAmount("");
-      setGoldWt("");
-      setIncharge("");
-      setPaymentMode("");
-      setReceiptData(new Date().toISOString().split("T")[0]);
-      setReceiptNo("");
-      setSelectedOption(null);
-      setShemeData({});
-      setCardNo("");
+      window.alert("Error Occurred while creating Receipt");
     }
+  };
+
+
+  const handleDelete = async (receiptNo) => {
+    const response = await fetch(`/api/receipt/${receiptNo}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      alert("Deleted successfully");
+      setReceipts(receipts.filter(receipt => receipt.ReceiptNo !== receiptNo));
+    } else {
+      const errorData = await response.json();
+      console.error("Failed to delete receipt:", errorData.error);
+    }
+  };
+
+  const handleModeChange = (mode) => {
+    setSelectedModes((prevModes) => {
+      if (prevModes.includes(mode)) {
+        return prevModes.filter((m) => m !== mode);
+      } else {
+        return [...prevModes, mode];
+      }
+    });
   };
 
 
@@ -117,8 +212,8 @@ const ReceiptEntry = () => {
 
   return (
     <div className="w-full max-h-[100000px]">
-      <div className="w-full h-full flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px]">
-        <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[10px]">
+      <div className="w-full h-full flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[5px]">
+        <div className="px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[10px]">
           <div
             className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[15px] rounded-md flex items-center gap-[5px] sm:gap-[8px] lg:gap-[12px]"
             style={{
@@ -257,9 +352,9 @@ const ReceiptEntry = () => {
           </div>
         </div>
 
-        <div className="w-full px-[20px] sm:px-[50px] lg:px-[40px] max-h-full mb-[20px]">
+        <div className="w-full px-[20px] sm:px-[50px] lg:px-[20px] max-h-full mb-[0px]">
           <div className="w-full h-full flex gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-            <div className="basis-[50%] border-2 border-[#182456] rounded-xl overflow-hidden">
+            <div className="basis-[45%] border-2 border-[#182456] rounded-xl overflow-hidden">
               <div
                 className="w-full h-[130px] flex flex-col gap-[5px] sm:gap-[9px] lg:gap-[13px] items-center justify-center"
                 style={{
@@ -291,8 +386,8 @@ const ReceiptEntry = () => {
                     </h1>
                     <input
                       type="text"
-                      value={receiptNo}
-                      onChange={(e) => setReceiptNo(e.target.value)}
+                      value={nextReceiptNumber}
+                      readOnly
                       className="rounded-md focus:outline-none px-[5px] sm:px-[10px] lg:px-[15px] py-[2px] sm:py-[4px] lg:py-[4px] max-w-[250px]"
                     />
                   </div>
@@ -405,38 +500,45 @@ const ReceiptEntry = () => {
                   Scheme Details
                 </h1>
 
-                <div className="flex flex-col gap-[4px] sm:gap-[8px] px-[10px] sm:px-[20px] lg:px-[40px]">
-                  <div className="w-full flex items-center justify-evenly gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                    <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                <div className="flex flex-col gap-[4px] sm:gap-[8px] px-[10px] sm:px-[20px] lg:px-[20px]">
+                  <div className="w-full flex items-center justify-evenly gap-[5px] sm:gap-[10px] lg:gap-[5px]">
+                    <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px] text-left">
                       <p className=" ">Amount</p>
                       <input
                         type="text"
                         value={ShemeData?.scheme?.SchemeAmount}
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                       />
                     </div>
 
-                    <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                    <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
                       <p className=" ">Scheme Duration</p>
                       <input
                         type="text"
                         value={ShemeData?.scheme?.SchemeDuration}
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                         readOnly
                       />
                     </div>
 
-                    <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                      <p className=" ">Scheme Amount</p>
+                    <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                      <p className=" ">Paid Amount</p>
                       <input
                         type="text"
-                        value={ShemeData?.scheme?.SchemeValue}
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                        value={
+                          ShemeData?.receipt?.reduce(
+                            (accumulator, currentItem) =>
+                              accumulator + currentItem.Amount,
+                            0
+                          ) || [0]
+                        }
+                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                         readOnly
                       />
                     </div>
+
                   </div>
-                  <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                  {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                     <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                       <p className=" ">Bonus Months</p>
                       <input
@@ -461,55 +563,41 @@ const ReceiptEntry = () => {
                         className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
                       />
                     </div>
-                  </div>
-                  <div className="w-full flex gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                    <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                  </div> */}
+                  <div className="w-full flex gap-[5px] sm:gap-[10px] lg:gap-[10px]">
+                    <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[0px]">
                       <p className=" ">Scheme Value</p>
                       <input
                         type="text"
                         value={ShemeData?.scheme?.SchemeValue}
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                         readOnly
                       />
                     </div>
 
-                    <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                    <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[0px]">
                       <p className=" ">Scheme Join Date</p>
                       <input
                         type="text"
                         value={ShemeData?.member?.JoinDate}
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                       />
                     </div>
 
-                    <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                    <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[0px]">
                       <p className=" ">Paid Months</p>
                       <input
                         type="text"
                         value={ShemeData?.receipt?.length}
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                         readOnly
                       />
                     </div>
                   </div>
-                  <div className="w-full flex gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                    <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                      <p className=" ">Paid Amount</p>
-                      <input
-                        type="text"
-                        value={
-                          ShemeData?.receipt?.reduce(
-                            (accumulator, currentItem) =>
-                              accumulator + currentItem.Amount,
-                            0
-                          ) || [0]
-                        }
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                        readOnly
-                      />
-                    </div>
+                  <div className="w-full flex gap-[5px] sm:gap-[10px] lg:gap-[10px]">
 
-                    <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+
+                    <div className="basis-[50%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[0px]">
                       <p className=" ">Balance Month</p>
                       <input
                         type="text"
@@ -517,12 +605,12 @@ const ReceiptEntry = () => {
                           ShemeData?.scheme?.SchemeDuration -
                           ShemeData?.receipt?.length
                         }
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                         readOnly
                       />
                     </div>
 
-                    <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                    <div className="basis-[50%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[0px]">
                       <p className=" ">Balance Amount</p>
                       <input
                         type="text"
@@ -534,32 +622,37 @@ const ReceiptEntry = () => {
                             0
                           ) || [0]
                         }
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                        className="px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                         readOnly
                       />
                     </div>
                   </div>
                   <div className="w-full flex gap-[5px] items-center justify-center sm:gap-[10px] lg:gap-[15px]">
-                    <div className=" flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                      <p className=" ">Installment No</p>
-                      <input
-                        type="text"
-                        value={ShemeData?.receipt?.length + 1}
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                        readOnly
-                      />
-                    </div>
+
                   </div>
                 </div>
               </div>
             </div>
-            <div className="basis-[50%] flex flex-col gap-[10px]  border-2 border-[#182456] rounded-xl py-[5px] sm:py-[10px] lg:py-[15px]">
-              <h1 className="px-[10px] sm:px-[20px] lg:px-[20px] text-[20px] sm:text-[24px] lg:text-[20px] text-[#182456] font-semibold">
-                Receipt Details
-              </h1>
+            <div className="basis-[55%] relative flex flex-col justify-center gap-[10px]  border-2 border-[#182456] rounded-xl py-[5px] sm:py-[10px] lg:py-[15px]">
+              <div className="flex items-center justify-between ">
+
+                <h1 className="px-[10px] sm:px-[20px] lg:px-[20px] text-[20px] sm:text-[24px] lg:text-[20px] text-[#182456] font-semibold">
+                  Receipt Details
+                </h1>
+
+                <div className="basis-[60%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[5px]">
+                  <p className="font-bold">Installment No</p>
+                  <input
+                    type="text"
+                    value={ShemeData?.receipt?.length + 1}
+                    className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                    readOnly
+                  />
+                </div>
+              </div>
 
               <div className="flex flex-col gap-[4px] sm:gap-[8px] px-[10px] sm:px-[10px] lg:px-[20px]">
-                <div className="w-full flex gap-[5px] sm:gap-[7px] lg:gap-[7px]">
+                {/* <div className="w-full flex gap-[5px] sm:gap-[7px] lg:gap-[7px]">
                   <div className="flex text-[14px] sm:text-[16px] w-full lg:text-[18px] items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                     <p className="text-[16px] sm:text-[18px] lg:text-[16px] font-semibold text-[#182456]">
                       Collection Point
@@ -585,9 +678,9 @@ const ReceiptEntry = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                  <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                  {/* <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                     <p className=" ">Scheme Code</p>
                     <input
                       type="text"
@@ -605,19 +698,42 @@ const ReceiptEntry = () => {
                       className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
                       readOnly
                     />
+                  </div> */}
+
+
+
+                  <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                    <p className=" ">Gold Wt</p>
+                    <input
+                      type="text"
+                      value={GoldWt}
+                      className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
+                      onChange={(e) => setGoldWt(e.target.value)}
+                    />
                   </div>
 
-                  <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+
+                  <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                    <p className=" ">Gold Amount</p>
+                    <input
+                      type="text"
+                      value={GoldAmount}
+                      className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
+                      onChange={(e) => setGoldAmount(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
                     <p className=" ">Paid Amount</p>
                     <input
                       type="text"
                       value={amount}
-                      className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                      className=" px-[3px] py-[3px] sm:py-[3px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
                       onChange={(e) => setAmount(e.target.value)}
                     />
                   </div>
                 </div>
-                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px] mt-[20px]">
+                {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px] mt-[20px]">
                   <div className="basis-[50%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                     <p className=" ">Payment Mode</p>
                     <input
@@ -637,10 +753,166 @@ const ReceiptEntry = () => {
                       onChange={(e) => setAccno(e.target.value)}
                     />
                   </div>
+                </div> */}
+              </div>
+
+
+
+
+              <div className="flex flex-col gap-[2px] px-[20px]">
+                <div className="w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[20px]">
+                  <button
+                    className={`border border-black p-2 ${selectedModes.includes('Cash') ? 'bg-[#182456] text-white' : ''}`}
+                    onClick={() => handleModeChange('Cash')}
+                  >
+                    Cash
+                  </button>
+                  <button
+                    className={`border border-black p-2 ${selectedModes.includes('Card') ? 'bg-[#182456] text-white' : ''}`}
+                    onClick={() => handleModeChange('Card')}
+                  >
+                    Card
+                  </button>
+                  <button
+                    className={`border border-black p-2 ${selectedModes.includes('Online') ? 'bg-[#182456] text-white' : ''}`}
+                    onClick={() => handleModeChange('Online')}
+                  >
+                    Online
+                  </button>
+                  <button
+                    className={`border border-black p-2 ${selectedModes.includes('UPI') ? 'bg-[#182456] text-white' : ''}`}
+                    onClick={() => handleModeChange('UPI')}
+                  >
+                    UPI
+                  </button>
                 </div>
               </div>
 
-              <div className="w-full px-[10px] sm:px-[20px] lg:px-[20px] mt-[10px]">
+
+
+              <div className="flex flex-col gap-[2px] px-[20px]">
+                {selectedModes.includes('Cash') && (
+                  <div className="w-full h-full grid grid-cols-3 gap-[5px] items-center justify-center">
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Payment Mode</p>
+                      <input type="text" value="Cash" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Description</p>
+                      <input type="text" value={cashdesc} onChange={(e) => setCashdesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Amount</p>
+                      <input
+                        type="number"
+                        value={cashamount}
+                        onChange={(e) => setCashamount(parseInt(e.target.value, 10))}
+                        className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {selectedModes.includes('Card') && (
+                  <div className="w-full h-full grid grid-cols-3 gap-[5px] items-center justify-center">
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Payment Mode</p>
+                      <input type="text" value="Card" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Description</p>
+                      <input type="text" value={carddesc} onChange={(e) => setCarddesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Amount</p>
+                      <input type="number" value={cardamount} onChange={(e) => setCardamount(parseInt(e.target.value, 10))} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                  </div>
+                )}
+
+                {selectedModes.includes('Online') && (
+                  <div className="w-full h-full grid grid-cols-5 gap-[5px] items-center justify-center">
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Payment Mode</p>
+                      <input type="text" value="Online" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Particulars</p>
+                      <select onChange={(e) => setOnlineparticulars(e.target.value)} name="online" id="online" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                        <option value="">Select</option>
+                        {online.map((option, index) => (
+                          <option key={index} value={option?.PAYMODE}>{option?.PAYMODE}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Acc No</p>
+                      <select onChange={(e) => setOnlineacc(e.target.value)} name="accno" id="accno" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                        <option value="">Select</option>
+                        {online.map((option, index) => (
+                          <option key={index} value={option?.ACCNO}>{option?.ACCNO}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Description</p>
+                      <input type="text" value={onlinedesc} onChange={(e) => setOnlinedesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Amount</p>
+                      <input type="text" value={onlineamount} onChange={(e) => setOnlineamount(parseInt(e.target.value, 10))} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                  </div>
+                )}
+
+                {selectedModes.includes('UPI') && (
+                  <div className="w-full h-full grid grid-cols-5 gap-[5px] items-center justify-center">
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Payment Mode</p>
+                      <input type="text" value="UPI" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Particulars</p>
+                      <select onChange={(e) => setUpiparticulars(e.target.value)} name="upi" id="upi" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                        <option value="">Select</option>
+                        {upi.map((option, index) => (
+                          <option key={index} value={option?.PAYMODE}>{option?.PAYMODE}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Acc No.</p>
+                      <select onChange={(e) => setUpiacc(e.target.value)} name="upiacc" id="upiacc" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                        <option value="">Select</option>
+                        {upi.map((option, index) => (
+                          <option key={index} value={option?.ACCNO}>{option?.ACCNO}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Description</p>
+                      <input type="text" value={upidesc} onChange={(e) => setUpidesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                    <div className="flex flex-col items-start justify-center text-left w-full">
+                      <p className="text-[12px]">Amount</p>
+                      <input type="text" value={upiamount} onChange={(e) => setUpiamount(parseInt(e.target.value, 10))} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+              <div className="w-full px-[10px] sm:px-[20px] lg:px-[20px] mt-[0px]">
                 <div className="w-full h-[175px] overflow-y-auto custom-scrollbar border border-[#000] rounded-md">
                   <table className="w-full table-auto">
                     <tr className="bg-[#182456] text-white">
@@ -663,8 +935,8 @@ const ReceiptEntry = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-[20px] w-full px-[10px] sm:px-[20px] lg:px-[40px]">
-                <div className="w-full flex flex-col gap-[3px] sm:gap-[5px]">
+              <div className="flex flex-col gap-[20px] w-full px-[10px] sm:px-[20px] lg:px-[20px]">
+                {/* <div className="w-full flex flex-col gap-[3px] sm:gap-[5px]">
                   <div className="flex gap-[25%] sm:gap-[35%] lg:gap-[45%]">
                     <p className="underline text-[16px] sm:text-[14px] lg:text-[14px] text-[#182456] font-normal">
                       Gold Wt
@@ -688,9 +960,9 @@ const ReceiptEntry = () => {
                       onChange={(e) => setGoldAmount(e.target.value)}
                     />
                   </div>
-                </div>
+                </div> */}
 
-                <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[7px] pt-[10px]">
+                <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[7px] pt-[0px]">
                   <div className="basis-[50%] flex text-[14px] sm:text-[14px] lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                     <p className="font-semibold">Incharge</p>
                     <input
@@ -706,7 +978,7 @@ const ReceiptEntry = () => {
                     <textarea
                       name=""
                       id=""
-                      rows={2}
+                      rows={1}
                       value={Description}
                       className="max-w-[350px] w-full px-[5px] sm:px-[10px] lg:px-[15px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg"
                       onChange={(e) => setDescription(e.target.value)}
@@ -741,7 +1013,7 @@ const ReceiptEntry = () => {
                     </svg>
                   </div> */}
 
-                  <div className="cursor-pointer h-[45px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#172561] rounded-md">
+                  <div className="cursor-pointer h-[35px] text-[14px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#172561] rounded-md">
                     <button
                       className="text-white font-bold"
                       onClick={() => createReceipt()}
@@ -824,6 +1096,61 @@ const ReceiptEntry = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[10px] text-[12px]">
+          <table className="w-full table-auto text-center max-w-[1250px] overflow-hidden mx-auto border border-black">
+            <thead className="w-full border border-black">
+              <tr>
+                <th className="border border-black p-2">ID</th>
+                <th className="border border-black p-2">Receipt No</th>
+                <th className="border border-black p-2">Receipt Date</th>
+                <th className="border border-black p-2">Card No</th>
+                <th className="border border-black p-2">Scheme Type</th>
+                <th className="border border-black p-2">Scheme Name</th>
+                <th className="border border-black p-2">Scheme Code</th>
+                <th className="border border-black p-2">Mobile No</th>
+                <th className="border border-black p-2">Member Name</th>
+                <th className="border border-black p-2">Address</th>
+                <th className="border border-black p-2">Collection Point</th>
+                <th className="border border-black p-2">Payment Mode</th>
+                <th className="border border-black p-2">Acc No</th>
+                <th className="border border-black p-2">Description</th>
+                <th className="border border-black p-2">Amount</th>
+                <th className="border border-black p-2">Gold Wt</th>
+                <th className="border border-black p-2">Gold Amount</th>
+                <th className="border border-black p-2">Incharge</th>
+                <th className="border border-black p-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="w-full border border-black">
+              {/* {receipts?.map((receipt) => (
+                <tr key={receipt.id} className="border border-black">
+                  <td className="border border-black p-2">{receipt.id}</td>
+                  <td className="border border-black p-2">{receipt.ReceiptNo}</td>
+                  <td className="border border-black p-2">{receipt.ReceiptDate}</td>
+                  <td className="border border-black p-2">{receipt.CardNo}</td>
+                  <td className="border border-black p-2">{receipt.SchemeType}</td>
+                  <td className="border border-black p-2">{receipt.SchemeName}</td>
+                  <td className="border border-black p-2">{receipt.SchemeCode}</td>
+                  <td className="border border-black p-2">{receipt.MobileNo}</td>
+                  <td className="border border-black p-2">{receipt.MemberName}</td>
+                  <td className="border border-black p-2">{receipt.Address}</td>
+                  <td className="border border-black p-2">{receipt.CollectionPoint ? 'Yes' : 'No'}</td>
+                  <td className="border border-black p-2">{receipt.PaymentMode}</td>
+                  <td className="border border-black p-2">{receipt.AccNo}</td>
+                  <td className="border border-black p-2">{receipt.Description}</td>
+                  <td className="border border-black p-2">{receipt.Amount}</td>
+                  <td className="border border-black p-2">{receipt.GoldWt}</td>
+                  <td className="border border-black p-2">{receipt.GoldAmount}</td>
+                  <td className="border border-black p-2">{receipt.Incharge}</td>
+                  <td className="border border-black p-2">
+                    <button className="text-red-700" onClick={() => handleDelete(receipt.ReceiptNo)}>Delete</button>
+                  </td>
+                </tr>
+              ))} */}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

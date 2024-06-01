@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 .custom-scrollbar {
-    margin-top: 10px;
     /* Adjust the margin top as needed */
 }
 

@@ -11,7 +11,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     };
 
     return (
-        <div className={`h-screen bg-gray-800 text-white flex flex-col items-center fixed transition-all duration-300 ${isOpen ? ' w-64' : 'w-16'}`}>
+        <div className={`h-screen overflow-y-auto custom-scrollbar2 bg-gray-800 text-white flex flex-col items-center fixed transition-all duration-300 ${isOpen ? ' w-64' : 'w-16'}`}>
             <button
                 className="bg-gray-700 hover:bg-gray-600 text-white ml-auto py-2 px-2 rounded-full"
                 onClick={toggleSidebar}
@@ -20,7 +20,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             </button>
 
             <div className="-mt-1">
-                <div className={`flex flex-row-reverse ${isOpen ? "p-5" : "p-1"} justify-center items-center`}>
+                <div className={`flex flex-row-reverse ${isOpen ? "p-5 -mt-[35px]" : "p-1 -mt-[0px]"} justify-center items-center`}>
                     <a href={"/"} className='max-w-[150px] mx-auto flex flex-col items-center justify-center gap-1'>
                         <img
                             src="/tlogo.png"
@@ -31,7 +31,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 </div>
             </div>
 
-            <div className="mt-2 w-full">
+            <div className="mt-0 w-full">
                 <Link href={"/"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaHome />
                     {isOpen && <span className="ml-4">Home</span>}

@@ -31,7 +31,7 @@ const SchemeMember = () => {
     const [nominee, setNominee] = useState('');
     const [mobile, setMobile] = useState('');
     const [incharge, setIncharge] = useState('');
-    const [joindate, setJoindate] = useState('');
+    const [joindate, setJoindate] = useState(new Date().toISOString().split("T")[0]);
     const [collectionPoint, setCollectionPoint] = useState('');
 
     const [schemeMembers, setSchemeMembers] = useState([]);
@@ -268,9 +268,9 @@ const SchemeMember = () => {
                                 <img src="/textLogo.png" alt="" className="max-w-[170px]" />
                             </div>
 
-                            <div className='flex w-full items-center justify-center gap-[20px]'>
+                            <div className='flex w-full items-center justify-center gap-[20px] px-[20px]'>
 
-                                <div className="flex items-center justify-center gap-[5px] sm:gap-[10px]">
+                                <div className="basis-[33%] w-full flex items-center justify-center gap-[5px] sm:gap-[10px]">
                                     <p className="font-semibold text-[14px] sm:text-[16px] lg:text-[14px]">
                                         Scheme Type:
                                     </p>
@@ -286,14 +286,14 @@ const SchemeMember = () => {
                                     </select>
                                 </div>
 
-                                <div className='flex items-center justify-between'>
+                                <div className='basis-[33%] flex items-center justify-between'>
                                     <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Joining Date</p>
-                                    <input type='date' value={joindate} onChange={(e) => setJoindate(e.target.value)} id="" className='basis-[50%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Join Date' onKeyDown={(e) => handleKeyDown(e, 'mobile')}
+                                    <input type='date' value={joindate} onChange={(e) => setJoindate(e.target.value)} id="" className=' w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Join Date' onKeyDown={(e) => handleKeyDown(e, 'mobile')}
                                         ref={inputRefs.joindate}>
                                     </input>
                                 </div>
 
-                                <div className='flex items-center justify-between'>
+                                <div className='basis-[33%] flex items-center justify-between'>
                                     <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Mobile No</p>
                                     <input type='text' id="" value={mobile} onChange={(e) => setMobile(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'schemeName')}
                                         ref={inputRefs.mobile} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Mobile No'>

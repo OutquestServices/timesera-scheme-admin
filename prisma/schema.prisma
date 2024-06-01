@@ -16,10 +16,10 @@ model ORIGIN_SCHEMETYPE {
 }
 
 model ORIGIN_SCHEME_NAME {
-  id             Int     @id @default(autoincrement())
-  SchemeCode     String  @unique
+  id             Int      @id @default(autoincrement())
+  SchemeCode     String   @unique
   SchemeType     String?
-  SchemeName     String? @unique
+  SchemeName     String?  @unique
   SchemeAmount   Float?
   SchemeDuration Float?
   SchemePersons  Float?
@@ -91,28 +91,46 @@ model ORIGIN_SCHEME_USER_SETTLEMENT {
 }
 
 model ORIGIN_SCHEME_RECEIPT {
-  id              Int      @id @default(autoincrement())
-  ReceiptNo       String   @unique
-  ReceiptDate     String?
-  CardNo          String?
-  SchemeType      String?
-  SchemeName      String?
-  SchemeCode      String?
-  MobileNo        String?
-  MemberName      String?
-  Address         String?
-  CollectionPoint Boolean?
-  PaymentMode     String?
-  AccNo           String?
-  Description     String?
-  Amount          Int
-  GoldWt          Float?
-  GoldAmount      Float?
-  Incharge        String?
+  id                Int      @id @default(autoincrement())
+  ReceiptNo         String   @unique
+  ReceiptDate       String?
+  CardNo            String?
+  SchemeType        String?
+  SchemeName        String?
+  SchemeCode        String?
+  MobileNo          String?
+  MemberName        String?
+  Address           String?
+  CollectionPoint   Boolean?
+  CashDesc          String?
+  CashAmount        Int?
+  CardDesc          String?
+  CardAmount        Int?
+  OnlineParticulars String?
+  OnlineAcc         String?
+  OnlineDesc        String?
+  OnlineAmount      Int?
+  UPIParticulars    String?
+  UPIAcc            String?
+  UPIDesc           String?
+  UPIAmount         Int?
+  Description       String?
+  Amount            Int
+  GoldWt            Float?
+  GoldAmount        Float?
+  Incharge          String?
 }
 
 model LOGIN_USER {
   id       Int    @id @default(autoincrement())
   UserName String @unique
   Password String
+}
+
+model ONLINEMODE_MAST {
+  id      Int     @id @default(autoincrement())
+  PMODE   String?
+  PAYMODE String?
+  ACCNO   String?
+  ACCNAME String?
 }

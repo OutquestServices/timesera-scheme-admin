@@ -23,11 +23,18 @@ export async function POST(request) {
         let cardNo;
 
         if (scheme.Continuous) {
-            // If continuous, generate card number based on total users
-            const totalUsers = await prisma.oRIGIN_SCHEME_USER.count({
-                where: { SchemeName: schemeName },
+            // If continuous, find the maximum numerical CardNo starting with numbers
+            const users = await prisma.oRIGIN_SCHEME_USER.findMany({
+                select: { CardNo: true },
             });
-            cardNo = (totalUsers + 1).toString();
+
+            const numericCardNumbers = users
+                .map(user => user.CardNo)
+                .filter(cardNo => /^\d+$/.test(cardNo)) // Only numeric card numbers
+                .map(cardNo => parseInt(cardNo, 10)); // Convert to integers
+
+            const maxCardNo = Math.max(0, ...numericCardNumbers);
+            cardNo = (maxCardNo + 1).toString();
         } else {
             // If not continuous, generate card number based on scheme code
             const users = await prisma.oRIGIN_SCHEME_USER.findMany({

@@ -43,7 +43,7 @@ const Duelist = () => {
                         <th className='border py-2'>Card No</th>
                         <th className='border py-2'>Member Name</th>
                         <th className='border py-2'>Scheme Name</th>
-                        <th className='border py-2'>Amount</th>
+                        <th className='border py-2'>Due Months</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,7 +53,7 @@ const Duelist = () => {
                             <td className='border  py-2'>{due.CardNo}</td>
                             <td className='border  py-2'>{due.MemberName}</td>
                             <td className='border  py-2'>{due.SchemeName}</td>
-                            <td className='border  py-2'>{due.Amount}</td>
+                            <td className='border  py-2'>{due.monthsDue}</td>
                         </tr>
                     ))}
                 </tbody>

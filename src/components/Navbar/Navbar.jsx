@@ -4,6 +4,8 @@ import Link from 'next/link';
 import React from 'react';
 import { FaHome, FaUser, FaChartBar, FaCog, FaQuestionCircle, FaEnvelope, FaBell, FaFolder, FaClipboard, FaSignOutAlt } from 'react-icons/fa';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { GiHamburgerMenu } from "react-icons/gi";
+
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
     const toggleSidebar = () => {
@@ -16,7 +18,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 className="bg-gray-700 hover:bg-gray-600 text-white ml-auto py-2 px-2 rounded-full"
                 onClick={toggleSidebar}
             >
-                {isOpen ? <IoIosArrowBack size={20} /> : <IoIosArrowForward size={20} />}
+                {isOpen ? <GiHamburgerMenu size={20} /> : <GiHamburgerMenu size={20} />}
             </button>
 
             <div className="-mt-1">
@@ -71,6 +73,26 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 <Link href={"/duelist"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaSignOutAlt />
                     {isOpen && <span className="ml-4">Due List</span>}
+                </Link>
+                <Link href={"/memberreport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Member Report</span>}
+                </Link>
+                <Link href={"/settlementreport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Settlement Report</span>}
+                </Link>
+                <Link href={"/discontinuereport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Discontinue Report</span>}
+                </Link>
+                <Link href={"/duereport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Due Report</span>}
+                </Link>
+                <Link href={"/receiptreport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Receipt Report</span>}
                 </Link>
             </div>
         </div>

@@ -5,8 +5,16 @@ import React, { useEffect, useState } from 'react'
 import XLSX from "xlsx/dist/xlsx.full.min.js";
 import jsPDF from "jspdf";
 import 'jspdf-autotable';
+import { useRouter } from 'next/navigation';
 
 const page = () => {
+
+    const router = useRouter();
+    useEffect(() => {
+        if (!localStorage.getItem("tenantName")) {
+            router.push("/reallogin");
+        }
+    }, [])
 
     const [schemeTypes, setSchemeTypes] = useState([]);
     const [loading, setLoading] = useState(true);

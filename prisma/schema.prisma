@@ -78,6 +78,8 @@ model ORIGIN_SCHEME_USER_SETTLEMENT {
   SchemeType    String?
   SchemeName    String?
   CardNo        String   @unique
+  MemberName    String?
+  MobileNo      String?
   SchemeAmount  Float?
   PaidAmount    Float?
   BalanceAmount Float?

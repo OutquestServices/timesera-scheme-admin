@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Styling.css";
 
 const MemberDiscontinue = () => {
@@ -15,6 +15,26 @@ const MemberDiscontinue = () => {
         setFilteredData(data);
       });
   }, []);
+
+  const inputRefs = { 
+    schemeType: useRef(null),
+    schemeGroup: useRef(null),
+    schemeName: useRef(null),
+    cardNo: useRef(null),
+    city: useRef(null),
+    member: useRef(null),
+    mobileNo: useRef(null),
+    incharge: useRef(null),
+  };
+
+  const handleKeyDown = (e, nextField) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (inputRefs[nextField]) {
+        inputRefs[nextField].current.focus();
+      }
+    }
+  }
 
   return (
     <div className="max-w-full max-h-[98vh] overflow-y-auto custom-scrollbar2">
@@ -142,6 +162,8 @@ const MemberDiscontinue = () => {
                 </p>
                 <input
                   type="text"
+                  ref={inputRefs.schemeType}
+                  onKeyDown={(e) => handleKeyDown(e, "schemeGroup")}
                   className="h-[30px] basis-[50%] w-full focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
@@ -151,6 +173,8 @@ const MemberDiscontinue = () => {
                 </p>
                 <input
                   type="text"
+                  ref={inputRefs.schemeGroup}
+                  onKeyDown={(e) => handleKeyDown(e, "schemeName")}
                   className="h-[30px] basis-[50%] w-full focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
@@ -160,6 +184,8 @@ const MemberDiscontinue = () => {
                 </p>
                 <input
                   type="text"
+                  ref={inputRefs.schemeName}
+                  onKeyDown={(e) => handleKeyDown(e, "cardNo")}
                   className="h-[30px] basis-[50%] w-full focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
@@ -169,6 +195,8 @@ const MemberDiscontinue = () => {
                 </p>
                 <input
                   type="text"
+                  ref={inputRefs.cardNo}
+                  onKeyDown={(e) => handleKeyDown(e, "city")}
                   className="h-[30px] basis-[50%] w-full focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
@@ -182,6 +210,8 @@ const MemberDiscontinue = () => {
                 <div className="flex-1">
                   <input
                     type="text"
+                    ref={inputRefs.city}
+                    onKeyDown={(e) => handleKeyDown(e, "member")}
                     className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
@@ -193,6 +223,8 @@ const MemberDiscontinue = () => {
                 <div className="flex-1">
                   <input
                     type="text"
+                    ref={inputRefs.member}
+                    onKeyDown={(e) => handleKeyDown(e, "mobileNo")}
                     className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
@@ -204,6 +236,8 @@ const MemberDiscontinue = () => {
                 <div className="flex-1">
                   <input
                     type="text"
+                    ref={inputRefs.mobileNo}
+                    onKeyDown={(e) => handleKeyDown(e, "incharge")}
                     className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
@@ -215,6 +249,7 @@ const MemberDiscontinue = () => {
                 <div className="flex-1">
                   <input
                     type="text"
+                    ref={inputRefs.incharge}
                     className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>

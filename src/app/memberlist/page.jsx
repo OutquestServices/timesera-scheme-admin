@@ -2,11 +2,20 @@
 
 import MemberList from "@/components/MemberList/MemberList";
 import Sidebar from "@/components/Navbar/Navbar";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
 
   const [isOpen, setIsOpen] = useState(true);
+
+  const router = useRouter();
+  useEffect(() => {
+    if (!localStorage.getItem("tenantName")) {
+      router.push("/reallogin");
+    }
+  }, [])
+
   return (
 
     <div className="flex w-full max-h-screen overflow-y-auto custom-scrollbar2 ">

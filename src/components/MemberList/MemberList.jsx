@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Styling.css";
 
 const MemberList = () => {
@@ -15,6 +15,27 @@ const MemberList = () => {
         setFilteredData(data);
       });
   }, []);
+
+  const inputRefs = { 
+    schemeType: useRef(null),
+    schemeGroup: useRef(null),
+    schemeName: useRef(null),
+    memberName: useRef(null),
+    cardNo: useRef(null),
+    mobileNo: useRef(null),
+    members: useRef(null),
+    droppers: useRef(null),
+    settlements: useRef(null),
+  };
+
+  const handleKeyDown = (e, nextField) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (inputRefs[nextField]) {
+        inputRefs[nextField].current.focus();
+      }
+    }
+  };
 
   return (
     <div className="w-full max-h-[98vh] overflow-auto custom-scrollbar2">
@@ -142,6 +163,8 @@ const MemberList = () => {
                 </p>
                 <input
                   type="text"
+                  ref={inputRefs.schemeType}
+                  onKeyDown={(e) => handleKeyDown(e, 'schemeGroup')}
                   className="h-[30px] focus:outline-none text-[14px] rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
@@ -151,6 +174,8 @@ const MemberList = () => {
                 </p>
                 <input
                   type="text"
+                  ref={inputRefs.schemeGroup}
+                  onKeyDown={(e) => handleKeyDown(e, 'schemeName')}
                   className="h-[30px] text-[14px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
@@ -160,6 +185,8 @@ const MemberList = () => {
                 </p>
                 <input
                   type="text"
+                  ref={inputRefs.schemeName}
+                  onKeyDown={(e) => handleKeyDown(e, 'memberName')}
                   className="h-[30px] text-[14px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                 />
               </div>
@@ -173,6 +200,8 @@ const MemberList = () => {
                 <div className="flex-1">
                   <input
                     type="text"
+                    ref={inputRefs.memberName}
+                    onKeyDown={(e) => handleKeyDown(e, 'cardNo')}
                     className="w-full h-[30px] text-[14px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
@@ -184,6 +213,8 @@ const MemberList = () => {
                 <div className="flex-1">
                   <input
                     type="text"
+                    ref={inputRefs.cardNo}
+                    onKeyDown={(e) => handleKeyDown(e, 'mobileNo')}
                     className="w-full h-[30px] text-[14px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
@@ -195,6 +226,8 @@ const MemberList = () => {
                 <div className="flex-1">
                   <input
                     type="text"
+                    ref={inputRefs.mobileNo}
+                    onKeyDown={(e) => handleKeyDown(e, 'members')}
                     className="w-full h-[30px] text-[14px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   />
                 </div>
@@ -203,7 +236,7 @@ const MemberList = () => {
             <div className="w-full">
               <div className="basis-[60%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]">
                 <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
-                  <input type="radio" name="option" id="shop" value="shop" />
+                  <input ref={inputRefs.members} onKeyDown={(e) => handleKeyDown(e, 'droppers')} type="radio"  name="option" id="shop" value="shop" />
                   <label
                     htmlFor="shop"
                     className="text-[14px] sm:text-[16px] lg:text-[16px] font-semibold text-[#000]"
@@ -212,7 +245,7 @@ const MemberList = () => {
                   </label>
                 </div>
                 <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
-                  <input type="radio" name="option" id="staff" value="staff" />
+                  <input ref={inputRefs.droppers} onKeyDown={(e) => handleKeyDown(e, 'settlements')} type="radio" name="option" id="staff" value="staff" />
                   <label
                     htmlFor="staff"
                     className="text-[14px] sm:text-[16px] lg:text-[16px] font-semibold text-[#000]"
@@ -221,7 +254,7 @@ const MemberList = () => {
                   </label>
                 </div>
                 <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
-                  <input type="radio" name="option" id="shop" value="shop" />
+                  <input ref={inputRefs.settlements} type="radio" name="option" id="shop" value="shop" />
                   <label
                     htmlFor="shop"
                     className="text-[14px] sm:text-[16px] lg:text-[16px] font-semibold text-[#000]"

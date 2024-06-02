@@ -130,7 +130,7 @@ const ReceiptEntry = () => {
   const [onlineacc, setOnlineacc] = useState("");
   const [upiacc, setUpiacc] = useState("");
 
-  
+
 
   const createReceipt = async () => {
     try {
@@ -762,27 +762,31 @@ const ReceiptEntry = () => {
               <div className="flex flex-col gap-[2px] px-[20px]">
                 <div className="w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[20px]">
                   <button
-                    className={`border border-black p-2 ${selectedModes.includes('Cash') ? 'bg-[#182456] text-white' : ''}`}
+                    className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Cash') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Cash')}
                   >
+                    <input type="checkbox" name="" id="" className="cursor-pointer" />
                     Cash
                   </button>
                   <button
-                    className={`border border-black p-2 ${selectedModes.includes('Card') ? 'bg-[#182456] text-white' : ''}`}
+                    className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Card') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Card')}
                   >
+                    <input type="checkbox" name="" id="" />
                     Card
                   </button>
                   <button
-                    className={`border border-black p-2 ${selectedModes.includes('Online') ? 'bg-[#182456] text-white' : ''}`}
+                    className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Online') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Online')}
                   >
+                    <input type="checkbox" name="" id="" />
                     Online
                   </button>
                   <button
-                    className={`border border-black p-2 ${selectedModes.includes('UPI') ? 'bg-[#182456] text-white' : ''}`}
+                    className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('UPI') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('UPI')}
                   >
+                    <input type="checkbox" name="" id="" />
                     UPI
                   </button>
                 </div>
@@ -1101,7 +1105,7 @@ const ReceiptEntry = () => {
         <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[10px] text-[12px]">
           <table className="w-full table-auto text-center max-w-[1250px] overflow-hidden mx-auto border border-black">
             <thead className="w-full border border-black">
-              <tr>
+              {/* <tr>
                 <th className="border border-black p-2">ID</th>
                 <th className="border border-black p-2">Receipt No</th>
                 <th className="border border-black p-2">Receipt Date</th>
@@ -1121,7 +1125,7 @@ const ReceiptEntry = () => {
                 <th className="border border-black p-2">Gold Amount</th>
                 <th className="border border-black p-2">Incharge</th>
                 <th className="border border-black p-2">Actions</th>
-              </tr>
+              </tr> */}
             </thead>
             <tbody className="w-full border border-black">
               {/* {receipts?.map((receipt) => (

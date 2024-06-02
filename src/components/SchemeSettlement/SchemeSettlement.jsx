@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Styling.css";
 
 const SchemeSettlement = () => {
@@ -62,6 +62,8 @@ const SchemeSettlement = () => {
           description: description,
           date: selectedDate,
           voucherNo: voucherNo,
+          membername: memberData?.member?.MemberName,
+          mobileno: memberData?.member?.MobileNo
         })
       });
 
@@ -218,13 +220,13 @@ const SchemeSettlement = () => {
           <div className="basis-[70%] w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]">
             <div className="flex items-center justify-center w-full gap-[5px] sm:gap-[10px] lg:gap-[15px]">
               <div className="basis-[40%] w-full flex items-center justify-between">
-                <p className="text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
+                <p className=" text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Card No
                 </p>
                 <input
                   type="text"
                   value={CardNo}
-                  className="h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  className="w-full max-w-[170px] h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   onChange={(e) => setCardNo(e.target.value)}
                 />
               </div>
@@ -553,7 +555,7 @@ const SchemeSettlement = () => {
                     <div className="flex-1">
                       <input
                         type="text"
-                        value={memberData?.member?.Mobile1}
+                        value={memberData?.member?.MobileNo}
                         className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                         readOnly
                       />

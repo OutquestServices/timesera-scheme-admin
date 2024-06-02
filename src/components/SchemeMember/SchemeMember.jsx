@@ -37,6 +37,19 @@ const SchemeMember = () => {
     const [schemeMembers, setSchemeMembers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [nextDateToPay, setNextDateToPay] = useState('');
+
+    const calculateDate = () => {
+        if (joindate) {
+            const date = new Date(joindate);
+            date.setDate(date.getDate() + 30);
+            setNextDateToPay(date.toISOString().split('T')[0]);
+        }
+    };
+
+    useEffect(() => {
+        calculateDate();
+    }, [])
 
     useEffect(() => {
         const fetchSchemeMembers = async () => {
@@ -153,8 +166,8 @@ const SchemeMember = () => {
                     joindate: joindate,
                     collectionpoint: collectionPoint,
                     lastdatepaid: '',
-                    actualdatetopay: '',
-                    nextdatetopay: ''
+                    actualdatetopay: joindate,
+                    nextdatetopay: nextDateToPay
                 })
             })
 

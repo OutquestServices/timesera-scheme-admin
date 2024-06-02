@@ -19,6 +19,12 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!localStorage.getItem("tenantName")) {
+      router.push("/reallogin");
+    }
+  }, [])
+
   return (
     <div className="flex h-screen overflow-hidden custom-scrollbar2">
       <Dashboard />

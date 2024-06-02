@@ -28,8 +28,8 @@ const PaymentMethods = () => {
         fetchPayments();
     }, []);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+    //if (loading) return <p>Loading...</p>;
+    // if (error) return <p>Error: {error}</p>;
 
     const formatRupees = (value) => {
         const roundedValue = parseFloat(value).toFixed(2);

@@ -27,8 +27,8 @@ const Discontinue = () => {
         fetchDuelist();
     }, []);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+    //if (loading) return <p>Loading...</p>;
+    // if (error) return <p>Error: {error}</p>;
 
     return (
         <div className='p-[5px]'>

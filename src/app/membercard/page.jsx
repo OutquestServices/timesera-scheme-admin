@@ -2,11 +2,19 @@
 
 import MemberList from '@/components/MemberList/MemberCard'
 import Sidebar from '@/components/Navbar/Navbar';
-import React, { useState } from 'react'
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
 
 const page = () => {
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
+
+    const router = useRouter();
+    useEffect(() => {
+        if (!localStorage.getItem("tenantName")) {
+            router.push("/reallogin");
+        }
+    }, [])
 
     return (
 

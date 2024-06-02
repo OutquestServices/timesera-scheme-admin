@@ -4,6 +4,8 @@ import Link from 'next/link';
 import React from 'react';
 import { FaHome, FaUser, FaChartBar, FaCog, FaQuestionCircle, FaEnvelope, FaBell, FaFolder, FaClipboard, FaSignOutAlt } from 'react-icons/fa';
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { GiHamburgerMenu } from "react-icons/gi";
+
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
     const toggleSidebar = () => {
@@ -11,16 +13,16 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     };
 
     return (
-        <div className={`h-screen bg-gray-800 text-white flex flex-col items-center fixed transition-all duration-300 ${isOpen ? ' w-64' : 'w-16'}`}>
+        <div className={`h-screen overflow-y-auto custom-scrollbar2 bg-gray-800 text-white flex flex-col items-center fixed transition-all duration-300 ${isOpen ? ' w-64' : 'w-16'}`}>
             <button
                 className="bg-gray-700 hover:bg-gray-600 text-white ml-auto py-2 px-2 rounded-full"
                 onClick={toggleSidebar}
             >
-                {isOpen ? <IoIosArrowBack size={20} /> : <IoIosArrowForward size={20} />}
+                {isOpen ? <GiHamburgerMenu size={20} /> : <GiHamburgerMenu size={20} />}
             </button>
 
             <div className="-mt-1">
-                <div className={`flex flex-row-reverse ${isOpen ? "p-5" : "p-1"} justify-center items-center`}>
+                <div className={`flex flex-row-reverse ${isOpen ? "p-5 -mt-[35px]" : "p-1 -mt-[0px]"} justify-center items-center`}>
                     <a href={"/"} className='max-w-[150px] mx-auto flex flex-col items-center justify-center gap-1'>
                         <img
                             src="/tlogo.png"
@@ -31,7 +33,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 </div>
             </div>
 
-            <div className="mt-2 w-full">
+            <div className="mt-0 w-full">
                 <Link href={"/"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaHome />
                     {isOpen && <span className="ml-4">Home</span>}
@@ -71,6 +73,26 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 <Link href={"/duelist"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaSignOutAlt />
                     {isOpen && <span className="ml-4">Due List</span>}
+                </Link>
+                <Link href={"/memberreport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Member Report</span>}
+                </Link>
+                <Link href={"/settlementreport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Settlement Report</span>}
+                </Link>
+                <Link href={"/discontinuereport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Discontinue Report</span>}
+                </Link>
+                <Link href={"/duereport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Due Report</span>}
+                </Link>
+                <Link href={"/receiptreport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                    <FaBell />
+                    {isOpen && <span className="ml-4">Receipt Report</span>}
                 </Link>
             </div>
         </div>

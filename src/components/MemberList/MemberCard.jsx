@@ -25,28 +25,28 @@ const MemberList = () => {
   return (
     <div className="w-full max-h-[98vh] overflow-auto custom-scrollbar">
       <div className="w-full h-full flex flex-col">
-        <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px]">
+        <div className="px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[10px]">
           <div
-            className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[20px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
+            className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[15px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
             style={{
               background:
                 "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)",
             }}
           >
             <div className="basis-[60%] flex items-center justify-between w-full h-full">
-              <h1 className="flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[28px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]">
+              <h1 className="flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[20px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]">
                 Member Card
               </h1>
 
               <div className="flex-1 flex items-center text-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]">
-                <p className="text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold">
+                <p className="text-white text-[14px] sm:text-[15px] lg:text-[14px] font-semibold">
                   Gold Rate
                 </p>
                 {/* <p className='text-[#52BD91] text-[16px] sm:text-[17px] lg:text-[18px] font-bold'>24-25</p> */}
-                <div className="h-[40px] max-w-[130px] rounded-md w-full px-[5px] sm:px-[10px] lg:px-[15px] bg-white"></div>
+                <div className="h-[30px] max-w-[130px] rounded-md w-full px-[5px] sm:px-[10px] lg:px-[15px] bg-white"></div>
               </div>
             </div>
-            <div className="basis-[40%] w-full h-full flex items-center gap-[10px] sm:gap-[20px] lg:gap-[30px]">
+            {/* <div className="basis-[40%] w-full h-full flex items-center gap-[10px] sm:gap-[20px] lg:gap-[30px]">
               <div className="grid grid-cols-3 w-full h-full items-center justify-center gap-[5px] sm:gap-[8px] lg:gap-[12px]">
                 <div className="cursor-pointer h-[45px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#52BD91] rounded-md">
                   <p className="text-white font-bold">SHOW</p>
@@ -135,21 +135,21 @@ const MemberList = () => {
                   </svg>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
-        <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px] w-full max-h-full flex gap-[10px] sm:gap-[15px] lg:gap-[20px]">
-          <div className="basis-[75%] w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+        <div className="px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[5px] w-full max-h-full flex gap-[10px] sm:gap-[15px] lg:gap-[20px]">
+          <div className="basis-[70%] w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]">
             <div className="flex w-full gap-[5px] sm:gap-[10px] lg:gap-[15px]">
               <div className="basis-[40%] w-full flex items-center justify-between">
-                <p className="text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Card No
                 </p>
                 <input
                   type="text"
                   value={Cardno}
-                  className="h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  className="h-[35px] focus:outline-none rounded-lg text-[14px] border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   onChange={(e) => setCardno(e.target.value)}
                 />
               </div>
@@ -160,13 +160,13 @@ const MemberList = () => {
                 Submit
               </button>
               <div className="basis-[50%] flex w-full items-center justify-between">
-                <p className="basis-[40%] text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="basis-[40%] text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Member Name
                 </p>
                 <input
                   type="text"
                   value={SchemeData?.member?.MemberName}
-                  className="basis-[60%] h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  className="basis-[60%] text-[14px] h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   readOnly
                 />
               </div>
@@ -174,47 +174,47 @@ const MemberList = () => {
 
             <div className="w-full grid grid-cols-3 gap-[7px] sm:gap-[14px] lg:gap-[20px]">
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Type
                 </p>
                 <div className="flex-1">
                   <input
                     type="text"
                     value={SchemeData?.member?.SchemeType}
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[35px] focus:outline-none text-[14px] rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
               </div>
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Code
                 </p>
                 <div className="flex-1">
                   <input
                     type="text"
                     value={SchemeData?.member?.SchemeCode}
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[35px] focus:outline-none text-[14px] rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
               </div>
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Name
                 </p>
                 <div className="flex-1">
                   <input
                     type="text"
                     value={SchemeData?.member?.SchemeName}
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[35px] focus:outline-none text-[14px] rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
               </div>
             </div>
 
-            <div className="w-full my-[10px] sm:my-[15px] lg:my-[20px] max-h-[380px] overflow-auto custom-scrollbar2">
+            <div className="w-full my-[10px] sm:my-[15px] lg:my-[10px] max-h-[380px] overflow-auto custom-scrollbar2">
               <table className="table-auto w-full text-[12px] sm:text-[14px] h-full">
                 <tr className="bg-[#172561] text-white">
                   <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
@@ -258,9 +258,8 @@ const MemberList = () => {
                               SchemeData?.member?.JoinDate
                             );
                             joinDate.setMonth(joinDate.getMonth() + index);
-                            const formattedDate = `${joinDate.getDate()}-${
-                              joinDate.getMonth() + 1
-                            }-${joinDate.getFullYear()}`;
+                            const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth() + 1
+                              }-${joinDate.getFullYear()}`;
                             return formattedDate;
                           })()}
                       </th>
@@ -308,10 +307,10 @@ const MemberList = () => {
                             );
                             joinDate.setMonth(
                               joinDate.getMonth() +
-                                (Object.keys(SchemeData?.receipt || {})
-                                  ?.length || 0) +
-                                index +
-                                1
+                              (Object.keys(SchemeData?.receipt || {})
+                                ?.length || 0) +
+                              index +
+                              1
                             );
                             const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth()}-${joinDate.getFullYear()}`;
                             return formattedDate;
@@ -395,9 +394,9 @@ const MemberList = () => {
                       (SchemeData &&
                         SchemeData.receipt &&
                         Object.keys(SchemeData.receipt).length) *
-                        (SchemeData &&
-                          SchemeData.scheme &&
-                          SchemeData.scheme.SchemeAmount) -
+                      (SchemeData &&
+                        SchemeData.scheme &&
+                        SchemeData.scheme.SchemeAmount) -
                       (SchemeData?.receipt?.reduce(
                         (accumulator, currentItem) =>
                           accumulator + currentItem.Amount,
@@ -430,8 +429,8 @@ const MemberList = () => {
               </div>
             </div>
           </div>
-          <div className="basis-[25%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[16px]">
-            <div className="flex flex-col gap-[2px] sm:gap-[4px] lg:gap-[6px]">
+          <div className="basis-[30%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[7px]">
+            {/* <div className="flex flex-col gap-[2px] sm:gap-[4px] lg:gap-[6px]">
               <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
                 <label
                   htmlFor="receiptpaid"
@@ -450,13 +449,13 @@ const MemberList = () => {
                 </label>
                 <input type="checkbox" name="droppers" id="" />
               </div>
-            </div>
+            </div> */}
 
-            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
-              <h1 className="text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]">
+            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[3px] px-[10px]">
+              <h1 className="text-[14px] sm:text-[17px] lg:text-[18px] font-bold underline text-[#182456]">
                 Scheme Details
               </h1>
-              <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[20px]">
+              <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[7px]">
                 <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     No. of Months
@@ -465,7 +464,7 @@ const MemberList = () => {
                     <input
                       type="text"
                       value={SchemeData?.scheme?.SchemeDuration}
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[35px] focus:outline-none text-[14px] rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -541,11 +540,11 @@ const MemberList = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
-              <h1 className="text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]">
+            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[3px] px-[10px]">
+              <h1 className="text-[14px] sm:text-[17px] lg:text-[18px] font-bold underline text-[#182456]">
                 Pending Dues
               </h1>
-              <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[20px]">
+              <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[7px]">
                 <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     Pending Dues
@@ -557,9 +556,9 @@ const MemberList = () => {
                         (SchemeData &&
                           SchemeData.receipt &&
                           Object.keys(SchemeData.receipt).length) *
-                          (SchemeData &&
-                            SchemeData.scheme &&
-                            SchemeData.scheme.SchemeAmount) -
+                        (SchemeData &&
+                          SchemeData.scheme &&
+                          SchemeData.scheme.SchemeAmount) -
                         (SchemeData?.receipt?.reduce(
                           (accumulator, currentItem) =>
                             accumulator + currentItem.Amount,
@@ -590,11 +589,11 @@ const MemberList = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
-              <h1 className="text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]">
+            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[3px] px-[10px]">
+              <h1 className="text-[14px] sm:text-[17px] lg:text-[18px] font-bold underline text-[#182456]">
                 Bill Details
               </h1>
-              <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[20px]">
+              <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[7px]">
                 <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     Bill No
@@ -605,7 +604,7 @@ const MemberList = () => {
                       value={
                         SchemeData?.receipt && SchemeData.receipt.length > 0
                           ? SchemeData.receipt[SchemeData.receipt.length - 1]
-                              .ReceiptNo
+                            .ReceiptNo
                           : ""
                       }
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
@@ -623,7 +622,7 @@ const MemberList = () => {
                       value={
                         SchemeData?.receipt && SchemeData.receipt.length > 0
                           ? SchemeData.receipt[SchemeData.receipt.length - 1]
-                              .ReceiptDate
+                            .ReceiptDate
                           : ""
                       }
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
@@ -641,7 +640,7 @@ const MemberList = () => {
                       value={
                         SchemeData?.receipt && SchemeData.receipt.length > 0
                           ? SchemeData.receipt[SchemeData.receipt.length - 1]
-                              .GoldWt
+                            .GoldWt
                           : ""
                       }
                       className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
@@ -652,11 +651,11 @@ const MemberList = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
-              <h1 className="text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]">
+            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[3px] px-[10px]">
+              <h1 className="text-[14px] sm:text-[17px] lg:text-[18px] font-bold underline text-[#182456]">
                 Settlement Detail{" "}
               </h1>
-              <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[20px]">
+              <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[7px]">
                 <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     Settlement No.

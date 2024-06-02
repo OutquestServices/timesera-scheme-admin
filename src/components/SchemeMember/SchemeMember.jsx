@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const SchemeMember = () => {
 
@@ -30,8 +31,78 @@ const SchemeMember = () => {
     const [nominee, setNominee] = useState('');
     const [mobile, setMobile] = useState('');
     const [incharge, setIncharge] = useState('');
-    const [joindate, setJoindate] = useState('');
+    const [joindate, setJoindate] = useState(new Date().toISOString().split("T")[0]);
     const [collectionPoint, setCollectionPoint] = useState('');
+
+    const [schemeMembers, setSchemeMembers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [nextDateToPay, setNextDateToPay] = useState('');
+
+    const calculateDate = () => {
+        if (joindate) {
+            const date = new Date(joindate);
+            date.setDate(date.getDate() + 30);
+            setNextDateToPay(date.toISOString().split('T')[0]);
+        }
+    };
+
+    useEffect(() => {
+        calculateDate();
+    }, [])
+
+    useEffect(() => {
+        const fetchSchemeMembers = async () => {
+            try {
+                const response = await fetch('/api/schememember/getmembers', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                setSchemeMembers(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchSchemeMembers();
+    }, []);
+
+    const handleDelete = async (cardNo) => {
+        try {
+            const response = await fetch(`/api/schememember/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cardNo }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.error);  // Show the error message
+                return;
+            }
+
+            // Remove the deleted item from the state
+            setSchemeMembers(schemeMembers.filter((type) => type.CardNo !== cardNo));
+            alert('Scheme Member deleted successfully');
+            window.location.reload();
+        } catch (error) {
+            console.error('Error deleting scheme member:', error);
+            alert('An error occurred while deleting the scheme member. Please try again.');
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -95,8 +166,8 @@ const SchemeMember = () => {
                     joindate: joindate,
                     collectionpoint: collectionPoint,
                     lastdatepaid: '',
-                    actualdatetopay: '',
-                    nextdatetopay: ''
+                    actualdatetopay: joindate,
+                    nextdatetopay: nextDateToPay
                 })
             })
 
@@ -115,31 +186,88 @@ const SchemeMember = () => {
         }
     }
 
+    const generateCardNo = async () => {
+        const response = await fetch('/api/schememember/generatecardno', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ schemeName }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            setCardNo(data.cardNo);
+        } else {
+            console.error(data.error);
+        }
+    };
+
     useEffect(() => {
         fetchData();
         fetchNames();
     }, []);
+
+    const inputRefs = {
+        schemeType: useRef(null),
+        joindate: useRef(null),
+        schemeName: useRef(null),
+        memberName: useRef(null),
+        cardNo: useRef(null),
+        male: useRef(null),
+        female: useRef(null),
+        city: useRef(null),
+        address: useRef(null),
+        pincode: useRef(null),
+        state: useRef(null),
+        district: useRef(null),
+        incharge: useRef(null),
+        landline: useRef(null),
+        mobile1: useRef(null),
+        mobile2: useRef(null),
+        email: useRef(null),
+        dob: useRef(null),
+        anniversary: useRef(null),
+        nominee: useRef(null),
+        mobile: useRef(null),
+        saveButton: useRef(null),
+        cancelButton: useRef(null),
+    };
+
+    const handleKeyDown = (e, nextField) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (inputRefs[nextField]) {
+                inputRefs[nextField].current.focus();
+            }
+        }
+    };
+
+    useEffect(() => {
+
+    }, [cardNo])
 
     return (
         <div className='w-full min-h-screen' style={{ background: "url(/banner.png) lightgray 50% / cover no-repeat" }}>
             <div className='w-full h-full'>
                 <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px]">
                     <div
-                        className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[20px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
+                        className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[15px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
                         style={{
                             background:
                                 "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)",
                         }}
                     >
                         <div className="basis-[60%] flex items-center justify-between w-full h-full">
-                            <h1 className="flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[28px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]">
+                            <h1 className="flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[20px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]">
                                 Scheme Member
                             </h1>
                         </div>
                     </div>
                 </div>
 
-                <div className="w-full pb-[40px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center">
+                <div className="w-full pb-[10px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center">
                     <div className="max-w-[1050px] bg-white w-full flex flex-col m-auto max-h-full border-2 border-[#182456] rounded-xl overflow-hidden">
                         <div
                             className="w-full h-[150px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center"
@@ -153,27 +281,48 @@ const SchemeMember = () => {
                                 <img src="/textLogo.png" alt="" className="max-w-[170px]" />
                             </div>
 
+                            <div className='flex w-full items-center justify-center gap-[20px] px-[20px]'>
 
-                            <div className="flex items-center justify-center gap-[5px] sm:gap-[10px]">
-                                <p className="font-semibold underline text-[14px] sm:text-[16px] lg:text-[18px]">
-                                    Scheme Type:
-                                </p>
-                                <select name="schemetype" id="" className='p-[10px] sm:p-[10px] rounded-lg focus:outline-none border border-black' onChange={(e) => setSchemeType(e.target.value)}>
-                                    <option value="">Select Scheme Type</option>
-                                    {
-                                        schemeTypes?.map((type) => (
-                                            <option key={type?.id} value={type?.SchemeType}>{type?.SchemeType}</option>
-                                        ))
-                                    }
-                                </select>
+                                <div className="basis-[33%] w-full flex items-center justify-center gap-[5px] sm:gap-[10px]">
+                                    <p className="font-semibold text-[14px] sm:text-[16px] lg:text-[14px]">
+                                        Scheme Type:
+                                    </p>
+                                    <select name="schemetype" id="" className='p-[10px] sm:p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' onChange={(e) => setSchemeType(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'joindate')}
+                                        ref={inputRefs.schemeType}
+                                    >
+                                        <option value="">Select Scheme Type</option>
+                                        {
+                                            schemeTypes?.map((type) => (
+                                                <option key={type?.id} value={type?.SchemeType}>{type?.SchemeType}</option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
+
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Joining Date</p>
+                                    <input type='date' value={joindate} onChange={(e) => setJoindate(e.target.value)} id="" className=' w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Join Date' onKeyDown={(e) => handleKeyDown(e, 'mobile')}
+                                        ref={inputRefs.joindate}>
+                                    </input>
+                                </div>
+
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Mobile No</p>
+                                    <input type='text' id="" value={mobile} onChange={(e) => setMobile(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'schemeName')}
+                                        ref={inputRefs.mobile} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Mobile No'>
+                                    </input>
+                                </div>
+
                             </div>
+
                         </div>
 
-                        <div className='w-full h-full flex p-[20px] sm:p-[30px] lg:p-[40px] gap-[10px] sm:gap-[15px] lg:gap-[20px]'>
-                            <div className='flex-1 w-full flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Scheme Name</p>
-                                    <select value={schemeName} onChange={(e) => setSchemeName(e.target.value)} name="" id="" className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black'>
+                        <div className='flex flex-col px-[20px] py-[20px] gap-[10px]'>
+                            <div className='flex items-center justify-center gap-[20px]'>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Scheme Name</p>
+                                    <select value={schemeName} onChange={(e) => setSchemeName(e.target.value)} name="" id="" className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' onKeyDown={(e) => handleKeyDown(e, 'memberName')}
+                                        ref={inputRefs.schemeName}>
                                         <option value="">Select Name</option>
                                         {
                                             schemeNames?.map((type) => (
@@ -182,25 +331,128 @@ const SchemeMember = () => {
                                         }
                                     </select>
                                 </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Member Name</p>
-                                    <input type='text' value={memberName} id="" className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Member Name' onChange={(e) => setMemberName(e.target.value)}>
-                                    </input>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <button onClick={generateCardNo} className='border border-black px-[20px] py-[5px] rounded-lg hover:bg-black hover:text-white'>Generate Card No</button>
                                 </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Card No</p>
-                                    <input type='text' value={cardNo} id="" className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Card No' onChange={(e) => setCardNo(e.target.value)}>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Member Name</p>
+                                    <input type='text' value={memberName} onKeyDown={(e) => handleKeyDown(e, 'cardNo')}
+                                        ref={inputRefs.memberName} id="" className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Member Name' onChange={(e) => setMemberName(e.target.value)}>
                                     </input>
                                 </div>
 
-                                <div className='flex items-center justify-between text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Gender</p>
+                            </div>
+
+                            <div className='flex items-center justify-center gap-[20px]'>
+
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Card No</p>
+                                    <input type='text' value={cardNo} onKeyDown={(e) => handleKeyDown(e, 'male')}
+                                        ref={inputRefs.cardNo} id="" className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Card No' onChange={(e) => setCardNo(e.target.value)} readOnly>
+                                    </input>
+                                </div>
+
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>City</p>
+                                    <input type='text' value={city} id="" className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter City' onChange={(e) => setCity(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'address')}
+                                        ref={inputRefs.city}>
+                                    </input>
+                                </div>
+
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Address</p>
+                                    <textarea rows={2} value={address} onChange={(e) => setAddress(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'pincode')}
+                                        ref={inputRefs.address} type='text' id="" className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Your Address'>
+                                    </textarea>
+                                </div>
+                            </div>
+
+                            <div className='flex items-center justify-center gap-[20px]'>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Pincode</p>
+                                    <input type='text' value={pincode} onChange={(e) => setPincode(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'state')}
+                                        ref={inputRefs.pincode} id="" className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Pincode'>
+                                    </input>
+                                </div>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>State</p>
+                                    <input type='text' value={state} onChange={(e) => setState(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'district')}
+                                        ref={inputRefs.state} id="" className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter State'>
+                                    </input>
+                                </div>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>District</p>
+                                    <input type='text' id="" value={district} onChange={(e) => setDistrict(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'incharge')}
+                                        ref={inputRefs.district} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter District'>
+                                    </input>
+                                </div>
+                            </div>
+
+                            <div className='flex items-center justify-center gap-[20px]'>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Incharge</p>
+                                    <input type='text' id="" value={incharge} onChange={(e) => setIncharge(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'landline')}
+                                        ref={inputRefs.incharge} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Incharge'>
+                                    </input>
+                                </div>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Land No</p>
+                                    <input type='text' value={landline} onChange={(e) => setLandline(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'mobile1')}
+                                        ref={inputRefs.landline} id="" className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Land No'>
+                                    </input>
+                                </div>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Mobile No1</p>
+                                    <input type='text' id="" value={mobile1} onChange={(e) => setMobile1(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'mobile2')}
+                                        ref={inputRefs.mobile1} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Mobile No1'>
+                                    </input>
+                                </div>
+                            </div>
+
+                            <div className='flex items-center justify-center gap-[20px]'>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Mobile No2</p>
+                                    <input type='text' id="" value={mobile2} onKeyDown={(e) => handleKeyDown(e, 'email')}
+                                        ref={inputRefs.mobile2} onChange={(e) => setMobile2(e.target.value)} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Mobile No2'>
+                                    </input>
+                                </div>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Email</p>
+                                    <input type='email' id="" value={email} onKeyDown={(e) => handleKeyDown(e, 'dob')}
+                                        ref={inputRefs.email} onChange={(e) => setEmail(e.target.value)} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Email'>
+                                    </input>
+                                </div>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>DOB</p>
+                                    <input type='date' id="" value={dob} onKeyDown={(e) => handleKeyDown(e, 'anniversary')}
+                                        ref={inputRefs.dob} onChange={(e) => setDob(e.target.value)} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Dob'>
+                                    </input>
+                                </div>
+                            </div>
+
+                            <div className='flex items-center justify-center gap-[20px]'>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Anniversary</p>
+                                    <input type='date' id="" value={anniversary} onKeyDown={(e) => handleKeyDown(e, 'nominee')}
+                                        ref={inputRefs.anniversary} onChange={(e) => setAnniversary(e.target.value)} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Anniversary'>
+                                    </input>
+                                </div>
+                                <div className='basis-[33%] flex items-center justify-between'>
+                                    <p className='basis-[40%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Nominee</p>
+                                    <input type='text' id="" value={nominee} onChange={(e) => setNominee(e.target.value)} onKeyDown={(e) => handleKeyDown(e, 'saveButton')}
+                                        ref={inputRefs.nominee} className='basis-[60%] w-full p-[5px] text-[14px] rounded-lg focus:outline-none border border-black' placeholder='Enter Nominee'>
+                                    </input>
+                                </div>
+                                <div className='basis-[33%] flex items-center justify-between text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>
+                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456] font-semibold'>Gender</p>
                                     <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
                                         <input
                                             type="radio"
                                             name="male"
                                             id="male"
                                             value="Male"
+                                            onKeyDown={(e) => handleKeyDown(e, 'female')}
+                                            ref={inputRefs.male}
                                             onChange={(e) => setGender(e.target.value)}
                                         />
                                         <label htmlFor="male" className="font-semibold">
@@ -212,6 +464,8 @@ const SchemeMember = () => {
                                             type="radio"
                                             name="female"
                                             id="female"
+                                            onKeyDown={(e) => handleKeyDown(e, 'city')}
+                                            ref={inputRefs.female}
                                             value="Female"
                                             onChange={(e) => setGender(e.target.value)}
                                         />
@@ -221,131 +475,68 @@ const SchemeMember = () => {
                                     </div>
                                 </div>
 
-
-
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>City</p>
-                                    <input type='text' value={city} id="" className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter City' onChange={(e) => setCity(e.target.value)}>
-                                    </input>
-                                </div>
-
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Address</p>
-                                    <textarea rows={2} value={address} onChange={(e) => setAddress(e.target.value)} type='text' id="" className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Your Address'>
-                                    </textarea>
-                                </div>
-
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Pincode</p>
-                                    <input type='text' value={pincode} onChange={(e) => setPincode(e.target.value)} id="" className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Pincode'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>State</p>
-                                    <input type='text' value={state} onChange={(e) => setState(e.target.value)} id="" className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter State'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>District</p>
-                                    <input type='text' id="" value={district} onChange={(e) => setDistrict(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter District'>
-                                    </input>
-                                </div>
-
-                                <div className='flex items-center justify-between text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Collection Point</p>
-                                    <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
-                                        <input
-                                            type="radio"
-                                            name="shop"
-                                            id="shop"
-                                            value="Shop"
-                                            onChange={(e) => setCollectionPoint(e.target.value)}
-                                        />
-                                        <label htmlFor="shop" className="font-semibold">
-                                            Shop
-                                        </label>
-                                    </div>
-                                    <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
-                                        <input
-                                            type="radio"
-                                            name="home"
-                                            id="home"
-                                            value="Home"
-                                            onChange={(e) => setCollectionPoint(e.target.value)}
-                                        />
-                                        <label htmlFor="home" className="font-semibold">
-                                            Home
-                                        </label>
-                                    </div>
-                                </div>
                             </div>
-                            <div className='flex-1 w-full flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Land No</p>
-                                    <input type='text' value={landline} onChange={(e) => setLandline(e.target.value)} id="" className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Land No'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Mobile No1</p>
-                                    <input type='text' id="" value={mobile1} onChange={(e) => setMobile1(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Mobile No1'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Mobile No2</p>
-                                    <input type='text' id="" value={mobile2} onChange={(e) => setMobile2(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Mobile No2'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Email</p>
-                                    <input type='email' id="" value={email} onChange={(e) => setEmail(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Email'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>DOB</p>
-                                    <input type='date' id="" value={dob} onChange={(e) => setDob(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Dob'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Anniversary</p>
-                                    <input type='date' id="" value={anniversary} onChange={(e) => setAnniversary(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Anniversary'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Nominee</p>
-                                    <input type='text' id="" value={nominee} onChange={(e) => setNominee(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Nominee'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Mobile No</p>
-                                    <input type='text' id="" value={mobile} onChange={(e) => setMobile(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Mobile No'>
-                                    </input>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Incharge</p>
-                                    <input type='text' id="" value={incharge} onChange={(e) => setIncharge(e.target.value)} className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Incharge'>
-                                    </input>
-                                </div>
 
-                                <div className='flex items-center justify-between'>
-                                    <p className='basis-[50%] text-[14px] sm:text-[16px] lg:text-[18px] text-[#182456] font-semibold'>Joining Date</p>
-                                    <input type='date' value={joindate} onChange={(e) => setJoindate(e.target.value)} id="" className='basis-[50%] w-full p-[10px] rounded-lg focus:outline-none border border-black' placeholder='Enter Join Date'>
-                                    </input>
-                                </div>
-                            </div>
                         </div>
+
                     </div>
 
                     <div className="w-full flex items-center justify-center gap-[10px] sm:gap-[15px] lg:gap-[20px]">
                         <button onClick={() => postSchemeMember()}
+                            onKeyDown={(e) => handleKeyDown(e, 'cancelButton')}
+                            ref={inputRefs.saveButton}
                             className="px-[20px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#52BD91] text-white font-semibold flex items-center justify-center cursor-pointer"
                         >
                             SAVE
                         </button>
 
-                        <div className="px-[20px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#182456] text-white font-semibold flex items-center justify-center cursor-pointer">
+                        <Link href={"/"}
+                            ref={inputRefs.cancelButton} className="px-[20px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#182456] text-white font-semibold flex items-center justify-center cursor-pointer">
                             CANCEL
-                        </div>
+                        </Link>
                     </div>
+                </div>
+
+
+                <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[20px]">
+                    <table className="w-full table-auto text-center max-w-[1350px] mx-auto border border-black">
+                        <thead className="w-full border border-black">
+                            <tr>
+                                <th className="border border-black p-2">ID</th>
+                                <th className="border border-black p-2">Scheme Code</th>
+                                <th className="border border-black p-2">Scheme Type</th>
+                                <th className="border border-black p-2">Scheme Name</th>
+                                <th className="border border-black p-2">Member Name</th>
+                                <th className="border border-black p-2">Card No</th>
+                                <th className="border border-black p-2">Mobile No</th>
+                                <th className="border border-black p-2">DOB</th>
+                                <th className="border border-black p-2">Anniversary</th>
+                                <th className="border border-black p-2">Join Date</th>
+                                <th className="border border-black p-2">Gender</th>
+                                <th className="border border-black p-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody className="w-full border border-black">
+                            {schemeMembers.map((type) => (
+                                <tr key={type.id} className="border border-black">
+                                    <td className="border border-black p-2">{type.id}</td>
+                                    <td className="border border-black p-2">{type.SchemeCode}</td>
+                                    <td className="border border-black p-2">{type.SchemeType}</td>
+                                    <td className="border border-black p-2">{type.SchemeName}</td>
+                                    <td className="border border-black p-2">{type.MemberName}</td>
+                                    <td className="border border-black p-2">{type.CardNo}</td>
+                                    <td className="border border-black p-2">{type.MobileNo}</td>
+                                    <td className="border border-black p-2">{type.dob}</td>
+                                    <td className="border border-black p-2">{type.Anniversary}</td>
+                                    <td className="border border-black p-2">{type.JoinDate}</td>
+                                    <td className="border border-black p-2">{type.Gender}</td>
+                                    <td className="border border-black p-2">
+                                        <button className="text-red-700" onClick={() => handleDelete(type.CardNo)}>Delete</button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

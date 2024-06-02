@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sidebar from '../Navbar/Navbar';
 import Banner from './Banner';
 import Payments from './Payments';
@@ -18,7 +18,8 @@ const logoutUser = async (router) => {
 
         if (response.ok) {
             Cookies.remove('username'); // Clear the cookie
-            router.push('/login'); // Redirect to login page
+            localStorage.removeItem('tenantName');
+            router.push('/reallogin'); // Redirect to login page
         } else {
             alert('Logout failed');
         }
@@ -28,9 +29,31 @@ const logoutUser = async (router) => {
     }
 };
 
+
 const Dashboard = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
     const router = useRouter();
+
+    const logout = () => {
+        try {
+            if (localStorage.getItem("tenantName")) {
+                localStorage.removeItem("tenantName");
+                alert("Logged Out!");
+                router.push("/reallogin");
+            } else {
+                alert("Logout Failed");
+            }
+        } catch (error) {
+            console.error("Error while logging out: ", error);
+            alert("An error occurred while logging out, Please try again");
+        }
+    };
+
+    useEffect(() => {
+        if (!localStorage.getItem("tenantName")) {
+            router.push("/reallogin");
+        }
+    }, [])
 
     return (
         <div className="flex w-full max-h-screen overflow-y-auto custom-scrollbar2 ">
@@ -45,7 +68,7 @@ const Dashboard = () => {
 
                         <div className='flex items-center justify-between gap-[15px]'>
                             <div className='h-[35px] w-[35px] bg-black rounded-full'></div>
-                            <a href='/' onClick={() => logoutUser(router)} className='bg-[#172561] text-[#52BD91] py-[5px] px-[20px] rounded-md font-semibold'>Logout</a>
+                            <a href='/' onClick={logout} className='bg-[#172561] text-[#52BD91] py-[5px] px-[20px] rounded-md font-semibold'>Logout</a>
                         </div>
                     </div>
 

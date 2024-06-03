@@ -133,6 +133,8 @@ const ReceiptEntry = () => {
   const [onlineacc, setOnlineacc] = useState("");
   const [upiacc, setUpiacc] = useState("");
 
+  const [entries, setEntries] = useState([]);
+
 
 
   const createReceipt = async () => {
@@ -200,14 +202,53 @@ const ReceiptEntry = () => {
     }
   };
 
+  // const handleModeChange = (mode) => {
+  //   setSelectedModes((prevModes) => {
+  //     if (prevModes.includes(mode)) {
+  //       return prevModes.filter((m) => m !== mode);
+  //     } else {
+  //       return [...prevModes, mode];
+  //     }
+  //   });
+  // };
+
   const handleModeChange = (mode) => {
-    setSelectedModes((prevModes) => {
-      if (prevModes.includes(mode)) {
-        return prevModes.filter((m) => m !== mode);
-      } else {
-        return [...prevModes, mode];
-      }
-    });
+    if (selectedModes.includes(mode)) {
+      setSelectedModes(selectedModes.filter((m) => m !== mode));
+    } else {
+      setSelectedModes([...selectedModes, mode]);
+    }
+  };
+
+  const handleAddEntry = (mode, particulars, acc, desc, amount) => {
+    const newEntry = { mode, particulars, acc, desc, amount };
+    setEntries([...entries, newEntry]);
+
+    // Clear input fields after adding the entry
+    switch (mode) {
+      case 'Cash':
+        setCashdesc('');
+        setCashamount(0);
+        break;
+      case 'Card':
+        setCarddesc('');
+        setCardamount(0);
+        break;
+      case 'Online':
+        setOnlinedesc('');
+        setOnlineamount(0);
+        setOnlineparticulars('');
+        setOnlineacc('');
+        break;
+      case 'UPI':
+        setUpidesc('');
+        setUpiamount(0);
+        setUpiparticulars('');
+        setUpiacc('');
+        break;
+      default:
+        break;
+    }
   };
 
 
@@ -446,7 +487,7 @@ const ReceiptEntry = () => {
                   </button>
                 </div>
 
-                
+
 
                 <div className="w-full flex items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[12px] pt-[10px]">
 
@@ -473,7 +514,7 @@ const ReceiptEntry = () => {
                     </div>
                   </div>
 
-                  
+
                 </div>
                 <div className="flex w-full items-start justify-start">
                   <div className=" flex text-[14px] items-center sm:text-[16px] lg:text-[14px] gap-[5px] sm:gap-[10px] lg:gap-[15px]">
@@ -488,7 +529,7 @@ const ReceiptEntry = () => {
                     ></textarea>
                   </div>
                 </div>
-                
+
               </div>
 
               <div className="flex flex-col gap-[10px] sm:gap-[10px] lg:gap-[10px] py-[10px] sm:py-[15px] lg:py-[10px]">
@@ -511,7 +552,7 @@ const ReceiptEntry = () => {
                           readOnly
                         />
                       </div>
-                      
+
                       <div className="flex flex-col">
                         <p className="text-[14px]">Scheme Name</p>
                         <input
@@ -520,7 +561,7 @@ const ReceiptEntry = () => {
                           className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[5px] border border-black rounded-lg text-[14px] sm:text-[14px] "
                         ></input>
                       </div>
-                      
+
                     </div>
                   </div>
 
@@ -663,12 +704,12 @@ const ReceiptEntry = () => {
             </div>
             <div className="basis-[55%] relative flex flex-col justify-center gap-[10px]  border-2 border-[#182456] rounded-xl py-[5px] sm:py-[10px] lg:py-[15px]">
               <div className="flex items-center justify-start px-[10px] sm:px-[20px] lg:px-[20px]">
-                <RiSecurePaymentLine size={30}/>
+                <RiSecurePaymentLine size={30} />
                 <h1 className=" text-[20px] sm:text-[24px] lg:text-[20px] text-[#182456] font-semibold">
                   Payment Details
                 </h1>
 
-                
+
               </div>
 
               <div className="flex flex-col gap-[4px] sm:gap-[8px] px-[10px] sm:px-[10px] lg:px-[20px]">
@@ -699,7 +740,7 @@ const ReceiptEntry = () => {
                     </div>
                   </div>
                 </div> */}
-                
+
                 {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px] mt-[20px]">
                   <div className="basis-[50%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                     <p className=" ">Payment Mode</p>
@@ -727,13 +768,202 @@ const ReceiptEntry = () => {
 
 
               <div className="flex flex-col gap-[2px] px-[20px]">
-                <div className="w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[20px]">
+
+                <div className='w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[20px]'>
+                  {['Cash', 'Card', 'Online', 'UPI'].map((mode) => (
+                    <button
+                      key={mode}
+                      className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes(mode) ? 'bg-[#182456] text-white' : ''}`}
+                      onClick={() => handleModeChange(mode)}
+                    >
+                      {mode}
+                      <GiClick size={20} />
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-col gap-[2px] px-[0px]">
+                  {selectedModes.includes('Cash') && (
+                    <div className="w-full h-full grid grid-cols-4 gap-[5px] items-center justify-center">
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Payment Mode</p>
+                        <input type="text" value="Cash" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Description</p>
+                        <input type="text" value={cashdesc} onChange={(e) => setCashdesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Amount</p>
+                        <input
+                          type="number"
+                          value={cashamount}
+                          onChange={(e) => setCashamount(parseInt(e.target.value, 10))}
+                          className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg"
+                        />
+                      </div>
+                      <button onClick={() => handleAddEntry('Cash', '', '', cashdesc, cashamount)} className="border bg-[#182456] text-white border-black p-1 mt-2">
+                        Add Entry
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedModes.includes('Card') && (
+                    <div className="w-full h-full grid grid-cols-4 gap-[5px] items-center justify-center">
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Payment Mode</p>
+                        <input type="text" value="Card" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Description</p>
+                        <input type="text" value={carddesc} onChange={(e) => setCarddesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Amount</p>
+                        <input
+                          type="number"
+                          value={cardamount}
+                          onChange={(e) => setCardamount(parseInt(e.target.value, 10))}
+                          className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg"
+                        />
+                      </div>
+                      <button onClick={() => handleAddEntry('Card', '', '', carddesc, cardamount)} className="border border-black bg-[#182456] text-white p-1 mt-2">
+                        Add Entry
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedModes.includes('Online') && (
+                    <div className="w-full h-full grid grid-cols-6 gap-[5px] items-center justify-center">
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Payment Mode</p>
+                        <input type="text" value="Online" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Particulars</p>
+                        <select onChange={(e) => setOnlineparticulars(e.target.value)} name="online" id="online" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                          <option value="">Select</option>
+                          {online.map((option, index) => (
+                            <option key={index} value={option?.PAYMODE}>{option?.PAYMODE}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Acc No</p>
+                        <select onChange={(e) => setOnlineacc(e.target.value)} name="accno" id="accno" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                          <option value="">Select</option>
+                          {online.map((option, index) => (
+                            <option key={index} value={option?.ACCNO}>{option?.ACCNO}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Description</p>
+                        <input type="text" value={onlinedesc} onChange={(e) => setOnlinedesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Amount</p>
+                        <input
+                          type="number"
+                          value={onlineamount}
+                          onChange={(e) => setOnlineamount(parseInt(e.target.value, 10))}
+                          className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg"
+                        />
+                      </div>
+                      <button onClick={() => handleAddEntry('Online', onlineparticulars, onlineacc, onlinedesc, onlineamount)} className="border border-black p-1 bg-[#182456] text-white mt-2">
+                        Add Entry
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedModes.includes('UPI') && (
+                    <div className="w-full h-full grid grid-cols-6 gap-[5px] items-center justify-center">
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Payment Mode</p>
+                        <input type="text" value="UPI" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Particulars</p>
+                        <select onChange={(e) => setUpiparticulars(e.target.value)} name="upi" id="upi" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                          <option value="">Select</option>
+                          {upi.map((option, index) => (
+                            <option key={index} value={option?.PAYMODE}>{option?.PAYMODE}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Acc No.</p>
+                        <select onChange={(e) => setUpiacc(e.target.value)} name="upiacc" id="upiacc" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                          <option value="">Select</option>
+                          {upi.map((option, index) => (
+                            <option key={index} value={option?.ACCNO}>{option?.ACCNO}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Description</p>
+                        <input type="text" value={upidesc} onChange={(e) => setUpidesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Amount</p>
+                        <input
+                          type="number"
+                          value={upiamount}
+                          onChange={(e) => setUpiamount(parseInt(e.target.value, 10))}
+                          className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg"
+                        />
+                      </div>
+                      <button onClick={() => handleAddEntry('UPI', upiparticulars, upiacc, upidesc, upiamount)} className="border border-black p-1 mt-2 bg-[#182456] text-white">
+                        Add Entry
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className="w-full px-[10px] sm:px-[20px] lg:px-[0px] mt-[0px]">
+                  <div className="w-full h-[175px] overflow-y-auto custom-scrollbar border border-[#000] rounded-md">
+                    <table className="w-full table-auto">
+                      <thead>
+                        <tr className="bg-[#182456] text-white">
+                          <th className="p-[7px]">Sno</th>
+                          <th className="p-[7px]">Payment Mode</th>
+                          <th className="p-[7px]">Particulars</th>
+                          <th className="p-[7px]">Account No</th>
+                          <th className="p-[7px]">Description</th>
+                          <th className="p-[7px]">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {entries.map((entry, index) => (
+                          <tr key={index} className="text-center">
+                            <td className="p-[5px]">{index + 1}</td>
+                            <td className="p-[5px]">{entry.mode}</td>
+                            <td className="p-[5px]">{entry.particulars}</td>
+                            <td className="p-[5px]">{entry.acc}</td>
+                            <td className="p-[5px]">{entry.desc}</td>
+                            <td className="p-[5px]">{entry.amount}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+                {/* <div className="w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[20px]">
                   <button
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Cash') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Cash')}
                   >
                     Cash
-                    <GiClick size={20}/>
+                    <GiClick size={20} />
                   </button>
                   <button
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Card') ? 'bg-[#182456] text-white' : ''}`}
@@ -756,12 +986,12 @@ const ReceiptEntry = () => {
                     UPI
                     <GiClick size={20} />
                   </button>
-                </div>
+                </div> */}
               </div>
 
 
 
-              <div className="flex flex-col gap-[2px] px-[20px]">
+              {/* <div className="flex flex-col gap-[2px] px-[20px]">
                 {selectedModes.includes('Cash') && (
                   <div className="w-full h-full grid grid-cols-3 gap-[5px] items-center justify-center">
                     <div className="flex flex-col items-start justify-center text-left w-full">
@@ -870,7 +1100,7 @@ const ReceiptEntry = () => {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
 
 
 
@@ -883,7 +1113,7 @@ const ReceiptEntry = () => {
 
 
 
-              <div className="w-full px-[10px] sm:px-[20px] lg:px-[20px] mt-[0px]">
+              {/* <div className="w-full px-[10px] sm:px-[20px] lg:px-[20px] mt-[0px]">
                 <div className="w-full h-[175px] overflow-y-auto custom-scrollbar border border-[#000] rounded-md">
                   <table className="w-full table-auto">
                     <tr className="bg-[#182456] text-white">
@@ -896,15 +1126,15 @@ const ReceiptEntry = () => {
                     {ShemeData?.receipt?.map((item, index) => (
                       <tr className="text-center" key={index}>
                         <td className="p-[5px]">{index + 1}</td>
-                        <td className="p-[5px]">{item.PaymentMode}</td>
-                        <td className="p-[5px]">{item.AccNo}</td>
-                        <td className="p-[5px]">{item.Description}</td>
-                        <td className="p-[5px]">{item.Amount}</td>
+                        <td className="p-[5px]">Cash</td>
+                        <td className="p-[5px]">123</td>
+                        <td className="p-[5px]">TEST</td>
+                        <td className="p-[5px]">1000</td>
                       </tr>
                     ))}
                   </table>
                 </div>
-              </div>
+              </div> */}
 
               <div className="w-full flex items-start justify-start gap-[5px] sm:gap-[10px] lg:gap-[15px] px-[20px]">
                 {/* <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">

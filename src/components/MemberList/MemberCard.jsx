@@ -22,6 +22,11 @@ const MemberList = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split('-');
+    return `${day}-${month}-${year}`;
+  };
+
   return (
     <div className="w-full max-h-[98vh] overflow-auto custom-scrollbar">
       <div className="w-full h-full flex flex-col">
@@ -149,12 +154,12 @@ const MemberList = () => {
                 <input
                   type="text"
                   value={Cardno}
-                  className="h-[35px] focus:outline-none rounded-lg text-[14px] border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  className="h-[35px] text-center bg-orange-500 font-bold focus:outline-none rounded-lg text-[14px] border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                   onChange={(e) => setCardno(e.target.value)}
                 />
               </div>
               <button
-                className="basis-[10%] h-[35px] border-2 rounded-lg cursor-pointer border-black flex items-center justify-center hover:bg-blue-400"
+                className="basis-[10%] bg-[#4FC997] text-black h-[35px] border-2 rounded-lg cursor-pointer border-black flex items-center justify-center hover:bg-green-700"
                 onClick={() => fetchmember(Cardno)}
               >
                 Submit
@@ -186,7 +191,7 @@ const MemberList = () => {
                   />
                 </div>
               </div>
-              <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+              {/* <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                 <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Code
                 </p>
@@ -198,7 +203,7 @@ const MemberList = () => {
                     readOnly
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                 <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Name
@@ -212,11 +217,25 @@ const MemberList = () => {
                   />
                 </div>
               </div>
+              <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                  No. of Months
+                </p>
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    value={SchemeData?.scheme?.SchemeDuration}
+                    className="w-full h-[35px] focus:outline-none text-[14px] rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    readOnly
+                  />
+                </div>
+              </div>
+
             </div>
 
             <div className="w-full my-[10px] sm:my-[15px] lg:my-[10px] max-h-[380px] overflow-auto custom-scrollbar2">
               <table className="table-auto w-full text-[12px] sm:text-[14px] h-full">
-                <tr className="bg-[#172561] text-white">
+                <tr className="bg-[#4FC997] text-white">
                   <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                     Sno
                   </th>
@@ -247,7 +266,7 @@ const MemberList = () => {
                 </tr>
                 {SchemeData?.receipt?.map((item, index) => (
                   <>
-                    <tr className="bg-[#EAFFF6] text-[#172561]">
+                    <tr className={`px-1 text-[12px] text-[#172561] ${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"}`} >
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {index + 1}
                       </th>
@@ -267,7 +286,7 @@ const MemberList = () => {
                         {item.ReceiptNo}
                       </th>
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                        {item.ReceiptDate}
+                        {formatDate(item.ReceiptDate)}
                       </th>
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {item.Amount}
@@ -293,7 +312,7 @@ const MemberList = () => {
                     (Object.keys(SchemeData?.receipt || {})?.length || 0),
                 }).map((_, index) => (
                   <>
-                    <tr className="bg-[#EAFFF6] text-[#172561]">
+                    <tr className={`px-1 text-[12px] text-[#172561] ${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"}`}>
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {(Object.keys(SchemeData?.receipt || {})?.length || 0) +
                           index +
@@ -343,32 +362,27 @@ const MemberList = () => {
               </table>
             </div>
 
-            <div className="w-full grid grid-cols-4 gap-[7px] sm:gap-[14px] lg:gap-[20px]">
+            <div className="w-full grid grid-cols-3 bg-[#4FC997] py-2 gap-[7px] sm:gap-[14px] lg:gap-[20px] px-[20px]">
               <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                <p className="text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                   Scheme Amount
                 </p>
                 <div className="flex-1">
                   <input
                     type="text"
                     value={
-                      (SchemeData &&
-                        SchemeData.receipt &&
-                        Object.keys(SchemeData.receipt).length) *
-                      (SchemeData &&
-                        SchemeData.scheme &&
-                        SchemeData.scheme.SchemeAmount)
+                      (SchemeData?.scheme?.SchemeValue) - (SchemeData?.scheme?.BonusAmount || 0)
                     }
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="max-w-[150px] w-full h-[35px] text-right focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
               </div>
               <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                <p className="text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                   Total Paid
                 </p>
-                <div className="flex-1">
+                <div className="max-w-[150px]">
                   <input
                     type="text"
                     value={
@@ -378,12 +392,12 @@ const MemberList = () => {
                         0
                       ) || []
                     }
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full text-right h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
               </div>
-              <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+              {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                 <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                   Bal Amount
                 </p>
@@ -407,12 +421,12 @@ const MemberList = () => {
                     readOnly
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                <p className="text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                   Tot.GoldWT
                 </p>
-                <div className="flex-1">
+                <div className="max-w-[150px]">
                   <input
                     type="text"
                     value={
@@ -422,7 +436,7 @@ const MemberList = () => {
                         0
                       ) || []
                     }
-                    className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[35px] text-right focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
@@ -458,19 +472,6 @@ const MemberList = () => {
               <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[7px]">
                 <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
-                    No. of Months
-                  </p>
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      value={SchemeData?.scheme?.SchemeDuration}
-                      className="w-full h-[35px] focus:outline-none text-[14px] rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
-                      readOnly
-                    />
-                  </div>
-                </div>
-                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                  <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     Scheme Join Date
                   </p>
                   <div className="flex-1">
@@ -484,26 +485,13 @@ const MemberList = () => {
                 </div>
                 <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
-                    Amount
+                    Scheme Amount
                   </p>
                   <div className="flex-1">
                     <input
                       type="text"
                       value={SchemeData?.scheme?.SchemeAmount}
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
-                      readOnly
-                    />
-                  </div>
-                </div>
-                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                  <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
-                    Scheme Value
-                  </p>
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      value={SchemeData?.scheme?.SchemeValue}
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full text-right h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -516,7 +504,7 @@ const MemberList = () => {
                     <input
                       type="text"
                       value={SchemeData?.scheme?.BonusAmount}
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full text-right h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -529,10 +517,9 @@ const MemberList = () => {
                     <input
                       type="text"
                       value={
-                        SchemeData?.scheme?.SchemeAmount +
-                        SchemeData?.scheme?.BonusAmount
+                        SchemeData?.scheme?.SchemeValue
                       }
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full text-right h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -565,7 +552,22 @@ const MemberList = () => {
                           0
                         ) || [])
                       }
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full text-center h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      readOnly
+                    />
+                  </div>
+                </div>
+                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                  <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                    Paid Months
+                  </p>
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      value={
+                        (Object.keys(SchemeData?.receipt || {})?.length || 0)
+                      }
+                      className="w-full h-[35px] text-center focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -581,7 +583,7 @@ const MemberList = () => {
                         (SchemeData?.scheme?.SchemeDuration || 0) -
                         (Object.keys(SchemeData?.receipt || {})?.length || 0)
                       }
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[35px] text-center focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -671,6 +673,19 @@ const MemberList = () => {
                 </div>
                 <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                    Settlement Date.
+                  </p>
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      value={(SchemeData?.settlement?.Date) && (formatDate(SchemeData?.settlement?.Date)) || "-"}
+                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      readOnly
+                    />
+                  </div>
+                </div>
+                {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                  <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     Dropper entry no
                   </p>
                   <div className="flex-1">
@@ -681,7 +696,7 @@ const MemberList = () => {
                       readOnly
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

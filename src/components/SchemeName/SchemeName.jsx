@@ -217,16 +217,15 @@ const SchemeName = () => {
           <div className="w-full flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center">
             <div className="max-w-[750px] w-full flex flex-col m-auto max-h-full border-2 border-[#182456] rounded-xl overflow-hidden">
               <div
-                className="w-full h-[100px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center"
-                style={{
-                  background:
-                    "radial-gradient(50% 50% at 50% 50%, rgba(44, 67, 161, 0.00) 0%, rgba(44, 67, 161, 0.18) 100%), url(/receiptbanner.png) lightgray 0px -110.255px / 100% 221.945% no-repeat",
+                className="w-full h-[60px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center bg-center bg-cover bg-no-repeat" style={{
+                  background: "url(/receiptbanner.png)"
                 }}
+                
               >
-                <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
+                {/* <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
                   <img src="/tlogo.png" alt="" />
                   <img src="/textLogo.png" alt="" className="max-w-[170px]" />
-                </div>
+                </div> */}
               </div>
 
               <div className="w-full py-[10px] px-[20px] font-semibold bg-[#F6F8FF] flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456]">
@@ -400,7 +399,7 @@ const SchemeName = () => {
 
           <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[20px]">
             <table className="w-full table-auto text-center max-w-[1350px] mx-auto border border-black">
-              <thead className="w-full border border-black">
+              <thead className="w-full border border-black text-[12px] bg-[#4FC997]">
                 <tr>
                   <th className="border border-black p-2">ID</th>
                   <th className="border border-black p-2">Scheme Code</th>
@@ -418,8 +417,8 @@ const SchemeName = () => {
                 </tr>
               </thead>
               <tbody className="w-full border border-black">
-                {schemeNames.map((type) => (
-                  <tr key={type.id} className="border border-black">
+                {schemeNames.map((type, index) => (
+                  <tr key={type.id} className={`px-1 text-[10px] font-medium ${(index % 2 == 0) ? "bg-white" : "bg-gray-100 "}`}>
                     <td className="border border-black p-2">{type.id}</td>
                     <td className="border border-black p-2">{type.SchemeCode}</td>
                     <td className="border border-black p-2">{type.SchemeType}</td>

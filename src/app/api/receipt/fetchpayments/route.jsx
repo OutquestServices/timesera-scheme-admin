@@ -9,26 +9,52 @@ export async function GET(request) {
     try {
         const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
 
-        const payments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
-            by: ['PaymentMode'],
+        const cashPayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
+            by: ['ReceiptDate'],
             where: {
                 ReceiptDate: today,
             },
             _sum: {
-                Amount: true,
+                CashAmount: true,
+            },
+        });
+
+        const cardPayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
+            by: ['ReceiptDate'],
+            where: {
+                ReceiptDate: today,
+            },
+            _sum: {
+                CardAmount: true,
+            },
+        });
+
+        const onlinePayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
+            by: ['ReceiptDate'],
+            where: {
+                ReceiptDate: today,
+            },
+            _sum: {
+                OnlineAmount: true,
+            },
+        });
+
+        const upiPayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
+            by: ['ReceiptDate'],
+            where: {
+                ReceiptDate: today,
+            },
+            _sum: {
+                UPIAmount: true,
             },
         });
 
         const result = {
-            cash: 0,
-            card: 0,
-            online: 0,
-            upi: 0,
+            cash: cashPayments[0]?._sum.CashAmount || 0,
+            card: cardPayments[0]?._sum.CardAmount || 0,
+            online: onlinePayments[0]?._sum.OnlineAmount || 0,
+            upi: upiPayments[0]?._sum.UPIAmount || 0,
         };
-
-        payments.forEach(payment => {
-            result[payment.PaymentMode.toLowerCase()] = payment._sum.Amount || 0;
-        });
 
         return NextResponse.json(result);
     } catch (error) {

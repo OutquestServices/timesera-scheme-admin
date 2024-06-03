@@ -31,29 +31,29 @@ const Duelist = () => {
     // if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className='p-[5px]'>
-            <div className='flex justify-between items-center w-full mb-2'>
+        <div className=''>
+            <div className='flex justify-between items-center w-full overflow-x-auto bg-gray-200 p-[5px] px-[30px]'>
                 <h2 className='text-center text-[14px] font-semibold'>Today Duelists</h2>
                 <p className='text-[14px] font-semibold'>Total: {duelist?.length}</p>
             </div>
             <table className='w-full text-left text-[12px]'>
                 <thead>
-                    <tr className='px-1'>
-                        <th className='border py-2'>S.No</th>
-                        <th className='border py-2'>Card No</th>
-                        <th className='border py-2'>Member Name</th>
-                        <th className='border py-2'>Scheme Name</th>
-                        <th className='border py-2'>Amount</th>
+                    <tr className='px-1 bg-orange-400'>
+                        {/* <th className='border py-2'>S.No</th> */}
+                        <th className='border py-2 text-center'>Card No</th>
+                        <th className='border py-2 text-center'>Member Name</th>
+                        <th className='border py-2 text-center' style={{ width: "100px" }}>Scheme Name</th>
+                        <th className='border py-2 text-center'>Dues</th>
                     </tr>
                 </thead>
                 <tbody>
                     {duelist.map((due, index) => (
-                        <tr className='px-1' key={index}>
-                            <td className='border  py-2'>{index + 1}</td>
-                            <td className='border  py-2'>{due.CardNo}</td>
-                            <td className='border  py-2'>{due.MemberName}</td>
-                            <td className='border  py-2'>{due.SchemeName}</td>
-                            <td className='border  py-2'>{due.Amount}</td>
+                        <tr className={`px-1 text-[10px] ${(index % 2 == 0) ? "bg-white" : "bg-gray-100"}`} key={index}>
+                            {/* <td className='border  py-1 font-medium text-center'>{index + 1}</td> */}
+                            <td className='border  py-1 font-medium text-center'>{due.CardNo}</td>
+                            <td className='border  py-1 font-medium'>{due.MemberName}</td>
+                            <td className='border  py-1 font-medium' style={{ width: "100px" }}>{due.SchemeName}</td>
+                            <td className='border  py-1 font-medium text-center'>{due.monthsDue}</td>
                         </tr>
                     ))}
                 </tbody>

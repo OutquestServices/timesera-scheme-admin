@@ -30,31 +30,32 @@ const TodayReceipts = () => {
     // if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className='p-[5px]'>
-            <div className='flex justify-between items-center w-full mb-2'>
+        <div className=''>
+            <div className='flex justify-between items-center w-full bg-gray-200 p-[5px] px-[30px]'>
                 <h2 className='text-center text-[14px] font-semibold'>Today Receipts</h2>
                 <p className='text-[14px] font-semibold'>Total: {receipts?.length}</p>
             </div>
             <table className='w-full text-left text-[12px]'>
                 <thead>
-                    <tr className='px-1'>
-                        <th className='border py-2'>S.No</th>
-                        <th className='border py-2'>Card No</th>
-                        <th className='border py-2'>Member Name</th>
-                        <th className='border py-2'>Scheme Name</th>
-                        <th className='border py-2'>Amount</th>
+                    <tr className='px-1 bg-blue-400'>
+                        {/* <th className='border py-2'>S.No</th> */}
+                        <th className='border py-2 text-center'>Card No</th>
+                        <th className='border py-2 text-center'>Member Name</th>
+                        <th className='border py-2 text-center' >Scheme Name</th>
+                        <th className='border py-2 text-center'>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
                     {receipts.map((receipt, index) => (
-                        <tr className='px-1' key={index}>
-                            <td className='border  py-2'>{index + 1}</td>
-                            <td className='border  py-2'>{receipt.CardNo}</td>
-                            <td className='border  py-2'>{receipt.MemberName}</td>
-                            <td className='border  py-2'>{receipt.SchemeName}</td>
-                            <td className='border  py-2'>{receipt.Amount}</td>
+                        <tr className={`px-1 text-[10px] ${(index%2 == 0) ? "bg-white" : "bg-gray-100"}`} key={index}>
+                            {/* <td className='border  py-2'>{index + 1}</td> */}
+                            <td className='border  py-1 text-center'>{receipt.CardNo}</td>
+                            <td className='border  py-1'>{receipt.MemberName}</td>
+                            <td className='border  py-1' >{receipt.SchemeName}</td>
+                            <td className='border  py-1 text-center'>{receipt.Amount}</td>
                         </tr>
                     ))}
+                    
                 </tbody>
             </table>
         </div>

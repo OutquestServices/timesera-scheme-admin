@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { GiClick } from "react-icons/gi";
+import { TbListDetails } from "react-icons/tb";
+import { RiSecurePaymentLine } from "react-icons/ri";
 
 const ReceiptEntry = () => {
 
@@ -130,6 +133,8 @@ const ReceiptEntry = () => {
   const [onlineacc, setOnlineacc] = useState("");
   const [upiacc, setUpiacc] = useState("");
 
+  const [entries, setEntries] = useState([]);
+
 
 
   const createReceipt = async () => {
@@ -140,7 +145,7 @@ const ReceiptEntry = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          rno: nextReceiptNumber,
+          rno: nextReceiptNumber.toString(),
           cardno: CardNo,
           rdate: receiptData,
           mno: ShemeData?.member?.Mobile1,
@@ -161,7 +166,7 @@ const ReceiptEntry = () => {
           UPIAmount: upiamount,
           desc: Description,
           amount: parseFloat(amount),
-          gamount: parseFloat(GoldAmount),
+          gamount: parseFloat(amount),
           incharge: Incharge,
           gweight: parseFloat(GoldWt),
           months: ShemeData?.receipt?.length,
@@ -197,14 +202,53 @@ const ReceiptEntry = () => {
     }
   };
 
+  // const handleModeChange = (mode) => {
+  //   setSelectedModes((prevModes) => {
+  //     if (prevModes.includes(mode)) {
+  //       return prevModes.filter((m) => m !== mode);
+  //     } else {
+  //       return [...prevModes, mode];
+  //     }
+  //   });
+  // };
+
   const handleModeChange = (mode) => {
-    setSelectedModes((prevModes) => {
-      if (prevModes.includes(mode)) {
-        return prevModes.filter((m) => m !== mode);
-      } else {
-        return [...prevModes, mode];
-      }
-    });
+    if (selectedModes.includes(mode)) {
+      setSelectedModes(selectedModes.filter((m) => m !== mode));
+    } else {
+      setSelectedModes([...selectedModes, mode]);
+    }
+  };
+
+  const handleAddEntry = (mode, particulars, acc, desc, amount) => {
+    const newEntry = { mode, particulars, acc, desc, amount };
+    setEntries([...entries, newEntry]);
+
+    // Clear input fields after adding the entry
+    switch (mode) {
+      case 'Cash':
+        setCashdesc('');
+        setCashamount(0);
+        break;
+      case 'Card':
+        setCarddesc('');
+        setCardamount(0);
+        break;
+      case 'Online':
+        setOnlinedesc('');
+        setOnlineamount(0);
+        setOnlineparticulars('');
+        setOnlineacc('');
+        break;
+      case 'UPI':
+        setUpidesc('');
+        setUpiamount(0);
+        setUpiparticulars('');
+        setUpiacc('');
+        break;
+      default:
+        break;
+    }
   };
 
 
@@ -356,16 +400,16 @@ const ReceiptEntry = () => {
           <div className="w-full h-full flex gap-[5px] sm:gap-[10px] lg:gap-[15px]">
             <div className="basis-[45%] border-2 border-[#182456] rounded-xl overflow-hidden">
               <div
-                className="w-full h-[130px] flex flex-col gap-[5px] sm:gap-[9px] lg:gap-[13px] items-center justify-center"
+                className="w-full h-[80px] flex flex-col gap-[5px] sm:gap-[9px] lg:gap-[13px] items-center justify-center bg-center bg-cover bg-no-repeat"
                 style={{
                   background:
-                    "radial-gradient(50% 50% at 50% 50%, rgba(44, 67, 161, 0.00) 0%, rgba(44, 67, 161, 0.18) 100%), url(/receiptbanner.png) lightgray 0px -110.255px / 100% 221.945% no-repeat",
+                    " url(/receiptbanner.png) ",
                 }}
               >
-                <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
+                {/* <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
                   <img src="/tlogo.png" alt="" />
                   <img src="/textLogo.png" alt="" className="max-w-[170px]" />
-                </div>
+                </div> */}
 
                 <div className="flex items-center justify-center gap-[10px] sm:gap-[15px] lg:gap-[20px] text-[14px] sm:text-[16px] lg:text-[14px] font-semibold text-[#0D1327]">
                   <div className="flex flex-col justify-start items-start text-start">
@@ -388,7 +432,17 @@ const ReceiptEntry = () => {
                       type="text"
                       value={nextReceiptNumber}
                       readOnly
-                      className="rounded-md focus:outline-none px-[5px] sm:px-[10px] lg:px-[15px] py-[2px] sm:py-[4px] lg:py-[4px] max-w-[250px]"
+                      className="rounded-md text-center  focus:outline-none px-[5px] sm:px-[10px] lg:px-[15px] py-[2px] sm:py-[4px] lg:py-[4px] max-w-[250px]"
+                    />
+                  </div>
+
+                  <div className="flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[0px] sm:gap-[10px] lg:gap-[0px]">
+                    <p className="font-bold underline">Installment No</p>
+                    <input
+                      type="text"
+                      value={ShemeData?.receipt?.length + 1}
+                      className="bg-[#52BD91] text-center px-[3px] py-[3px] sm:py-[5px] focus:outline-none  rounded-lg max-w-[150px] w-full"
+                      readOnly
                     />
                   </div>
                 </div>
@@ -422,7 +476,7 @@ const ReceiptEntry = () => {
                       type="text"
                       value={CardNo}
                       onChange={(e) => setCardNo(e.target.value)}
-                      className="px-[5px] sm:px-[10px] lg:px-[15px] py-[3px] sm:py-[5px] text-[20px] sm:text-[24px] lg:text-[16px] text-[#52BD91] focus:outline-none border border-black rounded-xl max-w-[110px]"
+                      className="px-[5px] w-full max-w-[200px] bg-orange-500 text-center font-bold sm:px-[10px] lg:px-[15px] py-[3px] sm:py-[5px] text-[20px] sm:text-[24px] lg:text-[16px] text-[#000] focus:outline-none border border-black rounded-xl"
                     />
                   </div>
                   <button
@@ -433,55 +487,37 @@ const ReceiptEntry = () => {
                   </button>
                 </div>
 
-                <div className="w-full flex items-center justify-center gap-[3px] sm:gap-[5px]">
-                  <div className="basis-[50%] flex flex-col gap-[3px] sm:gap-[5px]">
-                    <p className="underline text-[16px] sm:text-[18px] lg:text-[16px] text-[#182456] font-normal">
-                      Scheme
-                    </p>
-                    <div className="grid grid-cols-2 w-full gap-[10px] sm:gap-[15px] lg:gap-[20px]">
-                      <input
-                        type="text"
-                        value={ShemeData?.member?.SchemeType}
-                        className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[5px] border border-black rounded-lg text-[14px] sm:text-[14px] "
-                        readOnly
-                      />
-
-                      <input
-                        type="text"
-                        value={ShemeData?.member?.SchemeName}
-                        className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[5px] border border-black rounded-lg text-[14px] sm:text-[14px] "
-                      ></input>
-                    </div>
-                  </div>
-
-                  <div className="basis-[50%] w-full">
-                    <div className="flex w-full text-[14px] sm:text-[16px] lg:text-[14px] items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                      <p className=" ">Mobile No</p>
-                      <input
-                        type="text"
-                        value={ShemeData?.member?.Mobile1}
-                        className="px-[5px] sm:px-[10px] lg:px-[15px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px]"
-                        readOnly
-                      />
-                    </div>
-                  </div>
-
-                </div>
-
-                <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[12px] pt-[10px]">
 
 
-                  <div className="flex text-[14px] sm:text-[16px] lg:text-[16px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                    <p className=" ">Name</p>
+                <div className="w-full flex items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[12px] pt-[10px]">
+
+
+                  <div className="basis-[60%] flex flex-col text-[14px] sm:text-[16px] lg:text-[16px] items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                    <p className="text-[12px]">Member Name</p>
                     <input
                       type="text"
                       value={ShemeData?.member?.MemberName}
-                      className="px-[5px] sm:px-[10px] lg:px-[15px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg text-[14px]"
+                      className="px-[5px] sm:px-[10px] lg:px-[15px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg text-[14px] w-full"
                       readOnly
                     />
                   </div>
 
-                  <div className="flex text-[14px] sm:text-[16px] lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                  <div className="basis-[40%] w-full">
+                    <div className="flex flex-col w-full text-[14px] sm:text-[16px] lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                      <p className="text-[12px]">Mobile No</p>
+                      <input
+                        type="text"
+                        value={ShemeData?.member?.MobileNo}
+                        className="px-[5px] sm:px-[10px] lg:px-[15px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                        readOnly
+                      />
+                    </div>
+                  </div>
+
+
+                </div>
+                <div className="flex w-full items-start justify-start">
+                  <div className=" flex text-[14px] items-center sm:text-[16px] lg:text-[14px] gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                     <p className=" ">Address</p>
                     <textarea
                       name=""
@@ -493,12 +529,45 @@ const ReceiptEntry = () => {
                     ></textarea>
                   </div>
                 </div>
+
               </div>
 
               <div className="flex flex-col gap-[10px] sm:gap-[10px] lg:gap-[10px] py-[10px] sm:py-[15px] lg:py-[10px]">
-                <h1 className="px-[10px] sm:px-[20px] lg:px-[20px] text-[20px] sm:text-[24px] lg:text-[20px] text-[#182456] font-semibold">
-                  Scheme Details
-                </h1>
+                <div className="flex gap-[5px] sm:gap-[7px] lg:gap-[9px] items-start justify-start px-[20px]">
+                  <TbListDetails size={30} />
+                  <p className="text-[20px] sm:text-[24px] font-semibold lg:text-[20px] text-[#182456]">
+                    Scheme Details
+                  </p>
+                </div>
+
+                <div className="w-full flex items-start justify-start px-[20px] gap-[3px] sm:gap-[5px]">
+                  <div className="flex flex-col gap-[3px] sm:gap-[0px]">
+                    <div className="grid grid-cols-2 w-full gap-[10px] sm:gap-[15px] lg:gap-[20px]">
+                      <div className="flex flex-col">
+                        <p className="text-[14px]">Scheme Type</p>
+                        <input
+                          type="text"
+                          value={ShemeData?.member?.SchemeType}
+                          className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[5px] border border-black rounded-lg text-[14px] sm:text-[14px] "
+                          readOnly
+                        />
+                      </div>
+
+                      <div className="flex flex-col">
+                        <p className="text-[14px]">Scheme Name</p>
+                        <input
+                          type="text"
+                          value={ShemeData?.member?.SchemeName}
+                          className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[5px] border border-black rounded-lg text-[14px] sm:text-[14px] "
+                        ></input>
+                      </div>
+
+                    </div>
+                  </div>
+
+
+
+                </div>
 
                 <div className="flex flex-col gap-[4px] sm:gap-[8px] px-[10px] sm:px-[20px] lg:px-[20px]">
                   <div className="w-full flex items-center justify-evenly gap-[5px] sm:gap-[10px] lg:gap-[5px]">
@@ -507,7 +576,7 @@ const ReceiptEntry = () => {
                       <input
                         type="text"
                         value={ShemeData?.scheme?.SchemeAmount}
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
+                        className="bg-[#52BD91] px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                       />
                     </div>
 
@@ -634,21 +703,13 @@ const ReceiptEntry = () => {
               </div>
             </div>
             <div className="basis-[55%] relative flex flex-col justify-center gap-[10px]  border-2 border-[#182456] rounded-xl py-[5px] sm:py-[10px] lg:py-[15px]">
-              <div className="flex items-center justify-between ">
-
-                <h1 className="px-[10px] sm:px-[20px] lg:px-[20px] text-[20px] sm:text-[24px] lg:text-[20px] text-[#182456] font-semibold">
-                  Receipt Details
+              <div className="flex items-center justify-start px-[10px] sm:px-[20px] lg:px-[20px]">
+                <RiSecurePaymentLine size={30} />
+                <h1 className=" text-[20px] sm:text-[24px] lg:text-[20px] text-[#182456] font-semibold">
+                  Payment Details
                 </h1>
 
-                <div className="basis-[60%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[5px]">
-                  <p className="font-bold">Installment No</p>
-                  <input
-                    type="text"
-                    value={ShemeData?.receipt?.length + 1}
-                    className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                    readOnly
-                  />
-                </div>
+
               </div>
 
               <div className="flex flex-col gap-[4px] sm:gap-[8px] px-[10px] sm:px-[10px] lg:px-[20px]">
@@ -679,60 +740,7 @@ const ReceiptEntry = () => {
                     </div>
                   </div>
                 </div> */}
-                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                  {/* <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                    <p className=" ">Scheme Code</p>
-                    <input
-                      type="text"
-                      value={ShemeData?.member?.SchemeCode}
-                      className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                      readOnly
-                    />
-                  </div>
 
-                  <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                    <p className=" ">Card No</p>
-                    <input
-                      type="text"
-                      value={CardNo}
-                      className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                      readOnly
-                    />
-                  </div> */}
-
-
-
-                  <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
-                    <p className=" ">Gold Wt</p>
-                    <input
-                      type="text"
-                      value={GoldWt}
-                      className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
-                      onChange={(e) => setGoldWt(e.target.value)}
-                    />
-                  </div>
-
-
-                  <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
-                    <p className=" ">Gold Amount</p>
-                    <input
-                      type="text"
-                      value={GoldAmount}
-                      className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
-                      onChange={(e) => setGoldAmount(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
-                    <p className=" ">Paid Amount</p>
-                    <input
-                      type="text"
-                      value={amount}
-                      className=" px-[3px] py-[3px] sm:py-[3px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                      onChange={(e) => setAmount(e.target.value)}
-                    />
-                  </div>
-                </div>
                 {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px] mt-[20px]">
                   <div className="basis-[50%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                     <p className=" ">Payment Mode</p>
@@ -760,41 +768,230 @@ const ReceiptEntry = () => {
 
 
               <div className="flex flex-col gap-[2px] px-[20px]">
-                <div className="w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[20px]">
+
+                <div className='w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[20px]'>
+                  {['Cash', 'Card', 'Online', 'UPI'].map((mode) => (
+                    <button
+                      key={mode}
+                      className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes(mode) ? 'bg-[#182456] text-white' : ''}`}
+                      onClick={() => handleModeChange(mode)}
+                    >
+                      {mode}
+                      <GiClick size={20} />
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-col gap-[2px] px-[0px]">
+                  {selectedModes.includes('Cash') && (
+                    <div className="w-full h-full grid grid-cols-4 gap-[5px] items-center justify-center">
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Payment Mode</p>
+                        <input type="text" value="Cash" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Description</p>
+                        <input type="text" value={cashdesc} onChange={(e) => setCashdesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Amount</p>
+                        <input
+                          type="number"
+                          value={cashamount}
+                          onChange={(e) => setCashamount(parseInt(e.target.value, 10))}
+                          className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg"
+                        />
+                      </div>
+                      <button onClick={() => handleAddEntry('Cash', '', '', cashdesc, cashamount)} className="border bg-[#182456] text-white border-black p-1 mt-2">
+                        Add Entry
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedModes.includes('Card') && (
+                    <div className="w-full h-full grid grid-cols-4 gap-[5px] items-center justify-center">
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Payment Mode</p>
+                        <input type="text" value="Card" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Description</p>
+                        <input type="text" value={carddesc} onChange={(e) => setCarddesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Amount</p>
+                        <input
+                          type="number"
+                          value={cardamount}
+                          onChange={(e) => setCardamount(parseInt(e.target.value, 10))}
+                          className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg"
+                        />
+                      </div>
+                      <button onClick={() => handleAddEntry('Card', '', '', carddesc, cardamount)} className="border border-black bg-[#182456] text-white p-1 mt-2">
+                        Add Entry
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedModes.includes('Online') && (
+                    <div className="w-full h-full grid grid-cols-6 gap-[5px] items-center justify-center">
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Payment Mode</p>
+                        <input type="text" value="Online" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Particulars</p>
+                        <select onChange={(e) => setOnlineparticulars(e.target.value)} name="online" id="online" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                          <option value="">Select</option>
+                          {online.map((option, index) => (
+                            <option key={index} value={option?.PAYMODE}>{option?.PAYMODE}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Acc No</p>
+                        <select onChange={(e) => setOnlineacc(e.target.value)} name="accno" id="accno" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                          <option value="">Select</option>
+                          {online.map((option, index) => (
+                            <option key={index} value={option?.ACCNO}>{option?.ACCNO}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Description</p>
+                        <input type="text" value={onlinedesc} onChange={(e) => setOnlinedesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Amount</p>
+                        <input
+                          type="number"
+                          value={onlineamount}
+                          onChange={(e) => setOnlineamount(parseInt(e.target.value, 10))}
+                          className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg"
+                        />
+                      </div>
+                      <button onClick={() => handleAddEntry('Online', onlineparticulars, onlineacc, onlinedesc, onlineamount)} className="border border-black p-1 bg-[#182456] text-white mt-2">
+                        Add Entry
+                      </button>
+                    </div>
+                  )}
+
+                  {selectedModes.includes('UPI') && (
+                    <div className="w-full h-full grid grid-cols-6 gap-[5px] items-center justify-center">
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Payment Mode</p>
+                        <input type="text" value="UPI" readOnly className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Particulars</p>
+                        <select onChange={(e) => setUpiparticulars(e.target.value)} name="upi" id="upi" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                          <option value="">Select</option>
+                          {upi.map((option, index) => (
+                            <option key={index} value={option?.PAYMODE}>{option?.PAYMODE}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Acc No.</p>
+                        <select onChange={(e) => setUpiacc(e.target.value)} name="upiacc" id="upiacc" className="text-[14px] focus:outline-none border border-black w-full rounded-lg p-[3px]">
+                          <option value="">Select</option>
+                          {upi.map((option, index) => (
+                            <option key={index} value={option?.ACCNO}>{option?.ACCNO}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Description</p>
+                        <input type="text" value={upidesc} onChange={(e) => setUpidesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg" />
+                      </div>
+                      <div className="flex flex-col items-start justify-center text-left w-full">
+                        <p className="text-[12px]">Amount</p>
+                        <input
+                          type="number"
+                          value={upiamount}
+                          onChange={(e) => setUpiamount(parseInt(e.target.value, 10))}
+                          className="w-full text-[14px] focus:outline-none border border-black p-[3px] rounded-lg"
+                        />
+                      </div>
+                      <button onClick={() => handleAddEntry('UPI', upiparticulars, upiacc, upidesc, upiamount)} className="border border-black p-1 mt-2 bg-[#182456] text-white">
+                        Add Entry
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className="w-full px-[10px] sm:px-[20px] lg:px-[0px] mt-[0px]">
+                  <div className="w-full h-[175px] overflow-y-auto custom-scrollbar border border-[#000] rounded-md">
+                    <table className="w-full table-auto">
+                      <thead>
+                        <tr className="bg-[#182456] text-white">
+                          <th className="p-[7px]">Sno</th>
+                          <th className="p-[7px]">Payment Mode</th>
+                          <th className="p-[7px]">Particulars</th>
+                          <th className="p-[7px]">Account No</th>
+                          <th className="p-[7px]">Description</th>
+                          <th className="p-[7px]">Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {entries.map((entry, index) => (
+                          <tr key={index} className="text-center">
+                            <td className="p-[5px]">{index + 1}</td>
+                            <td className="p-[5px]">{entry.mode}</td>
+                            <td className="p-[5px]">{entry.particulars}</td>
+                            <td className="p-[5px]">{entry.acc}</td>
+                            <td className="p-[5px]">{entry.desc}</td>
+                            <td className="p-[5px]">{entry.amount}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+                {/* <div className="w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[20px]">
                   <button
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Cash') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Cash')}
                   >
-                    <input type="checkbox" name="" id="" className="cursor-pointer" />
                     Cash
+                    <GiClick size={20} />
                   </button>
                   <button
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Card') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Card')}
                   >
-                    <input type="checkbox" name="" id="" />
                     Card
+                    <GiClick size={20} />
                   </button>
                   <button
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Online') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Online')}
                   >
-                    <input type="checkbox" name="" id="" />
                     Online
+                    <GiClick size={20} />
                   </button>
                   <button
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('UPI') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('UPI')}
                   >
-                    <input type="checkbox" name="" id="" />
                     UPI
+                    <GiClick size={20} />
                   </button>
-                </div>
+                </div> */}
               </div>
 
 
 
-              <div className="flex flex-col gap-[2px] px-[20px]">
+              {/* <div className="flex flex-col gap-[2px] px-[20px]">
                 {selectedModes.includes('Cash') && (
                   <div className="w-full h-full grid grid-cols-3 gap-[5px] items-center justify-center">
                     <div className="flex flex-col items-start justify-center text-left w-full">
@@ -903,7 +1100,7 @@ const ReceiptEntry = () => {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
 
 
 
@@ -916,7 +1113,7 @@ const ReceiptEntry = () => {
 
 
 
-              <div className="w-full px-[10px] sm:px-[20px] lg:px-[20px] mt-[0px]">
+              {/* <div className="w-full px-[10px] sm:px-[20px] lg:px-[20px] mt-[0px]">
                 <div className="w-full h-[175px] overflow-y-auto custom-scrollbar border border-[#000] rounded-md">
                   <table className="w-full table-auto">
                     <tr className="bg-[#182456] text-white">
@@ -929,13 +1126,68 @@ const ReceiptEntry = () => {
                     {ShemeData?.receipt?.map((item, index) => (
                       <tr className="text-center" key={index}>
                         <td className="p-[5px]">{index + 1}</td>
-                        <td className="p-[5px]">{item.PaymentMode}</td>
-                        <td className="p-[5px]">{item.AccNo}</td>
-                        <td className="p-[5px]">{item.Description}</td>
-                        <td className="p-[5px]">{item.Amount}</td>
+                        <td className="p-[5px]">Cash</td>
+                        <td className="p-[5px]">123</td>
+                        <td className="p-[5px]">TEST</td>
+                        <td className="p-[5px]">1000</td>
                       </tr>
                     ))}
                   </table>
+                </div>
+              </div> */}
+
+              <div className="w-full flex items-start justify-start gap-[5px] sm:gap-[10px] lg:gap-[15px] px-[20px]">
+                {/* <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                    <p className=" ">Scheme Code</p>
+                    <input
+                      type="text"
+                      value={ShemeData?.member?.SchemeCode}
+                      className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                      readOnly
+                    />
+                  </div>
+
+                  <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                    <p className=" ">Card No</p>
+                    <input
+                      type="text"
+                      value={CardNo}
+                      className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                      readOnly
+                    />
+                  </div> */}
+
+
+
+                <div className="flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                  <p className=" ">Gold Wt</p>
+                  <input
+                    type="text"
+                    value={GoldWt}
+                    className="w-full max-w-[150px] bg-red-500 focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
+                    onChange={(e) => setGoldWt(e.target.value)}
+                  />
+                </div>
+
+
+                {/* <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                  <p className=" ">Gold Amount</p>
+                  <input
+                    type="text"
+                    value={GoldAmount}
+                    className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
+                    onChange={(e) => setGoldAmount(e.target.value)}
+                  />
+                </div> */}
+
+                <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                  <p className=" ">Paid Amount</p>
+                  <input
+                    type="text"
+                    value={amount}
+                    className="bg-red-500 px-[3px] py-[3px] sm:py-[3px] focus:outline-none border border-black rounded-lg w-full"
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -992,7 +1244,7 @@ const ReceiptEntry = () => {
               </div>
 
               <div className="w-full px-[10px] sm:px-[20px] lg:px-[40px]">
-                <div className="grid grid-cols-4 w-full h-full items-center justify-center gap-[5px] sm:gap-[8px] lg:gap-[7px]">
+                <div className="flex w-full h-full items-center justify-center gap-[5px] sm:gap-[8px] lg:gap-[7px]">
                   {/* <div className="cursor-pointer h-[45px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#172561] rounded-md">
                     <p className="text-white font-bold">SEARCH</p>
                     <svg
@@ -1017,7 +1269,7 @@ const ReceiptEntry = () => {
                     </svg>
                   </div> */}
 
-                  <div className="cursor-pointer h-[35px] text-[14px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#172561] rounded-md">
+                  <div className="w-[200px] cursor-pointer h-[35px] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#172561] rounded-md">
                     <button
                       className="text-white font-bold"
                       onClick={() => createReceipt()}
@@ -1104,55 +1356,43 @@ const ReceiptEntry = () => {
 
         <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[10px] text-[12px]">
           <table className="w-full table-auto text-center max-w-[1250px] overflow-hidden mx-auto border border-black">
-            <thead className="w-full border border-black">
-              {/* <tr>
+            <thead className="w-full border border-black text-[12px] bg-[#4FC997]">
+              <tr>
                 <th className="border border-black p-2">ID</th>
                 <th className="border border-black p-2">Receipt No</th>
                 <th className="border border-black p-2">Receipt Date</th>
                 <th className="border border-black p-2">Card No</th>
-                <th className="border border-black p-2">Scheme Type</th>
                 <th className="border border-black p-2">Scheme Name</th>
                 <th className="border border-black p-2">Scheme Code</th>
                 <th className="border border-black p-2">Mobile No</th>
                 <th className="border border-black p-2">Member Name</th>
                 <th className="border border-black p-2">Address</th>
-                <th className="border border-black p-2">Collection Point</th>
-                <th className="border border-black p-2">Payment Mode</th>
-                <th className="border border-black p-2">Acc No</th>
-                <th className="border border-black p-2">Description</th>
                 <th className="border border-black p-2">Amount</th>
                 <th className="border border-black p-2">Gold Wt</th>
                 <th className="border border-black p-2">Gold Amount</th>
-                <th className="border border-black p-2">Incharge</th>
                 <th className="border border-black p-2">Actions</th>
-              </tr> */}
+              </tr>
             </thead>
             <tbody className="w-full border border-black">
-              {/* {receipts?.map((receipt) => (
-                <tr key={receipt.id} className="border border-black">
+              {receipts?.map((receipt, index) => (
+                <tr key={receipt.id} className={`px-1 text-[10px] ${(index % 2 == 0) ? "bg-white" : "bg-gray-100"} font-medium`}>
                   <td className="border border-black p-2">{receipt.id}</td>
                   <td className="border border-black p-2">{receipt.ReceiptNo}</td>
                   <td className="border border-black p-2">{receipt.ReceiptDate}</td>
                   <td className="border border-black p-2">{receipt.CardNo}</td>
-                  <td className="border border-black p-2">{receipt.SchemeType}</td>
                   <td className="border border-black p-2">{receipt.SchemeName}</td>
                   <td className="border border-black p-2">{receipt.SchemeCode}</td>
                   <td className="border border-black p-2">{receipt.MobileNo}</td>
                   <td className="border border-black p-2">{receipt.MemberName}</td>
                   <td className="border border-black p-2">{receipt.Address}</td>
-                  <td className="border border-black p-2">{receipt.CollectionPoint ? 'Yes' : 'No'}</td>
-                  <td className="border border-black p-2">{receipt.PaymentMode}</td>
-                  <td className="border border-black p-2">{receipt.AccNo}</td>
-                  <td className="border border-black p-2">{receipt.Description}</td>
                   <td className="border border-black p-2">{receipt.Amount}</td>
                   <td className="border border-black p-2">{receipt.GoldWt}</td>
                   <td className="border border-black p-2">{receipt.GoldAmount}</td>
-                  <td className="border border-black p-2">{receipt.Incharge}</td>
                   <td className="border border-black p-2">
                     <button className="text-red-700" onClick={() => handleDelete(receipt.ReceiptNo)}>Delete</button>
                   </td>
                 </tr>
-              ))} */}
+              ))}
             </tbody>
           </table>
         </div>

@@ -270,16 +270,15 @@ const SchemeMember = () => {
                 <div className="w-full pb-[10px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center">
                     <div className="max-w-[1050px] bg-white w-full flex flex-col m-auto max-h-full border-2 border-[#182456] rounded-xl overflow-hidden">
                         <div
-                            className="w-full h-[150px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center"
+                            className="w-full h-[80px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center bg-center bg-no-repeat bg-cover"
                             style={{
-                                background:
-                                    "radial-gradient(50% 50% at 50% 50%, rgba(44, 67, 161, 0.00) 0%, rgba(44, 67, 161, 0.18) 100%), url(/receiptbanner.png) lightgray 0px -110.255px / 100% 221.945% no-repeat",
+                                background: "url(/receiptbanner.png)"
                             }}
                         >
-                            <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
+                            {/* <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
                                 <img src="/tlogo.png" alt="" />
                                 <img src="/textLogo.png" alt="" className="max-w-[170px]" />
-                            </div>
+                            </div> */}
 
                             <div className='flex w-full items-center justify-center gap-[20px] px-[20px]'>
 
@@ -500,7 +499,7 @@ const SchemeMember = () => {
 
                 <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[20px]">
                     <table className="w-full table-auto text-center max-w-[1350px] mx-auto border border-black">
-                        <thead className="w-full border border-black">
+                        <thead className="w-full border border-black text-[12px] bg-[#4FC997]">
                             <tr>
                                 <th className="border border-black p-2">ID</th>
                                 <th className="border border-black p-2">Scheme Code</th>
@@ -517,8 +516,8 @@ const SchemeMember = () => {
                             </tr>
                         </thead>
                         <tbody className="w-full border border-black">
-                            {schemeMembers.map((type) => (
-                                <tr key={type.id} className="border border-black">
+                            {schemeMembers.map((type, index) => (
+                                <tr key={type.id} className={`px-1 text-[10px] ${(index % 2 == 0) ? "bg-white" : "bg-gray-100"} font-medium`}>
                                     <td className="border border-black p-2">{type.id}</td>
                                     <td className="border border-black p-2">{type.SchemeCode}</td>
                                     <td className="border border-black p-2">{type.SchemeType}</td>

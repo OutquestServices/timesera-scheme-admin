@@ -1,39 +1,42 @@
 "use client";
 
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { FaHome, FaUser, FaChartBar, FaCog, FaIdCard, FaUserSlash, FaHandshake, FaFileInvoice, FaClipboardList, FaMoneyCheckAlt, FaFileContract, FaFileAlt, FaFileExport, FaFileImport, FaReceipt } from 'react-icons/fa';
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
-
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
     };
 
-    return (
-        <div className={`h-screen overflow-y-auto custom-scrollbar2 bg-gray-800 text-white flex flex-col items-center fixed transition-all duration-300 ${isOpen ? ' w-64' : 'w-16'}`}>
-            <button
-                className="bg-gray-700 hover:bg-gray-500 text-white ml-auto py-2 px-2 rounded-full"
-                onClick={toggleSidebar}
-            >
-                {isOpen ? <GiHamburgerMenu size={25} /> : <GiHamburgerMenu size={25} />}
-            </button>
+    const [clickReports, setClickReports] = useState(false);
 
-            <div className="-mt-1">
-                <div className={`flex flex-row-reverse ${isOpen ? "p-5 -mt-[35px]" : "p-1 -mt-[0px]"} justify-center items-center`}>
+    const handleClickReports = () => setClickReports(!clickReports);
+
+    return (
+        <div className={`h-screen overflow-y-auto custom-scrollbar2 bg-[#182456] text-white flex flex-col fixed transition-all duration-300 ${isOpen ? ' w-64' : 'w-16'}`}>
+            <div className="sticky top-0 w-full bg-gray-800 flex flex-col items-center">
+                <div className={`flex w-full items-end ${isOpen ? "justify-end" : "justify-center"}`}>
+                    <button
+                        className="bg-gray-700 z-20 hover:bg-gray-500 text-white py-2 px-2 rounded-full mt-2"
+                        onClick={toggleSidebar}
+                    >
+                        <GiHamburgerMenu size={25} />
+                    </button>
+                </div>
+
+                <div className={`bg-[#182456] w-full py-2 -z-30 flex flex-col items-center ${isOpen ? "-mt-[40px]" : "-mt-[0px]"} mt-2`}>
                     <a href={"/"} className='max-w-[150px] mx-auto flex flex-col items-center justify-center gap-1'>
                         <img
                             src="/tlogo.png"
                             alt="Logo"
                         />
-                        {isOpen && <span className=""><img src="/textLogo.png" alt="" /></span>}
+                        {isOpen && <span><img src="/textLogo.png" alt="Text Logo" /></span>}
                     </a>
                 </div>
             </div>
-
-            <div className="mt-0 w-full">
+            <div className="mt-4 w-full">
                 <Link href={"/"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaHome />
                     {isOpen && <span className="ml-4">Home</span>}
@@ -74,26 +77,37 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     <FaMoneyCheckAlt />
                     {isOpen && <span className="ml-4">Due List</span>}
                 </Link>
-                <Link href={"/memberreport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
-                    <FaFileContract />
-                    {isOpen && <span className="ml-4">Member Report</span>}
-                </Link>
-                <Link href={"/settlementreport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
-                    <FaFileAlt />
-                    {isOpen && <span className="ml-4">Settlement Report</span>}
-                </Link>
-                <Link href={"/discontinuereport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
-                    <FaFileExport />
-                    {isOpen && <span className="ml-4">Discontinue Report</span>}
-                </Link>
-                <Link href={"/duereport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
-                    <FaFileImport />
-                    {isOpen && <span className="ml-4">Due Report</span>}
-                </Link>
-                <Link href={"/receiptreport"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                <button onClick={handleClickReports} className="flex w-full items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaReceipt />
-                    {isOpen && <span className="ml-4">Receipt Report</span>}
-                </Link>
+                    {isOpen && <span className="ml-4">Reports</span>}
+                </button>
+                {
+                    (clickReports) && (
+                        <div className='flex flex-col'>
+                            <Link href={"/memberreport"} className="flex border-b border-[#4FC997] items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                                {/* <FaFileContract /> */}
+                                {isOpen && <span className="ml-4">Member Report</span>}
+                            </Link>
+                            <Link href={"/settlementreport"} className="flex border-b border-[#4FC997] items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                                {/* <FaFileAlt /> */}
+                                {isOpen && <span className="ml-4">Settlement Report</span>}
+                            </Link>
+                            <Link href={"/discontinuereport"} className="flex border-b border-[#4FC997] items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                                {/* <FaFileExport /> */}
+                                {isOpen && <span className="ml-4">Discontinue Report</span>}
+                            </Link>
+                            <Link href={"/duereport"} className="flex border-b border-[#4FC997] items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                                {/* <FaFileImport /> */}
+                                {isOpen && <span className="ml-4">Due Report</span>}
+                            </Link>
+                            <Link href={"/receiptreport"} className="flex border-b border-[#4FC997] items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                                {/* <FaReceipt /> */}
+                                {isOpen && <span className="ml-4">Receipt Report</span>}
+                            </Link>
+                        </div>
+                    )
+                }
+
             </div>
         </div>
     );

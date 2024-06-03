@@ -31,29 +31,29 @@ const Discontinue = () => {
     // if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className='p-[5px]'>
-            <div className='flex justify-between items-center w-full mb-2'>
+        <div className=''>
+            <div className='flex justify-between items-center w-full p-[5px] bg-gray-200 px-[30px]'>
                 <h2 className='text-center text-[14px] font-semibold'>Today Discontinues</h2>
                 <p className='text-[14px] font-semibold'>Total: {discontinue?.length}</p>
             </div>
             <table className='w-full text-left text-[12px]'>
                 <thead>
-                    <tr className='px-1'>
-                        <th className='border py-2'>S.No</th>
-                        <th className='border py-2'>Card No</th>
-                        <th className='border py-2'>Scheme Type</th>
-                        <th className='border py-2'>Scheme Name</th>
-                        <th className='border py-2'>Voucher No</th>
+                    <tr className='px-1 bg-red-400'>
+                        {/* <th className='border py-2'>S.No</th> */}
+                        <th className='border py-2 text-center'>Card No</th>
+                        <th className='border py-2 text-center'>Scheme Type</th>
+                        <th className='border py-2 text-center' style={{ width: "100px" }}>Scheme Name</th>
+                        <th className='border py-2 text-center'>Voucher No</th>
                     </tr>
                 </thead>
                 <tbody>
                     {discontinue.map((dis, index) => (
-                        <tr className='px-1' key={index}>
-                            <td className='border  py-2'>{index + 1}</td>
-                            <td className='border  py-2'>{dis.CardNo}</td>
-                            <td className='border  py-2'>{dis.SchemeType}</td>
-                            <td className='border  py-2'>{dis.SchemeName}</td>
-                            <td className='border  py-2'>{dis.VoucherNo}</td>
+                        <tr className={`px-1 text-[10px] ${(index % 2 == 0) ? "bg-white" : "bg-gray-100"}`} key={index}>
+                            {/* <td className='border  py-2'>{index + 1}</td> */}
+                            <td className='border  py-1 text-center'>{dis.CardNo}</td>
+                            <td className='border  py-1'>{dis.SchemeType}</td>
+                            <td className='border  py-1' style={{ width: "100px" }}>{dis.SchemeName}</td>
+                            <td className='border  py-1 text-center'>{dis.VoucherNo}</td>
                         </tr>
                     ))}
                 </tbody>

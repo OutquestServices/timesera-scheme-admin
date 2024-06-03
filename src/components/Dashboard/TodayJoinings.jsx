@@ -31,27 +31,27 @@ const TodayJoinings = () => {
     // if (error) return <p>Error: {error}</p>;
 
     return (
-        <div className='p-[5px]'>
-            <div className='flex justify-between items-center w-full mb-2'>
+        <div className=' '>
+            <div className='flex justify-between items-center w-full bg-gray-200 p-[5px] px-[30px]'>
                 <h2 className='text-center text-[14px] font-semibold'>Today Joinings</h2>
                 <p className='text-[14px] font-semibold'>Total: {data.totalJoinedToday}</p>
             </div>
             <table className='w-full table-auto h-full text-[12px] text-center'>
                 <thead>
-                    <tr className='px-1'>
-                        <th className='border py-2'>S.No</th>
-                        <th className='border py-2'>Card No</th>
-                        <th className='border py-2'>Member Name</th>
-                        <th className='border py-2'>Scheme Name</th>
+                    <tr className='px-1 bg-amber-400'>
+                        {/* <th className='border py-2 '>S.No</th> */}
+                        <th className='border py-2   text-center'>Card No</th>
+                        <th className='border py-2   text-center'>Member Name</th>
+                        <th className='border py-2   text-center'>Scheme Name</th>
                     </tr>
                 </thead>
                 <tbody>
                     {data.users.map((user, index) => (
-                        <tr key={index} className='px-1'>
-                            <td className='border py-2'>{index + 1}</td>
-                            <td className='border py-2'>{user.CardNo}</td>
-                            <td className='border py-2'>{user.MemberName}</td>
-                            <td className='border  py-2'>{user.SchemeName}</td>
+                        <tr key={index} className={`px-1 text-[10px] ${(index % 2 == 0) ? "bg-white" : "bg-gray-100"}`}>
+                            {/* <td className='border py-2'>{index + 1}</td> */}
+                            <td className='border py-1  text-center'>{user.CardNo}</td>
+                            <td className='border py-1'>{user.MemberName}</td>
+                            <td className='border py-1' style={{ width: "100px" }}>{user.SchemeName}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 
 const SchemeType = () => {
     const [schemeType, setSchemeType] = useState("");
-    const [goldScheme, setGoldScheme] = useState("");
+    const [goldScheme, setGoldScheme] = useState("Cash Scheme");
 
     const [schemeTypes, setSchemeTypes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -114,7 +114,7 @@ const SchemeType = () => {
             <div className="w-full h-full">
                 <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px]">
                     <div
-                        className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[10px] lg:py-[15px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
+                        className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[10px] lg:py-[10px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
                         style={{
                             background:
                                 "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)",
@@ -156,29 +156,28 @@ const SchemeType = () => {
                 </div>
 
                 <div className="w-full flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center">
-                    <div className="max-w-[750px] w-full flex flex-col m-auto max-h-full border-2 border-[#182456] rounded-xl overflow-hidden">
+                    <div className="max-w-[550px] w-full flex flex-col m-auto max-h-full border-2 border-[#182456] rounded-xl overflow-hidden">
                         <div
-                            className="w-full h-[100px] flex items-center justify-center"
+                            className="w-full h-[50px] flex items-center justify-center"
                             style={{
-                                background:
-                                    "radial-gradient(50% 50% at 50% 50%, rgba(44, 67, 161, 0.00) 0%, rgba(44, 67, 161, 0.18) 100%), url(/receiptbanner.png) lightgray 0px -110.255px / 100% 221.945% no-repeat",
+                                background: "url(/receiptbanner.png)"
                             }}
                         >
-                            <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
+                            {/* <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
                                 <img src="/tlogo.png" alt="" />
                                 <img src="/textLogo.png" alt="" className="max-w-[170px]" />
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="w-full p-[10px] sm:p-[15px] lg:p-[20px] bg-[#F6F8FF] flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px] text-[14px] sm:text-[16px] lg:text-[14px] text-[#182456]">
-                            <div className="w-full flex items-center justify-between">
-                                <p className="basis-[40%]  font-semibold  ">
+                            <div className="w-full flex items-center justify-center gap-[20px]">
+                                <p className="basis-[40%] font-semibold  flex items-center justify-center">
                                     Scheme Type:
                                 </p>
                                 <input
                                     type="text"
                                     value={schemeType}
-                                    className="basis-[60%] w-full focus:outline-none p-[4px] sm:p-[5px] lg:p-[5px] rounded-xl border-2 border-[#182456] "
+                                    className="basis-[60%] max-w-[250px] w-full focus:outline-none p-[4px] sm:p-[5px] lg:p-[5px] rounded-xl border-2 border-[#182456] "
                                     onChange={(e) => setSchemeType(e.target.value)}
                                 />
                             </div>
@@ -212,6 +211,7 @@ const SchemeType = () => {
                                         name="scheme"
                                         id="cashscheme"
                                         value="Cash Scheme"
+                                        defaultChecked
                                         onChange={(e) => setGoldScheme(e.target.value)}
                                     />
                                     <label htmlFor="cashscheme" className="font-semibold">
@@ -224,13 +224,13 @@ const SchemeType = () => {
 
                     <div className="w-full flex items-center justify-center gap-[10px] sm:gap-[15px] lg:gap-[20px]">
                         <button
-                            className="px-[20px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#52BD91] text-white font-semibold flex items-center justify-center cursor-pointer"
+                            className="px-[20px] w-[150px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#52BD91] text-white font-semibold flex items-center justify-center cursor-pointer"
                             onClick={handleSubmit}
                         >
                             SAVE
                         </button>
 
-                        <div className="px-[20px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#182456] text-white font-semibold flex items-center justify-center cursor-pointer">
+                        <div className="px-[20px] w-[150px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#182456] text-white font-semibold flex items-center justify-center cursor-pointer">
                             CANCEL
                         </div>
                     </div>
@@ -239,7 +239,7 @@ const SchemeType = () => {
                 <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[20px]">
                     <table className="w-full table-auto text-center max-w-[750px] mx-auto border border-black">
                         <thead className="w-full border border-black">
-                            <tr>
+                            <tr className="bg-[#4FC997]">
                                 <th className="border border-black p-2">ID</th>
                                 <th className="border border-black p-2">Scheme Type</th>
                                 <th className="border border-black p-2">Scheme Mode</th>
@@ -247,8 +247,8 @@ const SchemeType = () => {
                             </tr>
                         </thead>
                         <tbody className="w-full border border-black">
-                            {schemeTypes.map((type) => (
-                                <tr key={type.id} className="border border-black">
+                            {schemeTypes.map((type, index) => (
+                                <tr key={type.id} className={`px-1 text-[10px] ${(index % 2 == 0) ? "bg-white" : "bg-gray-100"} font-medium`}>
                                     <td className="border border-black p-2">{type.id}</td>
                                     <td className="border border-black p-2">{type.SchemeType}</td>
                                     <td className="border border-black p-2">{type.SchemeMode}</td>

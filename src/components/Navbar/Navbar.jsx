@@ -69,14 +69,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     <FaFileInvoice />
                     {isOpen && <span className="ml-4">Receipt Entry</span>}
                 </Link>
-                <Link href={"/memberlist"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
+                {/* <Link href={"/memberlist"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaClipboardList />
                     {isOpen && <span className="ml-4">Member List</span>}
                 </Link>
                 <Link href={"/duelist"} className="flex items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaMoneyCheckAlt />
                     {isOpen && <span className="ml-4">Due List</span>}
-                </Link>
+                </Link> */}
                 <button onClick={handleClickReports} className="flex w-full items-center py-4 pl-4 hover:bg-gray-700 cursor-pointer">
                     <FaReceipt />
                     {isOpen && <span className="ml-4">Reports</span>}

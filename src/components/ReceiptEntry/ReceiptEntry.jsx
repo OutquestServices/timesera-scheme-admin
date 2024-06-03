@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { GiClick } from "react-icons/gi";
+import { TbListDetails } from "react-icons/tb";
+import { RiSecurePaymentLine } from "react-icons/ri";
 
 const ReceiptEntry = () => {
 
@@ -161,7 +164,7 @@ const ReceiptEntry = () => {
           UPIAmount: upiamount,
           desc: Description,
           amount: parseFloat(amount),
-          gamount: parseFloat(GoldAmount),
+          gamount: parseFloat(amount),
           incharge: Incharge,
           gweight: parseFloat(GoldWt),
           months: ShemeData?.receipt?.length,
@@ -391,6 +394,16 @@ const ReceiptEntry = () => {
                       className="rounded-md text-center  focus:outline-none px-[5px] sm:px-[10px] lg:px-[15px] py-[2px] sm:py-[4px] lg:py-[4px] max-w-[250px]"
                     />
                   </div>
+
+                  <div className="flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[0px] sm:gap-[10px] lg:gap-[0px]">
+                    <p className="font-bold underline">Installment No</p>
+                    <input
+                      type="text"
+                      value={ShemeData?.receipt?.length + 1}
+                      className="bg-[#52BD91] text-center px-[3px] py-[3px] sm:py-[5px] focus:outline-none  rounded-lg max-w-[150px] w-full"
+                      readOnly
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -479,9 +492,12 @@ const ReceiptEntry = () => {
               </div>
 
               <div className="flex flex-col gap-[10px] sm:gap-[10px] lg:gap-[10px] py-[10px] sm:py-[15px] lg:py-[10px]">
-                <h1 className="px-[10px] sm:px-[20px] lg:px-[20px] text-[20px] sm:text-[24px] lg:text-[20px] text-[#182456] font-semibold">
-                  Scheme Details
-                </h1>
+                <div className="flex gap-[5px] sm:gap-[7px] lg:gap-[9px] items-start justify-start px-[20px]">
+                  <TbListDetails size={30} />
+                  <p className="text-[20px] sm:text-[24px] font-semibold lg:text-[20px] text-[#182456]">
+                    Scheme Details
+                  </p>
+                </div>
 
                 <div className="w-full flex items-start justify-start px-[20px] gap-[3px] sm:gap-[5px]">
                   <div className="flex flex-col gap-[3px] sm:gap-[0px]">
@@ -519,7 +535,7 @@ const ReceiptEntry = () => {
                       <input
                         type="text"
                         value={ShemeData?.scheme?.SchemeAmount}
-                        className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
+                        className="bg-[#52BD91] px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg w-full"
                       />
                     </div>
 
@@ -646,21 +662,13 @@ const ReceiptEntry = () => {
               </div>
             </div>
             <div className="basis-[55%] relative flex flex-col justify-center gap-[10px]  border-2 border-[#182456] rounded-xl py-[5px] sm:py-[10px] lg:py-[15px]">
-              <div className="flex items-center justify-between ">
-
-                <h1 className="px-[10px] sm:px-[20px] lg:px-[20px] text-[20px] sm:text-[24px] lg:text-[20px] text-[#182456] font-semibold">
-                  Receipt Details
+              <div className="flex items-center justify-start px-[10px] sm:px-[20px] lg:px-[20px]">
+                <RiSecurePaymentLine size={30}/>
+                <h1 className=" text-[20px] sm:text-[24px] lg:text-[20px] text-[#182456] font-semibold">
+                  Payment Details
                 </h1>
 
-                <div className="basis-[60%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[5px]">
-                  <p className="font-bold">Installment No</p>
-                  <input
-                    type="text"
-                    value={ShemeData?.receipt?.length + 1}
-                    className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                    readOnly
-                  />
-                </div>
+                
               </div>
 
               <div className="flex flex-col gap-[4px] sm:gap-[8px] px-[10px] sm:px-[10px] lg:px-[20px]">
@@ -691,60 +699,7 @@ const ReceiptEntry = () => {
                     </div>
                   </div>
                 </div> */}
-                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                  {/* <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                    <p className=" ">Scheme Code</p>
-                    <input
-                      type="text"
-                      value={ShemeData?.member?.SchemeCode}
-                      className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                      readOnly
-                    />
-                  </div>
-
-                  <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-                    <p className=" ">Card No</p>
-                    <input
-                      type="text"
-                      value={CardNo}
-                      className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                      readOnly
-                    />
-                  </div> */}
-
-
-
-                  <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
-                    <p className=" ">Gold Wt</p>
-                    <input
-                      type="text"
-                      value={GoldWt}
-                      className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
-                      onChange={(e) => setGoldWt(e.target.value)}
-                    />
-                  </div>
-
-
-                  <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
-                    <p className=" ">Gold Amount</p>
-                    <input
-                      type="text"
-                      value={GoldAmount}
-                      className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
-                      onChange={(e) => setGoldAmount(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
-                    <p className=" ">Paid Amount</p>
-                    <input
-                      type="text"
-                      value={amount}
-                      className=" px-[3px] py-[3px] sm:py-[3px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
-                      onChange={(e) => setAmount(e.target.value)}
-                    />
-                  </div>
-                </div>
+                
                 {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[10px] lg:gap-[15px] mt-[20px]">
                   <div className="basis-[50%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
                     <p className=" ">Payment Mode</p>
@@ -777,29 +732,29 @@ const ReceiptEntry = () => {
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Cash') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Cash')}
                   >
-                    <input type="checkbox" name="" id="" className="cursor-pointer" />
                     Cash
+                    <GiClick size={20}/>
                   </button>
                   <button
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Card') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Card')}
                   >
-                    <input type="checkbox" name="" id="" />
                     Card
+                    <GiClick size={20} />
                   </button>
                   <button
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('Online') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('Online')}
                   >
-                    <input type="checkbox" name="" id="" />
                     Online
+                    <GiClick size={20} />
                   </button>
                   <button
                     className={`border flex items-center justify-center gap-[5px] border-black p-2 ${selectedModes.includes('UPI') ? 'bg-[#182456] text-white' : ''}`}
                     onClick={() => handleModeChange('UPI')}
                   >
-                    <input type="checkbox" name="" id="" />
                     UPI
+                    <GiClick size={20} />
                   </button>
                 </div>
               </div>
@@ -951,6 +906,61 @@ const ReceiptEntry = () => {
                 </div>
               </div>
 
+              <div className="w-full flex items-start justify-start gap-[5px] sm:gap-[10px] lg:gap-[15px] px-[20px]">
+                {/* <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                    <p className=" ">Scheme Code</p>
+                    <input
+                      type="text"
+                      value={ShemeData?.member?.SchemeCode}
+                      className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                      readOnly
+                    />
+                  </div>
+
+                  <div className="basis-[33%] flex text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-between gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+                    <p className=" ">Card No</p>
+                    <input
+                      type="text"
+                      value={CardNo}
+                      className=" px-[3px] py-[3px] sm:py-[5px] focus:outline-none border border-black rounded-lg max-w-[150px] w-full"
+                      readOnly
+                    />
+                  </div> */}
+
+
+
+                <div className="flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                  <p className=" ">Gold Wt</p>
+                  <input
+                    type="text"
+                    value={GoldWt}
+                    className="w-full max-w-[150px] bg-red-500 focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
+                    onChange={(e) => setGoldWt(e.target.value)}
+                  />
+                </div>
+
+
+                {/* <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                  <p className=" ">Gold Amount</p>
+                  <input
+                    type="text"
+                    value={GoldAmount}
+                    className="w-full focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[5px] lg:py-[3px] border border-black rounded-lg text-[14px] sm:text-[16px] "
+                    onChange={(e) => setGoldAmount(e.target.value)}
+                  />
+                </div> */}
+
+                <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-start justify-center gap-[5px] sm:gap-[10px] lg:gap-[0px]">
+                  <p className=" ">Paid Amount</p>
+                  <input
+                    type="text"
+                    value={amount}
+                    className="bg-red-500 px-[3px] py-[3px] sm:py-[3px] focus:outline-none border border-black rounded-lg w-full"
+                    onChange={(e) => setAmount(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <div className="flex flex-col gap-[20px] w-full px-[10px] sm:px-[20px] lg:px-[20px]">
                 {/* <div className="w-full flex flex-col gap-[3px] sm:gap-[5px]">
                   <div className="flex gap-[25%] sm:gap-[35%] lg:gap-[45%]">
@@ -1004,7 +1014,7 @@ const ReceiptEntry = () => {
               </div>
 
               <div className="w-full px-[10px] sm:px-[20px] lg:px-[40px]">
-                <div className="grid grid-cols-4 w-full h-full items-center justify-center gap-[5px] sm:gap-[8px] lg:gap-[7px]">
+                <div className="flex w-full h-full items-center justify-center gap-[5px] sm:gap-[8px] lg:gap-[7px]">
                   {/* <div className="cursor-pointer h-[45px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#172561] rounded-md">
                     <p className="text-white font-bold">SEARCH</p>
                     <svg
@@ -1029,7 +1039,7 @@ const ReceiptEntry = () => {
                     </svg>
                   </div> */}
 
-                  <div className="cursor-pointer h-[35px] text-[14px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#172561] rounded-md">
+                  <div className="w-[200px] cursor-pointer h-[35px] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#172561] rounded-md">
                     <button
                       className="text-white font-bold"
                       onClick={() => createReceipt()}

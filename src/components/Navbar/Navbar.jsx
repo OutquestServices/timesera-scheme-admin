@@ -16,7 +16,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
     return (
         <div className={`h-screen overflow-y-auto custom-scrollbar2 bg-[#182456] text-white flex flex-col fixed transition-all duration-300 ${isOpen ? ' w-64' : 'w-16'}`}>
-            <div className="sticky top-0 w-full bg-gray-800 flex flex-col items-center">
+            <div className="sticky top-0 w-full bg-[#182456] flex flex-col items-center">
                 <div className={`flex w-full items-end ${isOpen ? "justify-end" : "justify-center"}`}>
                     <button
                         className="bg-gray-700 z-20 hover:bg-gray-500 text-white py-2 px-2 rounded-full mt-2"
@@ -26,7 +26,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     </button>
                 </div>
 
-                <div className={`bg-[#182456] w-full py-2 -z-30 flex flex-col items-center ${isOpen ? "-mt-[40px]" : "-mt-[0px]"} mt-2`}>
+                <div className={`bg-[#182456] w-full py-2 -z-30 flex flex-col items-center ${isOpen ? "-mt-[40px]" : "-mt-[0px]"} `}>
                     <a href={"/"} className='max-w-[150px] mx-auto flex flex-col items-center justify-center gap-1'>
                         <img
                             src="/tlogo.png"

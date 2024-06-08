@@ -64,15 +64,6 @@ const SchemeType = () => {
         }
     };
 
-
-    // if (loading) {
-    //     return <div>Loading...</div>;
-    // }
-
-    // if (error) {
-    //     return <div>Error: {error}</div>;
-    // }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const data = {
@@ -80,30 +71,36 @@ const SchemeType = () => {
             mode: goldScheme,
         };
 
-        try {
-            const response = await fetch("/api/schemetype", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
+        if(data.type === ""){
+            alert("Enter Scheme Type");
+        }
+        else if(data.type !== ""){
+            try {
+                const response = await fetch("/api/schemetype", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                });
 
-            if (response.ok) {
-                alert("Data saved successfully");
-                setGoldScheme("");
-                setSchemeType("");
-                window.location.reload();
-            } else {
-                alert("Failed to save data");
-                setGoldScheme("");
+                if (response.ok) {
+                    alert("Data saved successfully");
+                    setGoldScheme("");
+                    setSchemeType("");
+                    window.location.reload();
+                } else {
+                    alert("Failed to save data");
+                    setGoldScheme("");
+                    setSchemeType("");
+                }
+            } catch (error) {
+                console.error(error);
                 setSchemeType("");
             }
-        } catch (error) {
-            console.error(error);
-            setGoldScheme("");
-            setSchemeType("");
         }
+
+        
     };
 
     return (

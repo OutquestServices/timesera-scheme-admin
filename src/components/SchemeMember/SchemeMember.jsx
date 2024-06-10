@@ -141,6 +141,10 @@ const SchemeMember = () => {
     }
 
     const postSchemeMember = async () => {
+        if(!schemeType || !schemeName || !memberName || !cardNo || !mobile || !dob || !anniversary ){
+            alert("Please fill all the fields");
+            return;
+        }
         try {
             const response = await fetch("/api/schememember/createmember", {
                 method: "POST",

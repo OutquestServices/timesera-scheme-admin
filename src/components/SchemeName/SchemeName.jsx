@@ -97,6 +97,10 @@ const SchemeName = () => {
   };
 
   const pushSchemeName = async () => {
+    if( !schemeType || !schemeName || !duration || !amount || !persons || !bonus || !bonusmonths || !comm || !code){
+      alert("Please fill all the fields");
+      return;
+    }
     try {
       const response = await fetch("/api/schemename", {
         method: "POST",
@@ -135,7 +139,6 @@ const SchemeName = () => {
       setCommAmt(0);
       setSchemeValue(0);
       setCode("");
-
     }
   };
 

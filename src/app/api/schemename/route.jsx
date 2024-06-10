@@ -26,6 +26,7 @@ export async function POST(request) {
           SchemeValue: body.svalue,
           Commper: body.commper,
           Commamt: body.commamt,
+          Continuous: body.continuous
         },
       });
       return NextResponse.json({ message: "Added succesfully" });

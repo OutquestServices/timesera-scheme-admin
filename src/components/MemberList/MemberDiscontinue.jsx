@@ -98,18 +98,18 @@ const MemberDiscontinue = () => {
     return (
         <div className='w-full max-h-[98vh] overflow-auto custom-scrollbar2'>
             <div className='w-full h-full flex flex-col'>
-                <div className='px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px]'>
-                    <div className='w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[20px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]' style={{ background: "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)" }}>
+                <div className='px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[10px]'>
+                    <div className='w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[15px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]' style={{ background: "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)" }}>
                         <div className='basis-[60%] flex items-center justify-between w-full h-full'>
-                            <h1 className='flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[28px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]'>Member Discontinue</h1>
+                            <h1 className='flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[20px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]'>Member Discontinue</h1>
 
                             <div className='flex-1 flex items-center text-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]'>
-                                <p className='text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold'>Gold Rate</p>
+                                <p className='text-white text-[14px] sm:text-[15px] lg:text-[14px] font-semibold'>Gold Rate</p>
                                 {/* <p className='text-[#52BD91] text-[16px] sm:text-[17px] lg:text-[18px] font-bold'>24-25</p> */}
-                                <div className='h-[40px] max-w-[130px] rounded-md w-full px-[5px] sm:px-[10px] lg:px-[15px] bg-white'></div>
+                                <div className='h-[30px] max-w-[130px] rounded-md w-full px-[5px] sm:px-[10px] lg:px-[15px] bg-white'></div>
                             </div>
                         </div>
-                        <div className='basis-[40%] w-full h-full flex items-center gap-[10px] sm:gap-[20px] lg:gap-[30px]'>
+                        {/* <div className='basis-[40%] w-full h-full flex items-center gap-[10px] sm:gap-[20px] lg:gap-[30px]'>
                             <div className='grid grid-cols-3 w-full h-full items-center justify-center gap-[5px] sm:gap-[8px] lg:gap-[12px]'>
 
                                 <div className='cursor-pointer h-[45px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#52BD91] rounded-md'>
@@ -143,24 +143,24 @@ const MemberDiscontinue = () => {
                                     </svg>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
-                <div className='px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px] w-full max-h-full flex gap-[10px] sm:gap-[15px] lg:gap-[20px]'>
-                    <div className='basis-[75%] w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]'>
-                        <div className='flex w-full gap-[5px] sm:gap-[10px] lg:gap-[15px]'>
+                <div className='px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[5px] w-full max-h-full flex gap-[10px] sm:gap-[15px] lg:gap-[20px]'>
+                    <div className='basis-[70%] w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]'>
+                        <div className='flex items-center justify-center w-full gap-[5px] sm:gap-[10px] lg:gap-[15px]'>
                             <div className='basis-[40%] w-full flex items-center justify-between'>
-                                <p className='text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold'>Card No</p>
+                                <p className='text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold'>Card No</p>
                                 <input
                                     type="text"
                                     value={CardNo}
-                                    className="h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                                    className="h-[30px] focus:outline-none text-[14px] rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                                     onChange={(e) => setCardNo(e.target.value)}
                                 />
                             </div>
                             <button
-                                className="basis-[10%] h-[35px] border-2 rounded-lg cursor-pointer border-black flex items-center justify-center hover:bg-blue-400"
+                                className="basis-[10%] h-[30px] border-2 text-[14px] rounded-lg cursor-pointer border-black flex items-center justify-center hover:bg-blue-400"
                                 onClick={() => fetchMemberDiscontinue(CardNo)}
                             >
                                 Submit
@@ -178,8 +178,15 @@ const MemberDiscontinue = () => {
                                 <div className='flex items-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]'>
                                     {/* <p className='text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold'>Gold Rate</p> */}
                                     <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
-                                        <label htmlFor="voucherNo" className='text-[14px] sm:text-[16px] lg:text-[20px] font-semibold text-[#000]'>Voucher No</label>
+                                        <label htmlFor="voucherNo" className='text-[14px] sm:text-[16px] lg:text-[16px] font-semibold text-[#000]'>Voucher No</label>
                                         <input type="text" id="voucherNo" value={voucherNo} onChange={(e) => setVoucherNo(e.target.value)} className='w-[100px] h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                    </div>
+                                </div>
+
+                                <div className='flex items-center justify-start text-start gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Date</p>
+                                    <div className='flex-1'>
+                                        <input type="date" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={selectedDate} readOnly />
                                     </div>
                                 </div>
                             </div>
@@ -188,21 +195,21 @@ const MemberDiscontinue = () => {
 
                         <div className='w-full grid grid-cols-3 gap-[7px] sm:gap-[14px] lg:gap-[20px]'>
                             <div className='w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold'>Scheme Type</p>
+                                <p className='flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold'>Scheme Type</p>
                                 <div className='flex-1'>
-                                    <input type="text" value={memberData?.member?.SchemeType} className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' readOnly />
+                                    <input type="text" value={memberData?.member?.SchemeType} className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px]' readOnly />
                                 </div>
                             </div>
                             <div className='w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold'>Scheme Group</p>
+                                <p className='flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold'>Scheme Group</p>
                                 <div className='flex-1'>
-                                    <input type="text" value={memberData?.member?.SchemeCode} className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' readOnly />
+                                    <input type="text" value={memberData?.member?.SchemeCode} className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px]' readOnly />
                                 </div>
                             </div>
                             <div className='w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold'>Scheme Name</p>
+                                <p className='flex-1 text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold'>Scheme Name</p>
                                 <div className='flex-1'>
-                                    <input type="text" value={memberData?.member?.SchemeName} className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' readOnly />
+                                    <input type="text" value={memberData?.member?.SchemeName} className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px]' readOnly />
                                 </div>
                             </div>
                         </div>
@@ -305,7 +312,7 @@ const MemberDiscontinue = () => {
                             <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                 <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Scheme Amount</p>
                                 <div className='flex-1'>
-                                    <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
+                                    <input type="text" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
                                         (memberData &&
                                             memberData.receipt &&
                                             Object.keys(memberData.receipt).length) *
@@ -318,7 +325,7 @@ const MemberDiscontinue = () => {
                             <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                 <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Total Paid</p>
                                 <div className='flex-1'>
-                                    <input type="number" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
+                                    <input type="number" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
                                         memberData?.receipt?.reduce(
                                             (accumulator, currentItem) =>
                                                 accumulator + currentItem.Amount,
@@ -330,7 +337,7 @@ const MemberDiscontinue = () => {
                             <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                 <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Bal Amount</p>
                                 <div className='flex-1'>
-                                    <input type="number" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
+                                    <input type="number" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
                                         (memberData &&
                                             memberData.receipt &&
                                             Object.keys(memberData.receipt).length) *
@@ -348,7 +355,7 @@ const MemberDiscontinue = () => {
                             <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                 <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Tot.GoldWT</p>
                                 <div className='flex-1'>
-                                    <input type="number" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
+                                    <input type="number" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
                                         memberData?.receipt?.reduce(
                                             (accumulator, currentItem) =>
                                                 accumulator + currentItem.GoldWt,
@@ -359,42 +366,37 @@ const MemberDiscontinue = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='basis-[25%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[16px]'>
+                    <div className='basis-[30%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[7px]'>
                         <div className='flex flex-col gap-[2px] sm:gap-[4px] lg:gap-[6px]'>
-                            <div className='w-full flex flex-col items-center justify-start text-start gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Date</p>
-                                <div className='flex-1'>
-                                    <input type="date" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={selectedDate} readOnly />
-                                </div>
-                            </div>
+
                             <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
-                                <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
+                                <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[7px]'>
                                     <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                         <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Member Name</p>
                                         <div className='flex-1'>
                                             <input type="text"
                                                 value={memberData?.member?.MemberName} readOnly
-                                                className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                                className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                         </div>
                                     </div>
-                                    <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                    <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[7px]'>
                                         <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Address</p>
                                         <div className='flex-1'>
-                                            <textarea value={memberData?.member?.Address} readOnly name="" id="" cols="14" rows="3" className='rounded-lg focus:outline-none border-2 border-black px-[5px] sm:px-[10px]'></textarea>
-                                            {/* <input type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' /> */}
+                                            <textarea value={memberData?.member?.Address} readOnly name="" id="" cols="14" rows="2" className='rounded-lg focus:outline-none border-2 border-black px-[5px] sm:px-[10px]'></textarea>
+                                            {/* <input type="text" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' /> */}
                                         </div>
                                     </div>
-                                    <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                    <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[7px]'>
                                         <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Mobile No1</p>
                                         <div className='flex-1'>
                                             <input type="text"
-                                                value={memberData?.member?.Mobile1} readOnly className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                                value={memberData?.member?.Mobile1} readOnly className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                         </div>
                                     </div>
                                     <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                         <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Mobile No2</p>
                                         <div className='flex-1'>
-                                            <input type="text" value={memberData?.member?.Mobile2} readOnly className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                            <input type="text" value={memberData?.member?.Mobile2} readOnly className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                         </div>
                                     </div>
                                 </div>
@@ -406,54 +408,54 @@ const MemberDiscontinue = () => {
                         </div>
 
                         <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[5px] px-[10px]'>
-                            <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Scheme Details</h1>
+                            <h1 className='text-[14px] sm:text-[17px] lg:text-[18px] underline font-bold text-[#182456]'>Scheme Details</h1>
                             <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>No. of Months</p>
                                     <div className='flex-1'>
-                                        <input value={memberData?.scheme?.SchemeDuration} readOnly type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        <input value={memberData?.scheme?.SchemeDuration} readOnly type="text" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Scheme Join Date</p>
                                     <div className='flex-1'>
-                                        <input value={memberData?.member?.JoinDate} readOnly type="date" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        <input value={memberData?.member?.JoinDate} readOnly type="date" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Amount</p>
                                     <div className='flex-1'>
-                                        <input value={memberData?.scheme?.SchemeAmount} readOnly type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        <input value={memberData?.scheme?.SchemeAmount} readOnly type="text" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Scheme Value</p>
                                     <div className='flex-1'>
-                                        <input value={memberData?.scheme?.SchemeValue} readOnly type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        <input value={memberData?.scheme?.SchemeValue} readOnly type="text" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Total Scheme Amount</p>
                                     <div className='flex-1'>
-                                        <input readOnly value={memberData?.scheme?.SchemeAmount + memberData?.scheme?.BonusAmount} type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        <input readOnly value={memberData?.scheme?.SchemeAmount + memberData?.scheme?.BonusAmount} type="text" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
-                            <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Pending Dues</h1>
+                            <h1 className='text-[14px] sm:text-[17px] lg:text-[18px] underline font-bold text-[#182456]'>Pending Dues</h1>
                             <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Pending Dues</p>
                                     <div className='flex-1'>
-                                        <input readOnly value={memberData?.scheme?.SchemeDuration - memberData?.receipt?.length} type="text" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        <input readOnly value={memberData?.scheme?.SchemeDuration - memberData?.receipt?.length} type="text" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Balance Months</p>
                                     <div className='flex-1'>
-                                        <input type="text" readOnly value={memberData?.scheme?.SchemeDuration - memberData?.receipt?.length} className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                        <input type="text" readOnly value={memberData?.scheme?.SchemeDuration - memberData?.receipt?.length} className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div>
                             </div>
@@ -462,15 +464,15 @@ const MemberDiscontinue = () => {
                         <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
                             {/* <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Settlement Detail </h1> */}
 
-                            <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
+                            <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[7px]'>
                                 <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
                                     <input type="checkbox" name="droppers" id="" />
-                                    <label htmlFor="droppers" onClick={() => { setSettled(false); setDiscontinue(true) }} className='text-[18px] sm:text-[22px] lg:text-[26px] font-semibold text-[#000]'>Discontinue</label>
+                                    <label htmlFor="droppers" onClick={() => { setSettled(false); setDiscontinue(true) }} className='text-[18px] sm:text-[22px] lg:text-[20px] font-semibold text-[#000]'>Discontinue</label>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Cause</p>
                                     <div className='flex-1'>
-                                        <textarea name="" id="" value={description} onChange={(e) => setDescription(e.target.value)} cols="15" rows="10" className='w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]'></textarea>
+                                        <textarea name="" id="" value={description} onChange={(e) => setDescription(e.target.value)} cols="15" rows="10" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]'></textarea>
                                     </div>
                                 </div>
                             </div>

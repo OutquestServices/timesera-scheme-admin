@@ -7,6 +7,7 @@ export async function POST(request) {
   const prisma = new PrismaClient();
   try {
     const body = await request.json();
+    console.log("Request body:", body);
 
     const isExist = await prisma.oRIGIN_SCHEME_USER.findUnique({
       where: {
@@ -41,8 +42,18 @@ export async function POST(request) {
           MemberName: body.mname,
           Address: body.address,
           CollectionPoint: body.cpoint,
-          PaymentMode: body.pmode,
-          AccNo: body.accno,
+          CashDesc: body.CashDesc,
+          CashAmount: body.CashAmount,
+          CardDesc: body.CardDesc,
+          CardAmount: body.CardAmount,
+          OnlineParticulars: body.OnlineParticulars,
+          OnlineAcc: body.OnlineAcc,
+          OnlineDesc: body.OnlineDesc,
+          OnlineAmount: body.OnlineAmount,
+          UPIParticulars: body.UPIParticulars,
+          UPIAcc: body.UPIAcc,
+          UPIDesc: body.UPIDesc,
+          UPIAmount: body.UPIAmount,
           Description: body.desc,
           Amount: body.amount,
           GoldAmount: body.gamount,
@@ -50,18 +61,15 @@ export async function POST(request) {
           Incharge: body.incharge,
         },
       });
-      return NextResponse.json({ message: result });
+
+      console.log("Receipt created:", result);
+      return NextResponse.json({ message: "Receipt created successfully" }, { status: 200 });
     }
 
-    return NextResponse.error({
-      status: 400,
-      body: { error: "Scheme Code already exist" },
-    });
+    return NextResponse.json({ error: "Scheme Code does not exist" }, { status: 400 });
   } catch (error) {
-    return NextResponse.error({
-      status: 400,
-      body: { error: error.message },
-    });
+    console.error("Error creating receipt:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
@@ -72,22 +80,3 @@ function calculateNextDate(joinDate, months) {
   currentDate.setMonth(currentDate.getMonth() + months);
   return currentDate.toISOString().split("T")[0];
 }
-
-// Default export for endpoint
-
-// {
-// "rno": "1234",
-// "cardno": "GW2",
-// "rdate": "2024-04-26",
-// "mno": "1234567890",
-// "mname": "Test",
-// "address": "Test",
-// "cpoint": true,
-// "pmode": "Test",
-// "accno": "Test",
-// "desc": "Test",
-// "amount": 1000,
-// "gamount": 1000,
-// "incharge": "Test",
-// "gweight": 1000
-// }

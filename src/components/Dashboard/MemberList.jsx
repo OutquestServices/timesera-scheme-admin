@@ -14,11 +14,11 @@ const MemberList = () => {
                 <div className='basis-[33%] w-full h-[300px] overflow-y-auto custom-scrollbar border border-black rounded-lg'>
                     <Duelist />
                 </div>
-                <div className='basis-[33%] w-full h-[300px] overflow-y-auto custom-scrollbar border border-black rounded-lg'>
-                    <Discontinue />
-                </div>
                 <div className='basis-[34%] w-full h-[300px] overflow-y-auto custom-scrollbar border border-black rounded-lg'>
                     <Settlement />
+                </div>
+                <div className='basis-[33%] w-full h-[300px] overflow-y-auto custom-scrollbar border border-black rounded-lg'>
+                    <Discontinue />
                 </div>
             </div>
         </div>

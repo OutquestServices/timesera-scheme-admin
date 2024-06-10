@@ -22,6 +22,8 @@ export async function POST(request) {
                     SchemeType: isExist.SchemeType,
                     SchemeName: isExist.SchemeName,
                     CardNo: isExist.CardNo,
+                    MemberName: body.membername,
+                    MobileNo: body.mobileno,
                     SchemeAmount: body.schemeamount,
                     PaidAmount: body.paidamount,
                     BalanceAmount: body.balanceamount,

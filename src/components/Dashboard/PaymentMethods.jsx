@@ -28,8 +28,8 @@ const PaymentMethods = () => {
         fetchPayments();
     }, []);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+    //if (loading) return <p>Loading...</p>;
+    // if (error) return <p>Error: {error}</p>;
 
     const formatRupees = (value) => {
         const roundedValue = parseFloat(value).toFixed(2);
@@ -38,8 +38,8 @@ const PaymentMethods = () => {
 
     return (
         <div>
-            <div className=' w-full h-full flex flex-col gap-[10px] ' >
-                <div className='w-full h-full rounded-xl px-[15px] py-[5px] flex justify-between items-center' style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }}>
+            <div className=' w-full h-full flex flex-col gap-[3px] ' >
+                <div className='w-full h-full rounded-xl px-[15px] py-[1px] flex justify-between items-center' style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }}>
                     <div className='flex flex-col items-start justify-start'>
                         <p className='text-[12px] font-normal'>Cash</p>
                         <p className='text-[16px] font-semibold'>₹ {formatRupees(payments?.cash)}</p>
@@ -51,7 +51,7 @@ const PaymentMethods = () => {
 
 
 
-                <div className='w-full h-full rounded-xl px-[15px] py-[5px] flex justify-between items-center' style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }}>
+                <div className='w-full h-full rounded-xl px-[15px] py-[1px] flex justify-between items-center' style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }}>
                     <div className='flex flex-col items-start justify-start'>
                         <p className='text-[12px] font-normal'>Card</p>
                         <p className='text-[16px] font-semibold'>₹ {formatRupees(payments?.card)}</p>
@@ -63,7 +63,7 @@ const PaymentMethods = () => {
 
 
 
-                <div className='w-full h-full rounded-xl px-[15px] py-[5px] flex justify-between items-center' style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }}>
+                <div className='w-full h-full rounded-xl px-[15px] py-[1px] flex justify-between items-center' style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }}>
                     <div className='flex flex-col items-start justify-start'>
                         <p className='text-[12px] font-normal'>UPI</p>
                         <p className='text-[16px] font-semibold'>₹ {formatRupees(payments.upi)}</p>
@@ -76,7 +76,7 @@ const PaymentMethods = () => {
 
 
 
-                <div className='w-full h-full rounded-xl px-[15px] py-[5px] flex justify-between items-center' style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }}>
+                <div className='w-full h-full rounded-xl px-[15px] py-[1px] flex justify-between items-center' style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }}>
                     <div className='flex flex-col items-start justify-start'>
                         <p className='text-[12px] font-normal'>Online</p>
                         <p className='text-[16px] font-semibold'>₹ {formatRupees(payments.online)}</p>

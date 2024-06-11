@@ -5,7 +5,7 @@ import ReceiptEntry from '@/components/ReceiptEntry/ReceiptEntry'
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
-const page = () => {
+const Page = () => {
 
     const [isOpen, setIsOpen] = useState(true);
 
@@ -29,4 +29,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

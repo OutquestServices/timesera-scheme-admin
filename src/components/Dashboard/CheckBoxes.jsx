@@ -151,7 +151,7 @@ const CheckBox = () => {
 
                         <span className='flex gap-[3px] items-center justify-start'>
 
-                            <p className='text-[14px] text-black font-semibold z-30 relative'>Today's Collection: </p>
+                            <p className='text-[14px] text-black font-semibold z-30 relative'>Todays Collection: </p>
                         </span>
 
                         <span>
@@ -179,7 +179,7 @@ const CheckBox = () => {
                         <span className='flex gap-[3px] items-center justify-start'>
 
 
-                            <p className='text-[14px] text-black font-semibold z-30 relative'>Today's Receipts: </p>
+                            <p className='text-[14px] text-black font-semibold z-30 relative'>Todays Receipts: </p>
                         </span>
 
                         <span>

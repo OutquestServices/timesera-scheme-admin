@@ -7,7 +7,7 @@ import jsPDF from "jspdf";
 import 'jspdf-autotable';
 import { useRouter } from 'next/navigation';
 
-const page = () => {
+const Page = () => {
 
     const router = useRouter();
     useEffect(() => {
@@ -145,4 +145,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

@@ -136,3 +136,19 @@ model ONLINEMODE_MAST {
   ACCNO   String?
   ACCNAME String?
 }
+
+model MOBILE_LOGIN {
+  id          Int     @id @default(autoincrement())
+  MemberName  String?
+  Gender      String?
+  City        String?
+  Address     String?
+  Pincode     Float?
+  State       String?
+  District    String?
+  MobileNo    String? @unique
+  Password    String?
+  Email       String?
+  Dob         String?
+  Anniversary String?
+}

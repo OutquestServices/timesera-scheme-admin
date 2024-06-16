@@ -225,31 +225,33 @@ const ReceiptEntry = () => {
     setEntries([...entries, newEntry]);
 
     // Clear input fields after adding the entry
-    switch (mode) {
-      case 'Cash':
-        setCashdesc('');
-        setCashamount(0);
-        break;
-      case 'Card':
-        setCarddesc('');
-        setCardamount(0);
-        break;
-      case 'Online':
-        setOnlinedesc('');
-        setOnlineamount(0);
-        setOnlineparticulars('');
-        setOnlineacc('');
-        break;
-      case 'UPI':
-        setUpidesc('');
-        setUpiamount(0);
-        setUpiparticulars('');
-        setUpiacc('');
-        break;
-      default:
-        break;
-    }
+    // switch (mode) {
+    //   case 'Cash':
+    //     setCashdesc('');
+    //     setCashamount(0);
+    //     break;
+    //   case 'Card':
+    //     setCarddesc('');
+    //     setCardamount(0);
+    //     break;
+    //   case 'Online':
+    //     setOnlinedesc('');
+    //     setOnlineamount(0);
+    //     setOnlineparticulars('');
+    //     setOnlineacc('');
+    //     break;
+    //   case 'UPI':
+    //     setUpidesc('');
+    //     setUpiamount(0);
+    //     setUpiparticulars('');
+    //     setUpiacc('');
+    //     break;
+    //   default:
+    //     break;
+    // }
   };
+
+  console.log(cashamount);
 
 
   // console.log(ShemeData?.receipt?.length)

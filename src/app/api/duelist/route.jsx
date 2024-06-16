@@ -41,7 +41,7 @@ export async function GET(request) {
         return null;
       }
 
-      if (differenceInDays >= 30 || (!lastDatePaid && differenceInDays >= 1)) {
+      if (differenceInDays >= 30 || (!lastDatePaid && differenceInDays >= 0)) {
         const monthsDue = Math.ceil(differenceInDays / 30);
         return { ...duelist, monthsDue };
       }

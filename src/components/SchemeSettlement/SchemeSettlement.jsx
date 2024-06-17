@@ -550,7 +550,7 @@ const SchemeSettlement = () => {
                   </div>
                   <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                     <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
-                      Mobile No1
+                      Mobile No
                     </p>
                     <div className="flex-1">
                       <input
@@ -561,7 +561,7 @@ const SchemeSettlement = () => {
                       />
                     </div>
                   </div>
-                  <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                  {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                     <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                       Mobile No2
                     </p>
@@ -573,7 +573,7 @@ const SchemeSettlement = () => {
                         readOnly
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               {/* <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>

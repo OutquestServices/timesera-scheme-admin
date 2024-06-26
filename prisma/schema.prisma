@@ -162,3 +162,15 @@ model FEEDBACK{
   Feedback    String?
   created_at  DateTime @default(now())
 }
+
+model Transactions {
+  id          Int    @id @default(autoincrement())
+  Status      String
+  refid       String
+  transid     String
+  userid      String
+  usermobile  String
+  cardno      String
+  Amount      Int
+  created_at  DateTime @default(now())
+}

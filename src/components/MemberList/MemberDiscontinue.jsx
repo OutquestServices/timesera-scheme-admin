@@ -60,6 +60,8 @@ const MemberDiscontinue = () => {
                     description: description,
                     date: selectedDate,
                     voucherNo: voucherNo,
+                    membername: memberData?.member?.MemberName,
+                    mobileno: memberData?.member?.MobileNo
                 })
             });
 
@@ -387,18 +389,18 @@ const MemberDiscontinue = () => {
                                         </div>
                                     </div>
                                     <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[7px]'>
-                                        <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Mobile No1</p>
+                                        <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Mobile No</p>
                                         <div className='flex-1'>
                                             <input type="text"
-                                                value={memberData?.member?.Mobile1} readOnly className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                                                value={memberData?.member?.MobileNo} readOnly className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                         </div>
                                     </div>
-                                    <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                                    {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                         <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Mobile No2</p>
                                         <div className='flex-1'>
                                             <input type="text" value={memberData?.member?.Mobile2} readOnly className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             {/* <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>

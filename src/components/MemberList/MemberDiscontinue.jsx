@@ -61,7 +61,7 @@ const MemberDiscontinue = () => {
                     date: selectedDate,
                     voucherNo: voucherNo,
                     membername: memberData?.member?.MemberName,
-                    mobileno: memberData?.member?.MobileNo
+                    mobileno: memberData?.member?.MobileNo,
                 })
             });
 

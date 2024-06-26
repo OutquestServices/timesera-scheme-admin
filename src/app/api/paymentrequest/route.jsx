@@ -12,9 +12,9 @@ export async function POST(req) {
       merchantTransactionId: data.merchantTransactionId,
       merchantUserId: data.merchantUserId,
       amount: data.amount,
-      redirectUrl: `http://timeserasoftware.in/api/paymentstatus`,
+      redirectUrl: `https://timeserasoftware.in/api/paymentstatus`,
       redirectMode: "POST",
-      callbackUrl: "http://timeserasoftware.in/api/paymentstatus",
+      callbackUrl: "https://timeserasoftware.in/api/paymentstatus",
       mobileNumber: data.mobileNumber,
       paymentInstrument: {
         type: "PAY_PAGE",

@@ -102,7 +102,7 @@ export async function POST(req) {
   
         console.log("Receipt created:", result);
       }
-      return NextResponse.redirect(`http://timeserasoftware.in/success?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
+      return NextResponse.redirect(`https://timeserasoftware.in/success?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
         status: 301,
       });
     } else {
@@ -137,12 +137,12 @@ export async function POST(req) {
           },
         });
       }
-      return NextResponse.redirect(`http://timeserasoftware.in/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
+      return NextResponse.redirect(`https://timeserasoftware.in/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
         status: 301,
       });
     }
   } catch (error) {
     console.error(error);
-    return NextResponse.redirect(`http://timeserasoftware.in/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, { status: 301 });
+    return NextResponse.redirect(`https://timeserasoftware.in/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, { status: 301 });
   }
 }

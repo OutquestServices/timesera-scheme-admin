@@ -40,6 +40,7 @@ export async function POST(req) {
 
     const parts = transactionId.split('_');
     const cardno= parts[0];
+    const rno = parts[2];
 
     const isExist = await prisma.oRIGIN_SCHEME_USER.findUnique({
       where: {
@@ -72,7 +73,7 @@ export async function POST(req) {
             SchemeName: isExist.SchemeName,
             SchemeCode: isExist.SchemeCode,
             SchemeType: isExist.SchemeType,
-            ReceiptNo: transactionId,
+            ReceiptNo: rno,
             ReceiptDate: rdate,
             CardNo: isExist.CardNo,
             MobileNo: isExist.Mobile1,

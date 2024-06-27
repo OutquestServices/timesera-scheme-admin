@@ -30,6 +30,7 @@ export async function POST(req) {
 
     const response = await axios.post(
       "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay",
+      // "https://api.phonepe.com/apis/hermes/pg/v1/pay",
       { request: base64data },
       {
         headers: {

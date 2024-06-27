@@ -38,9 +38,7 @@ export async function POST(req) {
     const response = await axios.request(options);
 
     const parts = transactionId.split('_');
-    const membername = parts[1];
-    const phonenum = parts[2];
-    const cardno= parts[3];
+    const cardno= parts[0];
 
     const isExist = await prisma.oRIGIN_SCHEME_USER.findUnique({
       where: {
@@ -68,7 +66,6 @@ export async function POST(req) {
             ActualDateToPay: ActualDate,
           },
         });
-
         const result = await prisma.oRIGIN_SCHEME_RECEIPT.create({
           data: {
             SchemeName: isExist.SchemeName,
@@ -77,8 +74,8 @@ export async function POST(req) {
             ReceiptNo: transactionId,
             ReceiptDate: rdate,
             CardNo: isExist.CardNo,
-            MobileNo: phonenum,
-            MemberName: membername,
+            MobileNo: isExist.Mobile1,
+            MemberName: isExist.MemberName,
             Address: isExist.Address,
             OnlineAcc: providerReferenceId,
             OnlineDesc: transactionId,
@@ -93,8 +90,8 @@ export async function POST(req) {
             Status:"Success",
             refid: providerReferenceId,
             transid: transactionId,
-            userid: membername,
-            usermobile: phonenum,
+            userid: isExist.MemberName,
+            usermobile: isExist.Mobile1,
             cardno: cardno,
             Amount:parseInt(amount,10)/100,
           },
@@ -130,8 +127,8 @@ export async function POST(req) {
             Status:"Failure",
             refid: providerReferenceId,
             transid: transactionId,
-            userid: membername,
-            usermobile: phonenum,
+            userid: isExist.MemberName,
+            usermobile: isExist.Mobile1,
             cardno: cardno,
             Amount:parseInt(amount,10)/100,
           },

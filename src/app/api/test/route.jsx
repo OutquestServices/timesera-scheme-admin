@@ -1,7 +1,5 @@
-"use server";
-
-import { ReceiptSchema, getPrismaClient } from '@/components/db/Connection';
 import { NextResponse } from 'next/server';
+import { getPrismaClient,ReceiptSchema } from '@/components/db/Connection';
 
 export async function GET(request) {
     const prisma = await getPrismaClient("ORIGIN_JST");
@@ -11,17 +9,7 @@ export async function GET(request) {
 
         const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
 
-        const receipts = await prisma.oRIGIN_SCHEME_RECEIPT.findMany({
-            where: {
-                ReceiptDate: today,
-            },
-            select: {
-                CardNo: true,
-                MemberName: true,
-                SchemeName: true,
-                Amount: true,
-            },
-        });
+        const receipts = await prisma.oRIGIN_SCHEME_RECEIPT.findMany();
 
         return NextResponse.json(receipts);
     } catch (error) {

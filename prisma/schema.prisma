@@ -1,8 +1,8 @@
 // Prisma schema file
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./testing.db"
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -160,5 +160,17 @@ model FEEDBACK{
   MobileNo    String?
   Category    String?
   Feedback    String?
+  created_at  DateTime @default(now())
+}
+
+model Transactions {
+  id          Int    @id @default(autoincrement())
+  Status      String
+  refid       String
+  transid     String
+  userid      String
+  usermobile  String
+  cardno      String
+  Amount      Int
   created_at  DateTime @default(now())
 }

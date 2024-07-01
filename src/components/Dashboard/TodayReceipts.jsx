@@ -6,11 +6,19 @@ const TodayReceipts = () => {
     const [receipts, setReceipts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [tenantName,setTenantName] = useState(null);
+
+    useEffect(() => {
+        if (!localStorage.getItem("tenantName")) {
+          router.push("/reallogin");
+        }
+        setTenantName(localStorage.getItem("tenantName"));
+      }, [])
 
     useEffect(() => {
         const fetchReceipts = async () => {
             try {
-                const response = await fetch('/api/receipt/fetchtodayreceipts');
+                const response = await fetch(`/api/receipt/fetchtodayreceipts?tn=${tenantName}`);
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.statusText}`);
                 }
@@ -24,7 +32,7 @@ const TodayReceipts = () => {
         };
 
         fetchReceipts();
-    }, []);
+    }, [tenantName]);
 
     //if (loading) return <p>Loading...</p>;
     // if (error) return <p>Error: {error}</p>;

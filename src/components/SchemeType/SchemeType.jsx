@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { FaRegEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 const SchemeType = () => {
     const [schemeType, setSchemeType] = useState("");
@@ -10,6 +12,8 @@ const SchemeType = () => {
     const [schemeTypes, setSchemeTypes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [editing, setEditing] = useState(false);
+    const [editingId, setEditingId] = useState(null);
 
     useEffect(() => {
         const fetchSchemeTypes = async () => {
@@ -57,11 +61,17 @@ const SchemeType = () => {
             // Remove the deleted item from the state
             setSchemeTypes(schemeTypes.filter((type) => type.SchemeType !== schemeType));
             alert('Scheme type deleted successfully');
-            window.location.reload();
         } catch (error) {
             console.error('Error deleting scheme type:', error);
             alert('An error occurred while deleting the scheme type. Please try again.');
         }
+    };
+
+    const handleEdit = (type) => {
+        setSchemeType(type.SchemeType);
+        setGoldScheme(type.SchemeMode);
+        setEditing(true);
+        setEditingId(type.id);
     };
 
     const handleSubmit = async (e) => {
@@ -71,37 +81,53 @@ const SchemeType = () => {
             mode: goldScheme,
         };
 
-        if(data.type === ""){
+        if (data.type === "") {
             alert("Enter Scheme Type");
-        }
-        else if(data.type !== ""){
+        } else {
             try {
-                const response = await fetch("/api/schemetype", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                });
+                let response;
+                if (editing) {
+                    response = await fetch(`/api/schemetype/update`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ ...data, id: editingId }),
+                    });
+                } else {
+                    response = await fetch("/api/schemetype", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(data),
+                    });
+                }
+
+                const result = await response.json();
 
                 if (response.ok) {
                     alert("Data saved successfully");
-                    setGoldScheme("");
+                    setGoldScheme("Cash Scheme");
                     setSchemeType("");
+                    setEditing(false);
+                    setEditingId(null);
                     window.location.reload();
                 } else {
-                    alert("Failed to save data");
-                    setGoldScheme("");
+                    alert(result.error || "Failed to save data");
+                    setGoldScheme("Cash Scheme");
                     setSchemeType("");
                 }
             } catch (error) {
-                console.error(error);
+                console.error('Error submitting form:', error);
+                alert("An error occurred. Please try again.");
+                setGoldScheme("Cash Scheme");
                 setSchemeType("");
             }
         }
-
-        
     };
+
+
 
     return (
         <div
@@ -123,7 +149,7 @@ const SchemeType = () => {
                             </h1>
                         </div>
 
-                        <Link href={"/schemetype/typereport"} className=" cursor-pointer h-[45px] w-[250px] px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#52BD91] rounded-md">
+                        {/* <Link href={"/schemetype/typereport"} className=" cursor-pointer h-[45px] w-[250px] px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#52BD91] rounded-md">
                             <p className="text-white font-bold">GET REPORT</p>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -133,27 +159,24 @@ const SchemeType = () => {
                                 fill="none"
                             >
                                 <path
-                                    fill-rule="evenodd"
-                                    clip-rule="evenodd"
+                                    fillRule="evenodd"
+                                    clipRule="evenodd"
                                     d="M0.149414 9C0.149414 4.30545 3.97146 0.5 8.68649 0.5C13.4015 0.5 17.2236 4.30545 17.2236 9C17.2236 13.6946 13.4015 17.5 8.68649 17.5C3.97146 17.5 0.149414 13.6946 0.149414 9ZM8.68649 2.2C6.87515 2.2 5.138 2.91643 3.85719 4.19167C2.57638 5.46692 1.85683 7.19653 1.85683 9C1.85683 10.8035 2.57638 12.5331 3.85719 13.8083C5.138 15.0836 6.87515 15.8 8.68649 15.8C10.4978 15.8 12.235 15.0836 13.5158 13.8083C14.7966 12.5331 15.5161 10.8035 15.5161 9C15.5161 7.19653 14.7966 5.46692 13.5158 4.19167C12.235 2.91643 10.4978 2.2 8.68649 2.2Z"
                                     fill="#F8F8F8"
                                 />
                                 <path
-                                    fill-rule="evenodd"
-                                    clip-rule="evenodd"
+                                    fillRule="evenodd"
+                                    clipRule="evenodd"
                                     d="M9.5404 4.74999C9.5404 4.52456 9.45046 4.30836 9.29036 4.14895C9.13026 3.98955 8.91311 3.89999 8.6867 3.89999C8.46028 3.89999 8.24313 3.98955 8.08303 4.14895C7.92293 4.30836 7.83299 4.52456 7.83299 4.74999V8.14999H4.41816C4.19174 8.14999 3.9746 8.23955 3.8145 8.39895C3.6544 8.55836 3.56445 8.77456 3.56445 8.99999C3.56445 9.22543 3.6544 9.44163 3.8145 9.60103C3.9746 9.76044 4.19174 9.84999 4.41816 9.84999H7.83299V13.25C7.83299 13.4754 7.92293 13.6916 8.08303 13.851C8.24313 14.0104 8.46028 14.1 8.6867 14.1C8.91311 14.1 9.13026 14.0104 9.29036 13.851C9.45046 13.6916 9.5404 13.4754 9.5404 13.25V9.84999H12.9552C13.1816 9.84999 13.3988 9.76044 13.5589 9.60103C13.719 9.44163 13.8089 9.22543 13.8089 8.99999C13.8089 8.77456 13.719 8.55836 13.5589 8.39895C13.3988 8.23955 13.1816 8.14999 12.9552 8.14999H9.5404V4.74999Z"
                                     fill="#F8F8F8"
                                 />
                             </svg>
-                        </Link>
+                        </Link> */}
                     </div>
-
-
-
                 </div>
 
                 <div className="w-full flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center">
-                    <div className="max-w-[550px] w-full flex flex-col m-auto max-h-full border-2 border-[#182456] rounded-xl overflow-hidden">
+                    <div className="max-w-[550px] w-full flex flex-col m-auto max-h-full border border-[#182456] rounded-xl overflow-hidden">
                         <div
                             className="w-full h-[50px] flex items-center justify-center"
                             style={{
@@ -174,7 +197,7 @@ const SchemeType = () => {
                                 <input
                                     type="text"
                                     value={schemeType}
-                                    className="basis-[60%] max-w-[250px] w-full focus:outline-none p-[4px] sm:p-[5px] lg:p-[5px] rounded-xl border-2 border-[#182456] "
+                                    className="basis-[60%] max-w-[250px] w-full focus:outline-none p-[4px] sm:p-[3px] lg:p-[3px] text-[12px] rounded-md border border-gray-500 "
                                     onChange={(e) => setSchemeType(e.target.value)}
                                 />
                             </div>
@@ -197,6 +220,7 @@ const SchemeType = () => {
                                         id="goldscheme"
                                         value="Gold Scheme"
                                         onChange={(e) => setGoldScheme(e.target.value)}
+                                        checked={goldScheme === "Gold Scheme"}
                                     />
                                     <label htmlFor="goldscheme" className="font-semibold">
                                         Gold Scheme
@@ -208,8 +232,8 @@ const SchemeType = () => {
                                         name="scheme"
                                         id="cashscheme"
                                         value="Cash Scheme"
-                                        defaultChecked
                                         onChange={(e) => setGoldScheme(e.target.value)}
+                                        checked={goldScheme === "Cash Scheme"}
                                     />
                                     <label htmlFor="cashscheme" className="font-semibold">
                                         Cash Scheme
@@ -219,15 +243,15 @@ const SchemeType = () => {
                         </div>
                     </div>
 
-                    <div className="w-full flex items-center justify-center gap-[10px] sm:gap-[15px] lg:gap-[20px]">
+                    <div className="w-full text-[14px] flex items-center justify-center gap-[10px] sm:gap-[15px] lg:gap-[20px]">
                         <button
-                            className="px-[20px] w-[150px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#52BD91] text-white font-semibold flex items-center justify-center cursor-pointer"
+                            className="px-[20px] w-[120px] sm:px-[30px] rounded-md py-[2px] sm:py-[5px] bg-[#52BD91] text-white font-semibold flex items-center justify-center cursor-pointer"
                             onClick={handleSubmit}
                         >
-                            SAVE
+                            {editing ? "UPDATE" : "SAVE"}
                         </button>
 
-                        <div className="px-[20px] w-[150px] sm:px-[30px] rounded-md py-[5px] sm:py-[10px] bg-[#182456] text-white font-semibold flex items-center justify-center cursor-pointer">
+                        <div className="px-[20px] w-[120px] sm:px-[30px] rounded-md py-[2px] sm:py-[5px] bg-[#182456] text-white font-semibold flex items-center justify-center cursor-pointer">
                             CANCEL
                         </div>
                     </div>
@@ -245,12 +269,13 @@ const SchemeType = () => {
                         </thead>
                         <tbody className="w-full border border-black">
                             {schemeTypes.map((type, index) => (
-                                <tr key={type.id} className={`px-1 text-[10px] ${(index % 2 == 0) ? "bg-white" : "bg-gray-100"} font-medium`}>
+                                <tr key={type.id} className={`px-1 text-[12px] ${(index % 2 == 0) ? "bg-white" : "bg-gray-100"} font-medium`}>
                                     <td className="border border-black p-2">{type.id}</td>
                                     <td className="border border-black p-2">{type.SchemeType}</td>
                                     <td className="border border-black p-2">{type.SchemeMode}</td>
-                                    <td className="border border-black p-2">
-                                        <button className="text-red-700" onClick={() => handleDelete(type.SchemeType)}>Delete</button>
+                                    <td className="border border-black p-2 text-[14px]">
+                                        <button className="text-blue-700 mr-2" onClick={() => handleEdit(type)}><FaRegEdit /></button>
+                                        <button className="text-red-700" onClick={() => handleDelete(type.SchemeType)}><MdDelete /></button>
                                     </td>
                                 </tr>
                             ))}

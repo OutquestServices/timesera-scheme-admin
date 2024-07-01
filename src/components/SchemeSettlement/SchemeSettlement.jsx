@@ -40,6 +40,23 @@ const SchemeSettlement = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchNextVoucherNumber = async () => {
+      try {
+        const response = await fetch('/api/memberdiscontinue/generatevoucherno');
+        if (!response.ok) {
+          throw new Error('Failed to fetch the next voucher number');
+        }
+        const data = await response.json();
+        setVoucherNo(data.nextSettlementNumber);
+      } catch (error) {
+        console.error('Error fetching the next voucher number:', error);
+      }
+    };
+
+    fetchNextVoucherNumber();
+  }, []);
+
   const pushSettlement = async (cardno) => {
 
     if (!voucherNo) {
@@ -104,7 +121,7 @@ const SchemeSettlement = () => {
       <div className="w-full h-full flex flex-col">
         <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px]">
           <div
-            className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[15px] lg:py-[15px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
+            className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[10px] lg:py-[10px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
             style={{
               background:
                 "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)",
@@ -217,31 +234,31 @@ const SchemeSettlement = () => {
         </div>
 
         <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[5px] w-full max-h-full flex gap-[10px] sm:gap-[15px] lg:gap-[20px]">
-          <div className="basis-[70%] w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+          <div className="basis-[75%] w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]">
             <div className="flex items-center justify-center w-full gap-[5px] sm:gap-[10px] lg:gap-[15px]">
-              <div className="basis-[40%] w-full flex items-center justify-between">
+              <div className="basis-[30%] w-full flex items-center justify-between">
                 <p className=" text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Card No
                 </p>
                 <input
                   type="text"
                   value={CardNo}
-                  className="w-full max-w-[170px] h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  className="w-full max-w-[120px] h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px] text-[14px]"
                   onChange={(e) => setCardNo(e.target.value)}
                 />
               </div>
               <button
-                className="basis-[10%] h-[30px] border-2 rounded-lg cursor-pointer border-black flex items-center justify-center hover:bg-blue-400"
+                className="basis-[10%] h-full py-[2px] border rounded-md cursor-pointer border-black flex items-center justify-center hover:bg-blue-400 text-[14px]"
                 onClick={() => fetchSettlement(CardNo)}
               >
                 Submit
               </button>
-              <div className="basis-[60%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]">
+              <div className="basis-[70%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]">
                 <div className='flex items-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]'>
                   {/* <p className='text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold'>Gold Rate</p> */}
                   <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
                     <label htmlFor="voucherNo" className='text-[14px] sm:text-[16px] lg:text-[16px] font-semibold text-[#000]'>Voucher No</label>
-                    <input type="text" id="voucherNo" value={voucherNo} onChange={(e) => setVoucherNo(e.target.value)} className='w-[100px] h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                    <input type="text" id="voucherNo" readOnly value={voucherNo} className='max-w-[100px] h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                   </div>
                 </div>
 
@@ -250,27 +267,27 @@ const SchemeSettlement = () => {
                     Date
                   </p>
                   <div className="flex-1">
-                    <input type="date" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={selectedDate} readOnly />
+                    <input type="date" className='w-full h-full py-[2px] focus:outline-none rounded-md text-[14px] border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={selectedDate} readOnly />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="w-full grid grid-cols-3 gap-[7px] sm:gap-[14px] lg:gap-[20px]">
+            <div className="w-full grid grid-cols-2 gap-[7px] sm:gap-[14px] lg:gap-[20px]">
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="basis-[30%] text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Type
                 </p>
-                <div className="flex-1">
+                <div className="basis-[70%]">
                   <input
                     type="text"
                     value={memberData?.member?.SchemeType}
-                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-full py-[2px] text-[14px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
               </div>
-              <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+              {/* <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                 <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
                   Scheme Group
                 </p>
@@ -278,27 +295,27 @@ const SchemeSettlement = () => {
                   <input
                     type="text"
                     value={memberData?.member?.SchemeCode}
-                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-full py-[2px] text-[14px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
-              </div>
+              </div> */}
               <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                <p className="flex-1 text-[12px] sm:text-[14px] lg:text-[16px] text-[#182456] font-semibold">
+                <p className="basis-[30%] text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
                   Scheme Name
                 </p>
-                <div className="flex-1">
+                <div className="basis-[70%]">
                   <input
                     type="text"
                     value={memberData?.member?.SchemeName}
-                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-full py-[2px] text-[14px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
               </div>
             </div>
 
-            <div className="w-full my-[10px] sm:my-[15px] lg:my-[20px] max-h-[380px] overflow-auto custom-scrollbar2">
+            <div className="w-full max-h-[380px] overflow-auto custom-scrollbar2">
               <table className="table-auto w-full text-[12px] sm:text-[14px] h-full">
                 <tr className="bg-[#172561] text-white">
                   <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
@@ -331,7 +348,7 @@ const SchemeSettlement = () => {
                 </tr>
                 {memberData?.receipt?.map((item, index) => (
                   <>
-                    <tr className="bg-[#EAFFF6] text-[#172561]">
+                    <tr className={`${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"} text-[#172561]`}>
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {index + 1}
                       </th>
@@ -377,7 +394,7 @@ const SchemeSettlement = () => {
                     (Object.keys(memberData?.receipt || {})?.length || 0),
                 }).map((_, index) => (
                   <>
-                    <tr className="bg-[#EAFFF6] text-[#172561]">
+                    <tr className={`${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"} text-[#172561]`}>
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {(Object.keys(memberData?.receipt || {})?.length || 0) +
                           index +
@@ -443,7 +460,7 @@ const SchemeSettlement = () => {
                         memberData.scheme &&
                         memberData.scheme.SchemeAmount)
                     }
-                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
@@ -462,7 +479,7 @@ const SchemeSettlement = () => {
                         0
                       ) || []
                     }
-                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
@@ -487,7 +504,7 @@ const SchemeSettlement = () => {
                         0
                       ) || [])
                     }
-                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
@@ -506,19 +523,36 @@ const SchemeSettlement = () => {
                         0
                       ) || []
                     }
-                    className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    className="w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
                   />
                 </div>
               </div>
             </div>
           </div>
-          <div className="basis-[30%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[7px]">
+          <div className="basis-[25%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[7px]">
             <div className="flex flex-col gap-[2px] sm:gap-[4px] lg:gap-[6px]">
 
               <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
                 <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[5px]">
-                  <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+
+                  <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                    <p className="text-[12px] font-semibold">Member Name:</p>
+                    <p className="text-[12px]">{memberData?.member?.MemberName}</p>
+                  </div>
+
+                  <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                    <p className="text-[12px] font-semibold">Address:</p>
+                    <p className="text-[12px]">{memberData?.member?.Address}</p>
+                  </div>
+
+                  <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                    <p className="text-[12px] font-semibold">Mobile No:</p>
+                    <p className="text-[12px]">{memberData?.member?.MobileNo}</p>
+                  </div>
+                  
+
+                  {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                     <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                       Member Name
                     </p>
@@ -526,12 +560,12 @@ const SchemeSettlement = () => {
                       <input
                         type="text"
                         value={memberData?.member?.MemberName}
-                        className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                        className="w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                         readOnly
                       />
                     </div>
-                  </div>
-                  <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                  </div> */}
+                  {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                     <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                       Address
                     </p>
@@ -542,13 +576,12 @@ const SchemeSettlement = () => {
                         cols="14"
                         rows="2"
                         value={memberData?.member?.Address}
-                        className="rounded-lg focus:outline-none border-2 border-black px-[5px] sm:px-[10px]"
+                        className="rounded-lg focus:outline-none border border-black px-[5px] sm:px-[10px]"
                         readOnly
                       ></textarea>
-                      {/* <input type="text" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' /> */}
                     </div>
-                  </div>
-                  <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                  </div> */}
+                  {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                     <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                       Mobile No
                     </p>
@@ -556,20 +589,7 @@ const SchemeSettlement = () => {
                       <input
                         type="text"
                         value={memberData?.member?.MobileNo}
-                        className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
-                        readOnly
-                      />
-                    </div>
-                  </div>
-                  {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                    <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
-                      Mobile No2
-                    </p>
-                    <div className="flex-1">
-                      <input
-                        type="text"
-                        value={memberData?.member?.Mobile2}
-                        className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                        className="w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                         readOnly
                       />
                     </div>
@@ -583,11 +603,40 @@ const SchemeSettlement = () => {
             </div>
 
             <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[5px] px-[10px]">
-              <h1 className="text-[14px] sm:text-[17px] lg:text-[18px] underline font-bold text-[#182456]">
+              <h1 className="text-[14px] sm:text-[17px] lg:text-[14px] underline font-bold text-[#182456]">
                 Scheme Details
               </h1>
-              <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[7px]">
-                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+              <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[5px]">
+
+                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <p className="text-[12px] font-semibold">No. Of Months:</p>
+                  <p className="text-[12px]">{memberData?.scheme?.SchemeDuration}</p>
+                </div>
+
+                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <p className="text-[12px] font-semibold">Scheme Join Date:</p>
+                  <p className="text-[12px]">{memberData?.member?.JoinDate}</p>
+                </div>
+
+                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <p className="text-[12px] font-semibold">Amount:</p>
+                  <p className="text-[12px]">{memberData?.scheme?.SchemeAmount}</p>
+                </div>
+
+                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <p className="text-[12px] font-semibold">Scheme Value:</p>
+                  <p className="text-[12px]">{memberData?.scheme?.SchemeValue}</p>
+                </div>
+
+                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <p className="text-[12px] font-semibold">Total Scheme Amount:</p>
+                  <p className="text-[12px]">{memberData?.scheme?.SchemeAmount + memberData?.scheme?.BonusAmount}</p>
+                </div>
+
+                
+
+
+                {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     No. of Months
                   </p>
@@ -595,7 +644,7 @@ const SchemeSettlement = () => {
                     <input
                       type="text"
                       value={memberData?.scheme?.SchemeDuration}
-                      className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -608,7 +657,7 @@ const SchemeSettlement = () => {
                     <input
                       type="date"
                       value={memberData?.member?.JoinDate}
-                      className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -621,7 +670,7 @@ const SchemeSettlement = () => {
                     <input
                       type="text"
                       value={memberData?.scheme?.SchemeAmount}
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[35px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -634,7 +683,7 @@ const SchemeSettlement = () => {
                     <input
                       type="text"
                       value={memberData?.scheme?.SchemeValue}
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[35px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
@@ -650,20 +699,32 @@ const SchemeSettlement = () => {
                         memberData?.scheme?.SchemeAmount +
                         memberData?.scheme?.BonusAmount
                       }
-                      className="w-full h-[35px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[35px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                       readOnly
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 
             <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
-              <h1 className="text-[14px] sm:text-[17px] lg:text-[18px] font-bold underline text-[#182456]">
+              <h1 className="text-[14px] sm:text-[17px] lg:text-[14px] font-bold underline text-[#182456]">
                 Settlement Detail{" "}
               </h1>
-              <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[7px]">
-                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+              <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[5px]">
+
+                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <p className="text-[12px] font-semibold">Paid Amount:</p>
+                  <p className="text-[12px]">{(memberData && memberData.receipt && Object.keys(memberData.receipt).length) * (memberData && memberData.scheme && memberData.scheme.SchemeAmount)}</p>
+                </div>
+
+                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <p className="text-[12px] font-semibold">Bonus Amount:</p>
+                  <p className="text-[12px]">{(memberData?.receipt?.reduce((accumulator, currentItem) => accumulator + currentItem.Amount, 0) || []) - ((memberData && memberData.receipt && Object.keys(memberData.receipt).length) * (memberData && memberData.scheme && memberData.scheme.SchemeAmount))}</p>
+                </div>
+
+
+                {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     Paid Amount
                   </p>
@@ -679,7 +740,7 @@ const SchemeSettlement = () => {
                       }
                       readOnly
                       type="text"
-                      className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     />
                   </div>
                 </div>
@@ -704,27 +765,27 @@ const SchemeSettlement = () => {
                       }
                       readOnly
                       type="text"
-                      className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     />
                   </div>
-                </div>
-                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                </div> */}
+                {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     Incharge
                   </p>
                   <div className="flex-1">
                     <input
                       type="text"
-                      className="w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      className="w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     />
                   </div>
-                </div>
+                </div> */}
                 <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
-                  <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                  <p className="basis-[40%] text-[12px] sm:text-[14px] text-[#182456] font-semibold">
                     Description
                   </p>
-                  <div className="flex-1">
-                    <textarea name="" id="" value={description} onChange={(e) => setDescription(e.target.value)} cols="15" rows="10" className='w-full h-[30px] focus:outline-none rounded-lg border-2 border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]'></textarea>
+                  <div className="basis-[60%]">
+                    <textarea name="" id="" value={description} onChange={(e) => setDescription(e.target.value)} cols="15" rows="10" className='w-full max-h-[30px] h-full py-[2px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]'></textarea>
                   </div>
                 </div>
               </div>

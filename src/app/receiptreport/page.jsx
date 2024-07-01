@@ -157,7 +157,7 @@ const Page = () => {
     return (
         <div className="flex w-full max-h-screen overflow-y-auto custom-scrollbar2">
             <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-            <div className={`flex-1 w-full transition-all duration-300 ${isOpen ? 'ml-64' : 'ml-16'} p-[20px]`}>
+            <div className={`flex-1 w-full transition-all duration-300 ${isOpen ? 'ml-52' : 'ml-16'} p-[20px]`}>
                 <div className="w-full flex flex-col gap-[10px]">
 
                     <div
@@ -172,7 +172,7 @@ const Page = () => {
                                 Receipt Report
                             </h1>
 
-                            
+
                         </div>
                     </div>
 
@@ -186,8 +186,8 @@ const Page = () => {
                                 <p className='text-[12px]'>To Date</p>
                                 <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} className=' border border-black focus:outline-none p-1' />
                             </div>
-                            
-                            
+
+
                         </div>
                         <div className='flex items-center justify-center gap-[10px]'>
                             <button className="bg-green-400 px-[10px] text-white py-[10px]" onClick={exportToExcel}>
@@ -197,7 +197,7 @@ const Page = () => {
                                 Export to PDF
                             </button>
                         </div>
-                    </div> 
+                    </div>
 
                     <div className='w-full grid grid-cols-5 items-center justify-center gap-[10px] pt-[20px]'>
                         <select onChange={(e) => setSchemeType(e.target.value)} value={schemeType} className='border border-black p-2 focus:outline-none'>
@@ -215,8 +215,8 @@ const Page = () => {
                         <input type="text" placeholder="Search Card No" className='border border-black p-2 focus:outline-none' value={cardNo} onChange={(e) => setCardNo(e.target.value)} />
                         <input type="text" placeholder="Search Member Name" className='border border-black p-2 focus:outline-none' value={memberName} onChange={(e) => setMemberName(e.target.value)} />
                         <input type="text" placeholder="Search Mobile No" className='border border-black p-2 focus:outline-none' value={mobileNo} onChange={(e) => setMobileNo(e.target.value)} />
-                    </div> 
-                    
+                    </div>
+
                     <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[20px] text-[14px]">
                         <table className="w-full table-auto text-center max-w-[1350px] mx-auto border border-black">
                             <thead className="w-full border border-black">

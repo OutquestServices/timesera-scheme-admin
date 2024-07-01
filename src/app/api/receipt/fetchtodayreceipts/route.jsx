@@ -4,7 +4,9 @@ import { ReceiptSchema, getPrismaClient } from '@/components/db/Connection';
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {
-    const prisma = await getPrismaClient("ORIGIN_JST");
+    const tn = request.nextUrl.searchParams.get('tn');
+    const prisma = await getPrismaClient(tn);
+
 
     try {
         await ReceiptSchema(prisma);
@@ -25,7 +27,7 @@ export async function GET(request) {
 
         return NextResponse.json(receipts);
     } catch (error) {
-        console.error(error);
+        console.error('Error fetching receipts:', error);
         return NextResponse.json({ error: error.message }, { status: 500 });
     } finally {
         await prisma.$disconnect();

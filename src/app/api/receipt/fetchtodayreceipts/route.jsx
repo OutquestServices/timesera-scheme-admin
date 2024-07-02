@@ -4,14 +4,13 @@ import { ReceiptSchema, getPrismaClient } from '@/components/db/Connection';
 import { NextResponse } from 'next/server';
 
 export async function GET(request) {
-    const tn = request.nextUrl.searchParams.get('tn');
+    const tn = request.headers.get('tn');
     const prisma = await getPrismaClient(tn);
-
 
     try {
         await ReceiptSchema(prisma);
 
-        const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+        const today = new Date().toISOString().split('T')[0]; 
 
         const receipts = await prisma.oRIGIN_SCHEME_RECEIPT.findMany({
             where: {

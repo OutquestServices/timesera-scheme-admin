@@ -4,24 +4,23 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Styling.css";
 
 const SchemeSettlement = () => {
-
-  const currentDate = new Date().toISOString().split('T')[0];
+  const currentDate = new Date().toISOString().split("T")[0];
 
   // Set initial state with current date
   const [selectedDate, setSelectedDate] = useState(currentDate);
   const [memberData, setMemberData] = useState({});
-  const [CardNo, setCardNo] = useState('');
-  const [schemetype, setSchemeType] = useState('');
-  const [schemename, setSchemeName] = useState('');
-  const [schemeAmount, setSchemeAmount] = useState('');
-  const [paidamount, setPaidAmount] = useState('');
-  const [balanceamount, setBalanceAmount] = useState('');
-  const [goldwt, setGoldWt] = useState('');
+  const [CardNo, setCardNo] = useState("");
+  const [schemetype, setSchemeType] = useState("");
+  const [schemename, setSchemeName] = useState("");
+  const [schemeAmount, setSchemeAmount] = useState("");
+  const [paidamount, setPaidAmount] = useState("");
+  const [balanceamount, setBalanceAmount] = useState("");
+  const [goldwt, setGoldWt] = useState("");
   const [goldamt, setGoldAmt] = useState(77);
   const [settled, setSettled] = useState(true);
   const [discontinue, setDiscontinue] = useState(false);
-  const [description, setDescription] = useState('');
-  const [voucherNo, setVoucherNo] = useState('');
+  const [description, setDescription] = useState("");
+  const [voucherNo, setVoucherNo] = useState("");
 
   const [SchemeData, setSchemeData] = useState(null);
 
@@ -32,6 +31,10 @@ const SchemeSettlement = () => {
         body: JSON.stringify({
           cardno: cardno,
         }),
+        headers: {
+          "Content-Type": "application/json",
+          tn: localStorage.getItem("tenantName"),
+        },
       });
       const data = await response.json();
       setMemberData(data);
@@ -43,14 +46,22 @@ const SchemeSettlement = () => {
   useEffect(() => {
     const fetchNextVoucherNumber = async () => {
       try {
-        const response = await fetch('/api/memberdiscontinue/generatevoucherno');
+        const response = await fetch(
+          "/api/memberdiscontinue/generatevoucherno",
+          {
+            headers: {
+              tn: localStorage.getItem("tenantName"),
+              "content-type": "application/json",
+            },
+          }
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch the next voucher number');
+          throw new Error("Failed to fetch the next voucher number");
         }
         const data = await response.json();
         setVoucherNo(data.nextSettlementNumber);
       } catch (error) {
-        console.error('Error fetching the next voucher number:', error);
+        console.error("Error fetching the next voucher number:", error);
       }
     };
 
@@ -58,9 +69,8 @@ const SchemeSettlement = () => {
   }, []);
 
   const pushSettlement = async (cardno) => {
-
     if (!voucherNo) {
-      alert('Voucher number is required');
+      alert("Voucher number is required");
       return;
     }
 
@@ -80,35 +90,40 @@ const SchemeSettlement = () => {
           date: selectedDate,
           voucherNo: voucherNo,
           membername: memberData?.member?.MemberName,
-          mobileno: memberData?.member?.MobileNo
-        })
+          mobileno: memberData?.member?.MobileNo,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          tn: localStorage.getItem("tenantName"),
+        },
       });
 
       if (!response.ok) {
-        throw new Error('Network response is not ok');
+        throw new Error("Network response is not ok");
       }
 
       const ans = await response.json();
       alert("Settled Successfully");
 
       window.location.reload();
-
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
     if (memberData?.member) {
-      setSchemeType(memberData.member.SchemeType || '');
+      setSchemeType(memberData.member.SchemeType || "");
       // setSchemeCode(memberData.member.SchemeCode || '');
-      setSchemeName(memberData.member.SchemeName || '');
-      setSchemeAmount(memberData.scheme?.SchemeAmount || '');
+      setSchemeName(memberData.member.SchemeName || "");
+      setSchemeAmount(memberData.scheme?.SchemeAmount || "");
 
-      const totalPaid = memberData.receipt?.reduce((acc, item) => acc + item.Amount, 0) || 0;
+      const totalPaid =
+        memberData.receipt?.reduce((acc, item) => acc + item.Amount, 0) || 0;
       setPaidAmount(totalPaid);
 
-      const totalGoldWt = memberData.receipt?.reduce((acc, item) => acc + item.GoldWt, 0) || 0;
+      const totalGoldWt =
+        memberData.receipt?.reduce((acc, item) => acc + item.GoldWt, 0) || 0;
       setGoldWt(totalGoldWt);
 
       const schemeAmt = memberData.scheme?.SchemeAmount || 0;
@@ -254,11 +269,22 @@ const SchemeSettlement = () => {
                 Submit
               </button>
               <div className="basis-[70%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]">
-                <div className='flex items-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]'>
+                <div className="flex items-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]">
                   {/* <p className='text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold'>Gold Rate</p> */}
-                  <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
-                    <label htmlFor="voucherNo" className='text-[14px] sm:text-[16px] lg:text-[16px] font-semibold text-[#000]'>Voucher No</label>
-                    <input type="text" id="voucherNo" readOnly value={voucherNo} className='max-w-[100px] h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
+                  <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
+                    <label
+                      htmlFor="voucherNo"
+                      className="text-[14px] sm:text-[16px] lg:text-[16px] font-semibold text-[#000]"
+                    >
+                      Voucher No
+                    </label>
+                    <input
+                      type="text"
+                      id="voucherNo"
+                      readOnly
+                      value={voucherNo}
+                      className="max-w-[100px] h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    />
                   </div>
                 </div>
 
@@ -267,7 +293,12 @@ const SchemeSettlement = () => {
                     Date
                   </p>
                   <div className="flex-1">
-                    <input type="date" className='w-full h-full py-[2px] focus:outline-none rounded-md text-[14px] border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={selectedDate} readOnly />
+                    <input
+                      type="date"
+                      className="w-full h-full py-[2px] focus:outline-none rounded-md text-[14px] border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      value={selectedDate}
+                      readOnly
+                    />
                   </div>
                 </div>
               </div>
@@ -348,7 +379,11 @@ const SchemeSettlement = () => {
                 </tr>
                 {memberData?.receipt?.map((item, index) => (
                   <>
-                    <tr className={`${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"} text-[#172561]`}>
+                    <tr
+                      className={`${
+                        index % 2 == 0 ? "bg-white" : "bg-[#EAFFF6]"
+                      } text-[#172561]`}
+                    >
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {index + 1}
                       </th>
@@ -359,8 +394,9 @@ const SchemeSettlement = () => {
                               memberData?.member?.JoinDate
                             );
                             joinDate.setMonth(joinDate.getMonth() + index);
-                            const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth() + 1
-                              }-${joinDate.getFullYear()}`;
+                            const formattedDate = `${joinDate.getDate()}-${
+                              joinDate.getMonth() + 1
+                            }-${joinDate.getFullYear()}`;
                             return formattedDate;
                           })()}
                       </th>
@@ -394,7 +430,11 @@ const SchemeSettlement = () => {
                     (Object.keys(memberData?.receipt || {})?.length || 0),
                 }).map((_, index) => (
                   <>
-                    <tr className={`${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"} text-[#172561]`}>
+                    <tr
+                      className={`${
+                        index % 2 == 0 ? "bg-white" : "bg-[#EAFFF6]"
+                      } text-[#172561]`}
+                    >
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {(Object.keys(memberData?.receipt || {})?.length || 0) +
                           index +
@@ -408,10 +448,10 @@ const SchemeSettlement = () => {
                             );
                             joinDate.setMonth(
                               joinDate.getMonth() +
-                              (Object.keys(memberData?.receipt || {})
-                                ?.length || 0) +
-                              index +
-                              1
+                                (Object.keys(memberData?.receipt || {})
+                                  ?.length || 0) +
+                                index +
+                                1
                             );
                             const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth()}-${joinDate.getFullYear()}`;
                             return formattedDate;
@@ -495,9 +535,9 @@ const SchemeSettlement = () => {
                       (memberData &&
                         memberData.receipt &&
                         Object.keys(memberData.receipt).length) *
-                      (memberData &&
-                        memberData.scheme &&
-                        memberData.scheme.SchemeAmount) -
+                        (memberData &&
+                          memberData.scheme &&
+                          memberData.scheme.SchemeAmount) -
                       (memberData?.receipt?.reduce(
                         (accumulator, currentItem) =>
                           accumulator + currentItem.Amount,
@@ -532,25 +572,44 @@ const SchemeSettlement = () => {
           </div>
           <div className="basis-[25%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[7px]">
             <div className="flex flex-col gap-[2px] sm:gap-[4px] lg:gap-[6px]">
-
               <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
                 <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[5px]">
-
-                  <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <div
+                    style={{
+                      background:
+                        "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                    }}
+                    className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                  >
                     <p className="text-[12px] font-semibold">Member Name:</p>
-                    <p className="text-[12px]">{memberData?.member?.MemberName}</p>
+                    <p className="text-[12px]">
+                      {memberData?.member?.MemberName}
+                    </p>
                   </div>
 
-                  <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <div
+                    style={{
+                      background:
+                        "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                    }}
+                    className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                  >
                     <p className="text-[12px] font-semibold">Address:</p>
                     <p className="text-[12px]">{memberData?.member?.Address}</p>
                   </div>
 
-                  <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                  <div
+                    style={{
+                      background:
+                        "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                    }}
+                    className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                  >
                     <p className="text-[12px] font-semibold">Mobile No:</p>
-                    <p className="text-[12px]">{memberData?.member?.MobileNo}</p>
+                    <p className="text-[12px]">
+                      {memberData?.member?.MobileNo}
+                    </p>
                   </div>
-                  
 
                   {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                     <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
@@ -607,34 +666,71 @@ const SchemeSettlement = () => {
                 Scheme Details
               </h1>
               <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[5px]">
-
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">No. Of Months:</p>
-                  <p className="text-[12px]">{memberData?.scheme?.SchemeDuration}</p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeDuration}
+                  </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Scheme Join Date:</p>
                   <p className="text-[12px]">{memberData?.member?.JoinDate}</p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Amount:</p>
-                  <p className="text-[12px]">{memberData?.scheme?.SchemeAmount}</p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeAmount}
+                  </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Scheme Value:</p>
-                  <p className="text-[12px]">{memberData?.scheme?.SchemeValue}</p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeValue}
+                  </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                  <p className="text-[12px] font-semibold">Total Scheme Amount:</p>
-                  <p className="text-[12px]">{memberData?.scheme?.SchemeAmount + memberData?.scheme?.BonusAmount}</p>
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
+                  <p className="text-[12px] font-semibold">
+                    Total Scheme Amount:
+                  </p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeAmount +
+                      memberData?.scheme?.BonusAmount}
+                  </p>
                 </div>
-
-                
-
 
                 {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
@@ -712,17 +808,46 @@ const SchemeSettlement = () => {
                 Settlement Detail{" "}
               </h1>
               <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[5px]">
-
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Paid Amount:</p>
-                  <p className="text-[12px]">{(memberData && memberData.receipt && Object.keys(memberData.receipt).length) * (memberData && memberData.scheme && memberData.scheme.SchemeAmount)}</p>
+                  <p className="text-[12px]">
+                    {(memberData &&
+                      memberData.receipt &&
+                      Object.keys(memberData.receipt).length) *
+                      (memberData &&
+                        memberData.scheme &&
+                        memberData.scheme.SchemeAmount)}
+                  </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Bonus Amount:</p>
-                  <p className="text-[12px]">{(memberData?.receipt?.reduce((accumulator, currentItem) => accumulator + currentItem.Amount, 0) || []) - ((memberData && memberData.receipt && Object.keys(memberData.receipt).length) * (memberData && memberData.scheme && memberData.scheme.SchemeAmount))}</p>
+                  <p className="text-[12px]">
+                    {(memberData?.receipt?.reduce(
+                      (accumulator, currentItem) =>
+                        accumulator + currentItem.Amount,
+                      0
+                    ) || []) -
+                      (memberData &&
+                        memberData.receipt &&
+                        Object.keys(memberData.receipt).length) *
+                        (memberData &&
+                          memberData.scheme &&
+                          memberData.scheme.SchemeAmount)}
+                  </p>
                 </div>
-
 
                 {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
@@ -785,7 +910,15 @@ const SchemeSettlement = () => {
                     Description
                   </p>
                   <div className="basis-[60%]">
-                    <textarea name="" id="" value={description} onChange={(e) => setDescription(e.target.value)} cols="15" rows="10" className='w-full max-h-[30px] h-full py-[2px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]'></textarea>
+                    <textarea
+                      name=""
+                      id=""
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      cols="15"
+                      rows="10"
+                      className="w-full max-h-[30px] h-full py-[2px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    ></textarea>
                   </div>
                 </div>
               </div>

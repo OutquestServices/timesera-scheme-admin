@@ -1,11 +1,20 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+import {
+  SchemenameSchema,
+  Schemeuserschema,
+  getPrismaClient,
+} from "@/components/db/Connection";
 
 export async function POST(request) {
-  const prisma = new PrismaClient();
+  // const prisma = new PrismaClient();
+  const tn = request.headers.get("tn");
+  const prisma = await getPrismaClient(tn);
   try {
+    await SchemenameSchema(prisma);
+    await Schemeuserschema(prisma);
     const body = await request.json();
 
     const ifExists = await prisma.oRIGIN_SCHEME_NAME.findUnique({
@@ -61,8 +70,6 @@ export async function POST(request) {
     await prisma.$disconnect();
   }
 }
-
-
 
 // structure
 // {

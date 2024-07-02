@@ -17,8 +17,8 @@ const Page = () => {
     }, [])
 
     const [schemeTypes, setSchemeTypes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState(null);
 
     const [isOpen, setIsOpen] = useState(true);
 
@@ -86,6 +86,7 @@ const Page = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        tn : localStorage.getItem("tenantName")
                     },
                 });
 
@@ -96,10 +97,11 @@ const Page = () => {
                 const data = await response.json();
                 setSchemeTypes(data);
             } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
+                console.error(error.message);
+            } 
+            // finally {
+                // setLoading(false);
+            // }
         };
 
         fetchSchemeTypes();

@@ -14,6 +14,10 @@ const MemberList = () => {
         body: JSON.stringify({
           cardno: cardno,
         }),
+        headers: {
+          "Content-Type": "application/json",
+          tn: localStorage.getItem("tenantName"),
+        },
       });
       const data = await response.json();
       setShemeData(data);
@@ -23,11 +27,11 @@ const MemberList = () => {
   };
 
   const formatDate = (dateString) => {
-    const [year, month, day] = dateString.split('-');
+    const [year, month, day] = dateString.split("-");
     return `${day}-${month}-${year}`;
   };
 
-  console.log(SchemeData);
+  // console.log(SchemeData);
 
   return (
     <div className="w-full max-h-[98vh] overflow-auto custom-scrollbar">
@@ -232,7 +236,6 @@ const MemberList = () => {
                   />
                 </div>
               </div>
-
             </div>
 
             <div className="w-full my-[10px] sm:my-[15px] lg:my-[10px] max-h-[380px] overflow-auto custom-scrollbar2">
@@ -268,7 +271,11 @@ const MemberList = () => {
                 </tr>
                 {SchemeData?.receipt?.map((item, index) => (
                   <>
-                    <tr className={`px-1 text-[12px] text-[#172561] ${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"}`} >
+                    <tr
+                      className={`px-1 text-[12px] text-[#172561] ${
+                        index % 2 == 0 ? "bg-white" : "bg-[#EAFFF6]"
+                      }`}
+                    >
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {index + 1}
                       </th>
@@ -279,8 +286,9 @@ const MemberList = () => {
                               SchemeData?.member?.JoinDate
                             );
                             joinDate.setMonth(joinDate.getMonth() + index);
-                            const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth() + 1
-                              }-${joinDate.getFullYear()}`;
+                            const formattedDate = `${joinDate.getDate()}-${
+                              joinDate.getMonth() + 1
+                            }-${joinDate.getFullYear()}`;
                             return formattedDate;
                           })()}
                       </th>
@@ -314,7 +322,11 @@ const MemberList = () => {
                     (Object.keys(SchemeData?.receipt || {})?.length || 0),
                 }).map((_, index) => (
                   <>
-                    <tr className={`px-1 text-[12px] text-[#172561] ${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"}`}>
+                    <tr
+                      className={`px-1 text-[12px] text-[#172561] ${
+                        index % 2 == 0 ? "bg-white" : "bg-[#EAFFF6]"
+                      }`}
+                    >
                       <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
                         {(Object.keys(SchemeData?.receipt || {})?.length || 0) +
                           index +
@@ -328,10 +340,10 @@ const MemberList = () => {
                             );
                             joinDate.setMonth(
                               joinDate.getMonth() +
-                              (Object.keys(SchemeData?.receipt || {})
-                                ?.length || 0) +
-                              index +
-                              1
+                                (Object.keys(SchemeData?.receipt || {})
+                                  ?.length || 0) +
+                                index +
+                                1
                             );
                             const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth()}-${joinDate.getFullYear()}`;
                             return formattedDate;
@@ -373,7 +385,8 @@ const MemberList = () => {
                   <input
                     type="text"
                     value={
-                      (SchemeData?.scheme?.SchemeValue) - (SchemeData?.scheme?.BonusAmount || 0)
+                      SchemeData?.scheme?.SchemeValue -
+                      (SchemeData?.scheme?.BonusAmount || 0)
                     }
                     className="max-w-[150px] w-full h-full py-[2px] text-right focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
                     readOnly
@@ -443,7 +456,6 @@ const MemberList = () => {
                   />
                 </div>
               </div> */}
-              
             </div>
           </div>
           <div className="basis-[25%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[7px]">
@@ -473,28 +485,57 @@ const MemberList = () => {
                 Scheme Details
               </h1>
               <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[7px]">
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Scheme Join Date:</p>
                   <p className="text-[12px]">{SchemeData?.member?.JoinDate}</p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Scheme Amount:</p>
-                  <p className="text-[12px]">{SchemeData?.scheme?.SchemeAmount}</p>
+                  <p className="text-[12px]">
+                    {SchemeData?.scheme?.SchemeAmount}
+                  </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Bonus Amount:</p>
-                  <p className="text-[12px]">{SchemeData?.scheme?.BonusAmount}</p>
+                  <p className="text-[12px]">
+                    {SchemeData?.scheme?.BonusAmount}
+                  </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                  <p className="text-[12px] font-semibold">Total Scheme Amount:</p>
-                  <p className="text-[12px]">{SchemeData?.scheme?.SchemeValue}</p>
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
+                  <p className="text-[12px] font-semibold">
+                    Total Scheme Amount:
+                  </p>
+                  <p className="text-[12px]">
+                    {SchemeData?.scheme?.SchemeValue}
+                  </p>
                 </div>
-
-
-
 
                 {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
@@ -558,29 +599,55 @@ const MemberList = () => {
                 Pending Dues
               </h1>
               <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[7px]">
-
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Pending Dues:</p>
                   <p className="text-[12px]">
-                    {
+                    {(SchemeData &&
+                      SchemeData.receipt &&
+                      Object.keys(SchemeData.receipt).length) *
                       (SchemeData &&
-                        SchemeData.receipt && Object.keys(SchemeData.receipt).length) * (SchemeData && SchemeData.scheme && SchemeData.scheme.SchemeAmount) - (SchemeData?.receipt?.reduce((accumulator, currentItem) => accumulator + currentItem.Amount, 0) || []) || [] 
-                    }
+                        SchemeData.scheme &&
+                        SchemeData.scheme.SchemeAmount) -
+                      (SchemeData?.receipt?.reduce(
+                        (accumulator, currentItem) =>
+                          accumulator + currentItem.Amount,
+                        0
+                      ) || []) || []}
                   </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Paid Months:</p>
-                  <p className="text-[12px]">{Object.keys(SchemeData?.receipt || {})?.length || 0}</p>
+                  <p className="text-[12px]">
+                    {Object.keys(SchemeData?.receipt || {})?.length || 0}
+                  </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Balance Months:</p>
-                  <p className="text-[12px]">{(SchemeData?.scheme?.SchemeDuration || 0) - (Object.keys(SchemeData?.receipt || {})?.length || 0)}</p>
+                  <p className="text-[12px]">
+                    {(SchemeData?.scheme?.SchemeDuration || 0) -
+                      (Object.keys(SchemeData?.receipt || {})?.length || 0)}
+                  </p>
                 </div>
-
-                
-
 
                 {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
@@ -646,29 +713,52 @@ const MemberList = () => {
                 Bill Details
               </h1>
               <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[7px]">
-
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Bill No:</p>
                   <p className="text-[12px]">
-                    { SchemeData?.receipt && SchemeData.receipt.length > 0 ? SchemeData.receipt[SchemeData.receipt.length - 1].ReceiptNo : "" }
+                    {SchemeData?.receipt && SchemeData.receipt.length > 0
+                      ? SchemeData.receipt[SchemeData.receipt.length - 1]
+                          .ReceiptNo
+                      : ""}
                   </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Bill Date:</p>
                   <p className="text-[12px]">
-                    { SchemeData?.receipt && SchemeData.receipt.length > 0 ? SchemeData.receipt[SchemeData.receipt.length - 1].ReceiptDate : "" }
+                    {SchemeData?.receipt && SchemeData.receipt.length > 0
+                      ? SchemeData.receipt[SchemeData.receipt.length - 1]
+                          .ReceiptDate
+                      : ""}
                   </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Jewel Type:</p>
                   <p className="text-[12px]">
-                    { SchemeData?.receipt && SchemeData.receipt.length > 0 ? SchemeData.receipt[SchemeData.receipt.length - 1].GoldWt : "" }
+                    {SchemeData?.receipt && SchemeData.receipt.length > 0
+                      ? SchemeData.receipt[SchemeData.receipt.length - 1].GoldWt
+                      : ""}
                   </p>
                 </div>
-
-
 
                 {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
@@ -732,18 +822,33 @@ const MemberList = () => {
                 Settlement Detail{" "}
               </h1>
               <div className="w-full flex flex-col items-center justify-start gap-[7px] sm:gap-[14px] lg:gap-[7px]">
-
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Settlement No:</p>
-                  <p className="text-[12px]">{SchemeData?.settlement?.id || "-"}</p>
+                  <p className="text-[12px]">
+                    {SchemeData?.settlement?.id || "-"}
+                  </p>
                 </div>
 
-                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
                   <p className="text-[12px] font-semibold">Settlement Date:</p>
-                  <p className="text-[12px]">{(SchemeData?.settlement?.Date) && (formatDate(SchemeData?.settlement?.Date)) || "-"}</p>
+                  <p className="text-[12px]">
+                    {(SchemeData?.settlement?.Date &&
+                      formatDate(SchemeData?.settlement?.Date)) ||
+                      "-"}
+                  </p>
                 </div>
-
-
 
                 {/* <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
                   <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">

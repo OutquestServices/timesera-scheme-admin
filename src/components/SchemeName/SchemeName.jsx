@@ -21,8 +21,8 @@ const SchemeName = () => {
   const [code, setCode] = useState();
 
   const [schemeNames, setSchemeNames] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
 
   const [continuous, setContinuous] = useState(false);
 
@@ -32,24 +32,26 @@ const SchemeName = () => {
   useEffect(() => {
     const fetchSchemeNames = async () => {
       try {
-        const response = await fetch('/api/schemename/getnames', {
-          method: 'GET',
+        const response = await fetch("/api/schemename/getnames", {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
+            tn: localStorage.getItem("tenantName"),
           },
         });
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
 
         const data = await response.json();
         setSchemeNames(data);
       } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+        console.error(error.message);
       }
+      // finally {
+      // setLoading(false);
+      // }
     };
 
     fetchSchemeNames();
@@ -58,9 +60,10 @@ const SchemeName = () => {
   const handleDelete = async (schemeName) => {
     try {
       const response = await fetch(`/api/schemename/delete`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          tn: localStorage.getItem("tenantName"),
         },
         body: JSON.stringify({ schemeName }),
       });
@@ -68,23 +71,32 @@ const SchemeName = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.error);  // Show the error message
+        alert(data.error); // Show the error message
         return;
       }
 
       // Remove the deleted item from the state
-      setSchemeNames(schemeNames.filter((type) => type.SchemeName !== schemeName));
-      alert('Scheme Name deleted successfully');
+      setSchemeNames(
+        schemeNames.filter((type) => type.SchemeName !== schemeName)
+      );
+      alert("Scheme Name deleted successfully");
     } catch (error) {
-      console.error('Error deleting scheme name:', error);
-      alert('An error occurred while deleting the scheme name. Please try again.');
+      console.error("Error deleting scheme name:", error);
+      alert(
+        "An error occurred while deleting the scheme name. Please try again."
+      );
     }
   };
 
-
   const fetchData = async () => {
     try {
-      const response = await fetch("/api/schemetype/gettypes");
+      const response = await fetch("/api/schemetype/gettypes", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          tn: localStorage.getItem("tenantName"),
+        },
+      });
       if (!response.ok) {
         throw new Error("Failed to fetch data");
       }
@@ -112,7 +124,7 @@ const SchemeName = () => {
     setBonusMonths(scheme.BonusMonth);
     setComm(scheme.Commper);
     setCode(scheme.SchemeCode);
-  }
+  };
 
   const pushSchemeName = async () => {
     const data = {
@@ -127,8 +139,8 @@ const SchemeName = () => {
       commper: parseFloat(comm),
       commamt: (comm * (duration * amount + bonusmonths * bonus)) / 100,
       code: code,
-      continuous: continuous
-    }
+      continuous: continuous,
+    };
 
     // console.log(data);
 
@@ -145,13 +157,18 @@ const SchemeName = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            tn: localStorage.getItem("tenantName"),
           },
           body: JSON.stringify({ ...data, id: editingId }),
-        })
+        });
       } else {
         response = await fetch("/api/schemename", {
           method: "POST",
           body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+            tn: localStorage.getItem("tenantName"),
+          },
         });
       }
 
@@ -192,7 +209,7 @@ const SchemeName = () => {
     fetchData();
   }, []);
 
-  useEffect(() => { }, [duration, amount, bonus, bonusmonths]);
+  useEffect(() => {}, [duration, amount, bonus, bonusmonths]);
 
   const inputRefs = {
     schemeType: useRef(null),
@@ -203,12 +220,12 @@ const SchemeName = () => {
     bonus: useRef(null),
     bonusmonths: useRef(null),
     code: useRef(null),
-    comm: useRef(null)
+    comm: useRef(null),
   };
 
   // Function to handle key down event and move to next input on Enter key
   const handleKeyDown = (e, nextField) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       if (inputRefs[nextField]) {
         inputRefs[nextField].current.focus();
@@ -216,14 +233,26 @@ const SchemeName = () => {
     }
   };
 
-  useEffect(() => {
-  }, [schemeName, duration, amount, persons, bonus, bonusmonths, comm, code, editing, editingId])
+  useEffect(() => {}, [
+    schemeName,
+    duration,
+    amount,
+    persons,
+    bonus,
+    bonusmonths,
+    comm,
+    code,
+    editing,
+    editingId,
+  ]);
 
   return (
     <>
       <div
         className="w-full min-h-screen"
-        style={{ background: "url(/banner.png) lightgray 50% / cover no-repeat" }}
+        style={{
+          background: "url(/banner.png) lightgray 50% / cover no-repeat",
+        }}
       >
         <div className="w-full h-full">
           <div className="px-[10px] sm:px-[20px] lg:px-[40px] py-[5px] sm:py-[10px] lg:py-[15px]">
@@ -269,10 +298,10 @@ const SchemeName = () => {
           <div className="w-full flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center">
             <div className="max-w-[750px] w-full flex flex-col m-auto max-h-full border border-[#182456] rounded-xl overflow-hidden">
               <div
-                className="w-full h-[60px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center bg-center bg-cover bg-no-repeat" style={{
-                  background: "url(/receiptbanner.png)"
+                className="w-full h-[60px] flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[20px] items-center justify-center bg-center bg-cover bg-no-repeat"
+                style={{
+                  background: "url(/receiptbanner.png)",
                 }}
-
               >
                 {/* <div className="flex items-center justify-center gap-[2px] sm:gap-[4px] lg:gap-[6px]">
                   <img src="/tlogo.png" alt="" />
@@ -291,7 +320,7 @@ const SchemeName = () => {
                       className="p-[10px] text-[12px] sm:p-[5px] max-w-[300px] w-full rounded-lg focus:outline-none border border-gray-500"
                       value={schemeType}
                       onChange={(e) => setSchemeType(e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, 'schemeName')}
+                      onKeyDown={(e) => handleKeyDown(e, "schemeName")}
                       ref={inputRefs.schemeType}
                     >
                       <option value="">Select Scheme Type</option>
@@ -303,45 +332,53 @@ const SchemeName = () => {
                     </select>
                   </div>
                   <div className="basis-[50%]">
-                    <label htmlFor="schemename" className="text-[15px]">Scheme name</label>
+                    <label htmlFor="schemename" className="text-[15px]">
+                      Scheme name
+                    </label>
                     <input
                       type="text"
                       className=" p-[4px] focus:outline-none border max-w-[300px] text-[12px] border-black rounded-md w-full"
                       placeholder="Enter Scheme Name"
                       value={schemeName}
                       onChange={(e) => setSchemeName(e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, 'duration')}
+                      onKeyDown={(e) => handleKeyDown(e, "duration")}
                       ref={inputRefs.schemeName}
                     />
                   </div>
                 </div>
                 <div className="w-full flex items-center justify-center gap-[10px] sm:gap-[15px]">
-                  <div className="basis-[33%]" >
-                    <label htmlFor="duration" className="text-[15px]">Duration</label>
+                  <div className="basis-[33%]">
+                    <label htmlFor="duration" className="text-[15px]">
+                      Duration
+                    </label>
                     <input
                       type="text"
                       className=" p-[4px] focus:outline-none text-[12px] border border-gray-500 rounded-md w-full"
                       placeholder="Enter Duration"
                       value={duration}
                       onChange={(e) => setDuration(e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, 'amount')}
+                      onKeyDown={(e) => handleKeyDown(e, "amount")}
                       ref={inputRefs.duration}
                     />
                   </div>
                   <div className="basis-[33%]">
-                    <label htmlFor="amount" className="text-[15px]">Amount</label>
+                    <label htmlFor="amount" className="text-[15px]">
+                      Amount
+                    </label>
                     <input
                       type="text"
                       className=" p-[4px] focus:outline-none text-[12px] border border-gray-500 rounded-md w-full"
                       placeholder="Enter Amount"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, 'persons')}
+                      onKeyDown={(e) => handleKeyDown(e, "persons")}
                       ref={inputRefs.amount}
                     />
                   </div>
                   <div className="basis-[33%]">
-                    <label htmlFor="persons" className="text-[15px]">No.of Persons</label>
+                    <label htmlFor="persons" className="text-[15px]">
+                      No.of Persons
+                    </label>
                     <input
                       type="text"
                       name="persons"
@@ -349,26 +386,30 @@ const SchemeName = () => {
                       className=" p-[4px] focus:outline-none border border-gray-500 text-[12px] rounded-md w-full"
                       placeholder="Enter Capacity"
                       onChange={(e) => setPersons(e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, 'bonus')}
+                      onKeyDown={(e) => handleKeyDown(e, "bonus")}
                       ref={inputRefs.persons}
                     />
                   </div>
                 </div>
                 <div className="w-full flex items-center justify-center gap-[10px] sm:gap-[15px]">
                   <div className="basis-[33%]">
-                    <label htmlFor="bonus" className="text-[15px]">Bonus Amount</label>
+                    <label htmlFor="bonus" className="text-[15px]">
+                      Bonus Amount
+                    </label>
                     <input
                       type="text"
                       className=" p-[4px] focus:outline-none border border-gray-500 text-[12px] rounded-md w-full"
                       placeholder="Enter Bonus Amount"
                       value={bonus}
                       onChange={(e) => setBonus(e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, 'bonusmonths')}
+                      onKeyDown={(e) => handleKeyDown(e, "bonusmonths")}
                       ref={inputRefs.bonus}
                     />
                   </div>
                   <div className="basis-[33%]">
-                    <label htmlFor="months" className="text-[15px]">Bonus Months</label>
+                    <label htmlFor="months" className="text-[15px]">
+                      Bonus Months
+                    </label>
                     <input
                       type="text"
                       name="months"
@@ -376,12 +417,14 @@ const SchemeName = () => {
                       placeholder="Enter Bonus Months"
                       value={bonusmonths}
                       onChange={(e) => setBonusMonths(e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(e, 'code')}
+                      onKeyDown={(e) => handleKeyDown(e, "code")}
                       ref={inputRefs.bonusmonths}
                     />
                   </div>
                   <div className="basis-[33%]">
-                    <label htmlFor="schemevalue" className="text-[15px]">Scheme Value</label>
+                    <label htmlFor="schemevalue" className="text-[15px]">
+                      Scheme Value
+                    </label>
                     <input
                       type="text"
                       className=" p-[4px] focus:outline-none border border-gray-500 rounded-md text-[12px] w-full"
@@ -394,37 +437,44 @@ const SchemeName = () => {
                 <div className="w-full flex items-center justify-center gap-[10px] sm:gap-[15px]">
                   <div className="basis-[66%] w-full flex items-start justify-center gap-[10px] sm:gap-[15px]">
                     <div className="basis-[50%] w-full">
-                      <label htmlFor="comm" className="text-[15px]">Scheme Code</label>
+                      <label htmlFor="comm" className="text-[15px]">
+                        Scheme Code
+                      </label>
                       <input
                         type="text"
                         className=" p-[4px] focus:outline-none border border-gray-500 rounded-md text-[12px] w-full"
                         placeholder="Enter Code"
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
-                        onKeyDown={(e) => handleKeyDown(e, 'comm')}
+                        onKeyDown={(e) => handleKeyDown(e, "comm")}
                         ref={inputRefs.code}
                       />
                     </div>
                     <div className="basis-[50%] w-full">
-                      <label htmlFor="comm" className="text-[15px]">Emp Comm(%)</label>
+                      <label htmlFor="comm" className="text-[15px]">
+                        Emp Comm(%)
+                      </label>
                       <input
                         type="text"
                         className=" p-[4px] focus:outline-none border border-gray-500 rounded-md text-[12px] w-full"
                         placeholder="Enter Emp Comm"
                         value={comm}
                         onChange={(e) => setComm(e.target.value)}
-                        onKeyDown={(e) => handleKeyDown(e, 'saveButton')}
+                        onKeyDown={(e) => handleKeyDown(e, "saveButton")}
                         ref={inputRefs.comm}
                       />
                       <p className="text-[12px]">
                         Employee Commission will be:-{" "}
-                        {(comm * (duration * amount + bonusmonths * bonus)) / 100}
+                        {(comm * (duration * amount + bonusmonths * bonus)) /
+                          100}
                       </p>
                     </div>
                   </div>
 
                   <div className="basis-[33%] h-full flex items-center justify-center gap-[10px]">
-                    <label htmlFor="continuous" className="text-[15px]">Continuous Card No</label>
+                    <label htmlFor="continuous" className="text-[15px]">
+                      Continuous Card No
+                    </label>
                     <input
                       type="checkbox"
                       name="continuous"
@@ -435,7 +485,6 @@ const SchemeName = () => {
                     />
                   </div>
                 </div>
-
               </div>
             </div>
 
@@ -453,7 +502,6 @@ const SchemeName = () => {
               </div>
             </div>
           </div>
-
 
           <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[20px]">
             <table className="w-full table-auto text-center max-w-[1350px] mx-auto border border-black">
@@ -476,30 +524,61 @@ const SchemeName = () => {
               </thead>
               <tbody className="w-full border border-black">
                 {schemeNames.map((type, index) => (
-                  <tr key={type.id} className={`px-1 text-[12px] font-medium ${(index % 2 == 0) ? "bg-white" : "bg-gray-100 "}`}>
+                  <tr
+                    key={type.id}
+                    className={`px-1 text-[12px] font-medium ${
+                      index % 2 == 0 ? "bg-white" : "bg-gray-100 "
+                    }`}
+                  >
                     <td className="border border-black p-1">{type.id}</td>
-                    <td className="border border-black p-1">{type.SchemeCode}</td>
-                    <td className="border border-black p-1">{type.SchemeType}</td>
-                    <td className="border border-black p-1">{type.SchemeName}</td>
-                    <td className="border border-black p-1">{type.SchemeAmount}</td>
-                    <td className="border border-black p-1">{type.SchemeDuration}</td>
-                    <td className="border border-black p-1">{type.SchemePersons}</td>
-                    <td className="border border-black p-1">{type.BonusMonth}</td>
-                    <td className="border border-black p-1">{type.BonusAmount}</td>
-                    <td className="border border-black p-1">{type.SchemeValue}</td>
+                    <td className="border border-black p-1">
+                      {type.SchemeCode}
+                    </td>
+                    <td className="border border-black p-1">
+                      {type.SchemeType}
+                    </td>
+                    <td className="border border-black p-1">
+                      {type.SchemeName}
+                    </td>
+                    <td className="border border-black p-1">
+                      {type.SchemeAmount}
+                    </td>
+                    <td className="border border-black p-1">
+                      {type.SchemeDuration}
+                    </td>
+                    <td className="border border-black p-1">
+                      {type.SchemePersons}
+                    </td>
+                    <td className="border border-black p-1">
+                      {type.BonusMonth}
+                    </td>
+                    <td className="border border-black p-1">
+                      {type.BonusAmount}
+                    </td>
+                    <td className="border border-black p-1">
+                      {type.SchemeValue}
+                    </td>
                     <td className="border border-black p-1">{type.Commper}</td>
                     <td className="border border-black p-1">{type.Commamt}</td>
                     <td className="border border-black p-1 text-[14px]">
-                      <button className="text-blue-700 " onClick={() => handleEdit(type)}><FaRegEdit /></button>
-                      <button className="text-red-700" onClick={() => handleDelete(type.SchemeName)}><MdDelete /></button>
+                      <button
+                        className="text-blue-700 "
+                        onClick={() => handleEdit(type)}
+                      >
+                        <FaRegEdit />
+                      </button>
+                      <button
+                        className="text-red-700"
+                        onClick={() => handleDelete(type.SchemeName)}
+                      >
+                        <MdDelete />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
-
         </div>
       </div>
     </>

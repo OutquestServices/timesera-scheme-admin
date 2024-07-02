@@ -1,11 +1,20 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+import {
+  ReceiptSchema,
+  Schemeuserschema,
+  getPrismaClient,
+} from "@/components/db/Connection";
 
 export async function POST(request) {
-  const prisma = new PrismaClient();
+  // const prisma = new PrismaClient();
+  const tn = request.headers.get("tn");
+  const prisma = await getPrismaClient(tn);
   try {
+    await Schemeuserschema(prisma);
+    await ReceiptSchema(prisma);
     const body = await request.json();
     console.log("Request body:", body);
 
@@ -63,10 +72,16 @@ export async function POST(request) {
       });
 
       console.log("Receipt created:", result);
-      return NextResponse.json({ message: "Receipt created successfully" }, { status: 200 });
+      return NextResponse.json(
+        { message: "Receipt created successfully" },
+        { status: 200 }
+      );
     }
 
-    return NextResponse.json({ error: "Scheme Code does not exist" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Scheme Code does not exist" },
+      { status: 400 }
+    );
   } catch (error) {
     console.error("Error creating receipt:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -1,151 +1,174 @@
 "use client";
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import "./Styling.css";
 
 const MemberDiscontinue = () => {
+  const currentDate = new Date().toISOString().split("T")[0];
 
-    const currentDate = new Date().toISOString().split('T')[0];
+  // Set initial state with current date
+  const [selectedDate, setSelectedDate] = useState(currentDate);
+  const [memberData, setMemberData] = useState({});
+  const [CardNo, setCardNo] = useState("");
+  const [schemetype, setSchemeType] = useState("");
+  const [schemename, setSchemeName] = useState("");
+  const [schemeAmount, setSchemeAmount] = useState("");
+  const [paidamount, setPaidAmount] = useState("");
+  const [balanceamount, setBalanceAmount] = useState("");
+  const [goldwt, setGoldWt] = useState("");
+  const [goldamt, setGoldAmt] = useState(77);
+  const [settled, setSettled] = useState(false);
+  const [discontinue, setDiscontinue] = useState(true);
+  const [description, setDescription] = useState("");
+  const [voucherNo, setVoucherNo] = useState("");
 
-    // Set initial state with current date
-    const [selectedDate, setSelectedDate] = useState(currentDate);
-    const [memberData, setMemberData] = useState({});
-    const [CardNo, setCardNo] = useState('');
-    const [schemetype, setSchemeType] = useState('');
-    const [schemename, setSchemeName] = useState('');
-    const [schemeAmount, setSchemeAmount] = useState('');
-    const [paidamount, setPaidAmount] = useState('');
-    const [balanceamount, setBalanceAmount] = useState('');
-    const [goldwt, setGoldWt] = useState('');
-    const [goldamt, setGoldAmt] = useState(77);
-    const [settled, setSettled] = useState(false);
-    const [discontinue, setDiscontinue] = useState(true);
-    const [description, setDescription] = useState('');
-    const [voucherNo, setVoucherNo] = useState('');
-
-    useEffect(() => {
-        const fetchNextVoucherNumber = async () => {
-            try {
-                const response = await fetch('/api/memberdiscontinue/generatevoucherno');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch the next voucher number');
-                }
-                const data = await response.json();
-                setVoucherNo(data.nextSettlementNumber);
-            } catch (error) {
-                console.error('Error fetching the next voucher number:', error);
-            }
-        };
-
-        fetchNextVoucherNumber();
-    }, []);
-
-    const fetchMemberDiscontinue = async (cardno) => {
-        try {
-            const response = await fetch("/api/memberdiscontinue/getmember", {
-                method: "POST",
-                body: JSON.stringify({
-                    cardno: cardno,
-                }),
-            });
-            const data = await response.json();
-            setMemberData(data);
-        } catch (e) {
-            console.error(e);
+  useEffect(() => {
+    const fetchNextVoucherNumber = async () => {
+      try {
+        const response = await fetch(
+          "/api/memberdiscontinue/generatevoucherno",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              tn: localStorage.getItem("tenantName"),
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch the next voucher number");
         }
+        const data = await response.json();
+        setVoucherNo(data.nextSettlementNumber);
+      } catch (error) {
+        console.error("Error fetching the next voucher number:", error);
+      }
     };
 
-    const pushDiscontinueMember = async (cardno) => {
-        if (!voucherNo) {
-            alert('Voucher number is required');
-            return;
-        }
+    fetchNextVoucherNumber();
+  }, []);
 
-        try {
-            const response = await fetch("/api/memberdiscontinue/postmember", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    cardno: cardno,
-                    schemeamount: schemeAmount,
-                    paidamount: paidamount,
-                    balanceamount: balanceamount,
-                    goldwt: goldwt,
-                    goldamt: goldamt,
-                    settled: settled,
-                    discontinue: discontinue,
-                    description: description,
-                    date: selectedDate,
-                    voucherNo: voucherNo,
-                    membername: memberData?.member?.MemberName,
-                    mobileno: memberData?.member?.MobileNo,
-                })
-            });
+  const fetchMemberDiscontinue = async (cardno) => {
+    try {
+      const response = await fetch("/api/memberdiscontinue/getmember", {
+        method: "POST",
+        body: JSON.stringify({
+          cardno: cardno,
+        }),
+        headers: {
+          tn: localStorage.getItem("tenantName"),
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setMemberData(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-            if (!response.ok) {
-                throw new Error('Network response is not ok');
-            }
+  const pushDiscontinueMember = async (cardno) => {
+    if (!voucherNo) {
+      alert("Voucher number is required");
+      return;
+    }
 
-            const ans = await response.json();
-            alert(ans?.message);
+    try {
+      const response = await fetch("/api/memberdiscontinue/postmember", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          tn: localStorage.getItem("tenantName"),
+        },
+        body: JSON.stringify({
+          cardno: cardno,
+          schemeamount: schemeAmount,
+          paidamount: paidamount,
+          balanceamount: balanceamount,
+          goldwt: goldwt,
+          goldamt: goldamt,
+          settled: settled,
+          discontinue: discontinue,
+          description: description,
+          date: selectedDate,
+          voucherNo: voucherNo,
+          membername: memberData?.member?.MemberName,
+          mobileno: memberData?.member?.MobileNo,
+        }),
+      });
 
-            // Reset all the state variables to their initial values
-            setSchemeAmount('');
-            setPaidAmount('');
-            setBalanceAmount('');
-            setGoldWt('');
-            setGoldAmt('');
-            setSettled(false);
-            setDiscontinue(true);
-            setDescription('');
-            setSelectedDate(currentDate); // Reset to the current date
-            setVoucherNo('');
-            setMemberData({ member: { MemberName: '', MobileNo: '' } });
-            setCardNo('');
-            setSchemeType('');
-            setSchemeName('');
+      if (!response.ok) {
+        throw new Error("Network response is not ok");
+      }
 
-        } catch (error) {
-            console.error(error);
-        }
-    };
+      const ans = await response.json();
+      alert(ans?.message);
 
+      // Reset all the state variables to their initial values
+      setSchemeAmount("");
+      setPaidAmount("");
+      setBalanceAmount("");
+      setGoldWt("");
+      setGoldAmt("");
+      setSettled(false);
+      setDiscontinue(true);
+      setDescription("");
+      setSelectedDate(currentDate); // Reset to the current date
+      setVoucherNo("");
+      setMemberData({ member: { MemberName: "", MobileNo: "" } });
+      setCardNo("");
+      setSchemeType("");
+      setSchemeName("");
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    useEffect(() => {
-        if (memberData?.member) {
-            setSchemeType(memberData.member.SchemeType || '');
-            // setSchemeCode(memberData.member.SchemeCode || '');
-            setSchemeName(memberData.member.SchemeName || '');
-            setSchemeAmount(memberData.scheme?.SchemeAmount || '');
+  useEffect(() => {
+    if (memberData?.member) {
+      setSchemeType(memberData.member.SchemeType || "");
+      // setSchemeCode(memberData.member.SchemeCode || '');
+      setSchemeName(memberData.member.SchemeName || "");
+      setSchemeAmount(memberData.scheme?.SchemeAmount || "");
 
-            const totalPaid = memberData.receipt?.reduce((acc, item) => acc + item.Amount, 0) || 0;
-            setPaidAmount(totalPaid);
+      const totalPaid =
+        memberData.receipt?.reduce((acc, item) => acc + item.Amount, 0) || 0;
+      setPaidAmount(totalPaid);
 
-            const totalGoldWt = memberData.receipt?.reduce((acc, item) => acc + item.GoldWt, 0) || 0;
-            setGoldWt(totalGoldWt);
+      const totalGoldWt =
+        memberData.receipt?.reduce((acc, item) => acc + item.GoldWt, 0) || 0;
+      setGoldWt(totalGoldWt);
 
-            const schemeAmt = memberData.scheme?.SchemeAmount || 0;
-            setBalanceAmount(schemeAmt - totalPaid);
-        }
-    }, [memberData]);
+      const schemeAmt = memberData.scheme?.SchemeAmount || 0;
+      setBalanceAmount(schemeAmt - totalPaid);
+    }
+  }, [memberData]);
 
-    return (
-        <div className='w-full max-h-[98vh] overflow-auto custom-scrollbar2'>
-            <div className='w-full h-full flex flex-col'>
-                <div className='px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[10px]'>
-                    <div className='w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[10px] lg:py-[10px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]' style={{ background: "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)" }}>
-                        <div className='basis-[60%] flex items-center justify-between w-full h-full'>
-                            <h1 className='flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[20px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]'>Member Discontinue</h1>
+  return (
+    <div className="w-full max-h-[98vh] overflow-auto custom-scrollbar2">
+      <div className="w-full h-full flex flex-col">
+        <div className="px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[10px]">
+          <div
+            className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[10px] lg:py-[10px] rounded-md flex items-center gap-[10px] sm:gap-[15px] lg:gap-[20px]"
+            style={{
+              background:
+                "linear-gradient(270deg, #0A0E16 5.64%, #182456 97.55%)",
+            }}
+          >
+            <div className="basis-[60%] flex items-center justify-between w-full h-full">
+              <h1 className="flex-1 text-[#fff] text-[20px] sm:text-[24px] lg:text-[20px] font-semibold pl-[10px] border-l-8 rounded-s-md border-[#52BD91]">
+                Member Discontinue
+              </h1>
 
-                            <div className='flex-1 flex items-center text-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]'>
-                                <p className='text-white text-[14px] sm:text-[15px] lg:text-[14px] font-semibold'>Gold Rate</p>
-                                {/* <p className='text-[#52BD91] text-[16px] sm:text-[17px] lg:text-[18px] font-bold'>24-25</p> */}
-                                <div className='h-[30px] max-w-[130px] rounded-md w-full px-[5px] sm:px-[10px] lg:px-[15px] bg-white'></div>
-                            </div>
-                        </div>
-                        {/* <div className='basis-[40%] w-full h-full flex items-center gap-[10px] sm:gap-[20px] lg:gap-[30px]'>
+              <div className="flex-1 flex items-center text-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]">
+                <p className="text-white text-[14px] sm:text-[15px] lg:text-[14px] font-semibold">
+                  Gold Rate
+                </p>
+                {/* <p className='text-[#52BD91] text-[16px] sm:text-[17px] lg:text-[18px] font-bold'>24-25</p> */}
+                <div className="h-[30px] max-w-[130px] rounded-md w-full px-[5px] sm:px-[10px] lg:px-[15px] bg-white"></div>
+              </div>
+            </div>
+            {/* <div className='basis-[40%] w-full h-full flex items-center gap-[10px] sm:gap-[20px] lg:gap-[30px]'>
                             <div className='grid grid-cols-3 w-full h-full items-center justify-center gap-[5px] sm:gap-[8px] lg:gap-[12px]'>
 
                                 <div className='cursor-pointer h-[45px] w-full px-[5px] sm:px-[10px] lg:px-[15px] flex items-center justify-center gap-[5px] bg-[#52BD91] rounded-md'>
@@ -180,29 +203,31 @@ const MemberDiscontinue = () => {
                                 </div>
                             </div>
                         </div> */}
-                    </div>
-                </div>
+          </div>
+        </div>
 
-                <div className='px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[5px] w-full max-h-full flex gap-[10px] sm:gap-[15px] lg:gap-[20px]'>
-                    <div className='basis-[75%] w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]'>
-                        <div className='flex items-center justify-center w-full gap-[5px] sm:gap-[10px] lg:gap-[15px]'>
-                            <div className='basis-[40%] w-full flex items-center justify-between'>
-                                <p className='text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold'>Card No</p>
-                                <input
-                                    type="text"
-                                    value={CardNo}
-                                    className="h-full py-[2px] focus:outline-none text-[14px] rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
-                                    onChange={(e) => setCardNo(e.target.value)}
-                                />
-                            </div>
-                            <button
-                                className="basis-[10%] h-full py-[2px] border text-[14px] rounded-md cursor-pointer border-black flex items-center justify-center hover:bg-blue-400"
-                                onClick={() => fetchMemberDiscontinue(CardNo)}
-                            >
-                                Submit
-                            </button>
-                            <div className='basis-[60%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]'>
-                                {/* <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
+        <div className="px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[5px] w-full max-h-full flex gap-[10px] sm:gap-[15px] lg:gap-[20px]">
+          <div className="basis-[75%] w-full flex flex-col gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+            <div className="flex items-center justify-center w-full gap-[5px] sm:gap-[10px] lg:gap-[15px]">
+              <div className="basis-[40%] w-full flex items-center justify-between">
+                <p className="text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold">
+                  Card No
+                </p>
+                <input
+                  type="text"
+                  value={CardNo}
+                  className="h-full py-[2px] focus:outline-none text-[14px] rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                  onChange={(e) => setCardNo(e.target.value)}
+                />
+              </div>
+              <button
+                className="basis-[10%] h-full py-[2px] border text-[14px] rounded-md cursor-pointer border-black flex items-center justify-center hover:bg-blue-400"
+                onClick={() => fetchMemberDiscontinue(CardNo)}
+              >
+                Submit
+              </button>
+              <div className="basis-[60%] flex w-full items-center justify-center gap-[15px] sm:gap-[20px] lg:gap-[25px]">
+                {/* <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
                                     <input type="checkbox" name="receiptpaid" id="" />
                                     <label htmlFor="receiptpaid" className='text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#000]'>Receipt Paid</label>
                                 </div>
@@ -211,219 +236,342 @@ const MemberDiscontinue = () => {
                                     <input type="checkbox" name="droppers" id="" />
                                 </div> */}
 
-                                <div className='flex items-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]'>
-                                    {/* <p className='text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold'>Gold Rate</p> */}
-                                    <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
-                                        <label htmlFor="voucherNo" className='text-[14px] sm:text-[16px] lg:text-[16px] font-semibold text-[#000]'>Voucher No</label>
-                                        <input type="text" id="voucherNo" value={voucherNo} readOnly className='w-[100px] h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
-                                    </div>
-                                </div>
+                <div className="flex items-center justify-center gap-[3px] sm:gap-[6px] lg:gap-[9px]">
+                  {/* <p className='text-white text-[14px] sm:text-[15px] lg:text-[16px] font-semibold'>Gold Rate</p> */}
+                  <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
+                    <label
+                      htmlFor="voucherNo"
+                      className="text-[14px] sm:text-[16px] lg:text-[16px] font-semibold text-[#000]"
+                    >
+                      Voucher No
+                    </label>
+                    <input
+                      type="text"
+                      id="voucherNo"
+                      value={voucherNo}
+                      readOnly
+                      className="w-[100px] h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    />
+                  </div>
+                </div>
 
-                                <div className='flex items-center justify-start text-start gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Date</p>
-                                    <div className='flex-1'>
-                                        <input type="date" className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={selectedDate} readOnly />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div className="flex items-center justify-start text-start gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                  <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                    Date
+                  </p>
+                  <div className="flex-1">
+                    <input
+                      type="date"
+                      className="w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                      value={selectedDate}
+                      readOnly
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
 
-
-                        <div className='w-full grid grid-cols-2 gap-[7px] sm:gap-[14px] lg:gap-[20px]'>
-                            <div className='w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='basis-[30%] text-[12px] sm:text-[14px] lg:text-[12px] text-[#182456] font-semibold'>Scheme Type</p>
-                                <div className='basis-[70%]'>
-                                    <input type="text" value={memberData?.member?.SchemeType} className='w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px]' readOnly />
-                                </div>
-                            </div>
-                            {/* <div className='w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+            <div className="w-full grid grid-cols-2 gap-[7px] sm:gap-[14px] lg:gap-[20px]">
+              <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                <p className="basis-[30%] text-[12px] sm:text-[14px] lg:text-[12px] text-[#182456] font-semibold">
+                  Scheme Type
+                </p>
+                <div className="basis-[70%]">
+                  <input
+                    type="text"
+                    value={memberData?.member?.SchemeType}
+                    className="w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    readOnly
+                  />
+                </div>
+              </div>
+              {/* <div className='w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                 <p className='basis-[35%] text-[12px] sm:text-[14px] lg:text-[14px] text-[#182456] font-semibold'>Scheme Group</p>
                                 <div className='basis-[65%]'>
                                     <input type="text" value={memberData?.member?.SchemeCode} className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px]' readOnly />
                                 </div>
                             </div> */}
-                            <div className='w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='basis-[30%] text-[12px] sm:text-[14px] lg:text-[12px] text-[#182456] font-semibold'>Scheme Name</p>
-                                <div className='basis-[70%]'>
-                                    <input type="text" value={memberData?.member?.SchemeName} className='w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px]' readOnly />
-                                </div>
-                            </div>
-                        </div>
+              <div className="w-full flex items-center justify-between gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                <p className="basis-[30%] text-[12px] sm:text-[14px] lg:text-[12px] text-[#182456] font-semibold">
+                  Scheme Name
+                </p>
+                <div className="basis-[70%]">
+                  <input
+                    type="text"
+                    value={memberData?.member?.SchemeName}
+                    className="w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] text-[14px] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    readOnly
+                  />
+                </div>
+              </div>
+            </div>
 
+            <div className="w-full my-[10px] sm:my-[15px] lg:my-[20px] max-h-[350px] overflow-auto custom-scrollbar2">
+              <table className="table-auto w-full text-[12px] sm:text-[14px] h-full">
+                <tr className="bg-[#172561] text-white">
+                  <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                    Sno
+                  </th>
+                  <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                    Month
+                  </th>
+                  <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                    Rec No
+                  </th>
+                  <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                    Rec Date
+                  </th>
+                  <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                    Rec Amount
+                  </th>
+                  <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                    Gold Wt
+                  </th>
+                  <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                    Gold(1 Gram)
+                  </th>
+                  <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                    Mode Of Pay
+                  </th>
+                  <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                    Balance
+                  </th>
+                </tr>
+                {memberData?.receipt?.map((item, index) => (
+                  <tr
+                    key={index}
+                    className={`text-[#172561] ${
+                      index % 2 == 0 ? "bg-white" : "bg-[#EAFFF6]"
+                    }`}
+                  >
+                    <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                      {index + 1}
+                    </th>
+                    <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                      {memberData?.member?.JoinDate &&
+                        (() => {
+                          const joinDate = new Date(
+                            memberData?.member?.JoinDate
+                          );
+                          joinDate.setMonth(joinDate.getMonth() + index);
+                          const formattedDate = `${joinDate.getDate()}-${
+                            joinDate.getMonth() + 1
+                          }-${joinDate.getFullYear()}`;
+                          return formattedDate;
+                        })()}
+                    </th>
+                    <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                      {item?.ReceiptNo}
+                    </th>
+                    <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                      {item.ReceiptDate}
+                    </th>
+                    <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                      {item.Amount}
+                    </th>
+                    <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                      {item.GoldWt}
+                    </th>
+                    <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                      {item.GoldAmount}
+                    </th>
+                    <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                      {item.PaymentMode}
+                    </th>
+                    <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                      -
+                    </th>
+                  </tr>
+                ))}
+                {Array.from({
+                  length:
+                    (memberData?.scheme?.SchemeDuration || 0) -
+                    (Object.keys(memberData?.receipt || {})?.length || 0),
+                }).map((_, index) => (
+                  <>
+                    <tr
+                      className={`px-1 text-[12px] text-[#172561] ${
+                        index % 2 == 0 ? "bg-white" : "bg-[#EAFFF6]"
+                      }`}
+                    >
+                      <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                        {(Object.keys(memberData?.receipt || {})?.length || 0) +
+                          index +
+                          1}
+                      </th>
+                      <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                        {memberData?.member?.JoinDate &&
+                          (() => {
+                            const joinDate = new Date(
+                              memberData?.member?.JoinDate
+                            );
+                            joinDate.setMonth(
+                              joinDate.getMonth() +
+                                (Object.keys(memberData?.receipt || {})
+                                  ?.length || 0) +
+                                index
+                            );
+                            const formattedDate = `${joinDate.getDate()}-${
+                              joinDate.getMonth() + 1
+                            }-${joinDate.getFullYear()}`;
+                            return formattedDate;
+                          })()}
+                      </th>
+                      <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                        -
+                      </th>
+                      <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                        -
+                      </th>
+                      <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                        -
+                      </th>
+                      <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                        -
+                      </th>
+                      <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                        -
+                      </th>
+                      <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                        -
+                      </th>
+                      <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
+                        {memberData?.scheme?.SchemeAmount}
+                      </th>
+                    </tr>
+                  </>
+                ))}
+              </table>
+            </div>
 
-                        <div className='w-full my-[10px] sm:my-[15px] lg:my-[20px] max-h-[350px] overflow-auto custom-scrollbar2'>
-                            <table className='table-auto w-full text-[12px] sm:text-[14px] h-full'>
-                                <tr className='bg-[#172561] text-white'>
-                                    <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>Sno</th>
-                                    <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>Month</th>
-                                    <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>Rec No</th>
-                                    <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>Rec Date</th>
-                                    <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>Rec Amount</th>
-                                    <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>Gold Wt</th>
-                                    <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>Gold(1 Gram)</th>
-                                    <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>Mode Of Pay</th>
-                                    <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>Balance</th>
-                                </tr>
-                                {
-                                    memberData?.receipt?.map((item, index) => (
-                                        <tr key={index} className={`text-[#172561] ${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"}`} >
-                                            <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>{index + 1}</th>
-                                            <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>{memberData?.member?.JoinDate &&
-                                                (() => {
-                                                    const joinDate = new Date(
-                                                        memberData?.member?.JoinDate
-                                                    );
-                                                    joinDate.setMonth(joinDate.getMonth() + index);
-                                                    const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth() + 1
-                                                        }-${joinDate.getFullYear()}`;
-                                                    return formattedDate;
-                                                })()}</th>
-                                            <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>{item?.ReceiptNo}</th>
-                                            <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>{item.ReceiptDate}</th>
-                                            <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>{item.Amount}</th>
-                                            <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>{item.GoldWt}</th>
-                                            <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>{item.GoldAmount}</th>
-                                            <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>{item.PaymentMode}</th>
-                                            <th className='py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]'>-</th>
-                                        </tr>
-                                    ))
-                                }
-                                {Array.from({
-                                    length:
-                                        (memberData?.scheme?.SchemeDuration || 0) -
-                                        (Object.keys(memberData?.receipt || {})?.length || 0),
-                                }).map((_, index) => (
-                                    <>
-                                        <tr className={`px-1 text-[12px] text-[#172561] ${(index % 2 == 0) ? "bg-white" : "bg-[#EAFFF6]"}`}>
-                                            <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                                                {(Object.keys(memberData?.receipt || {})?.length || 0) +
-                                                    index +
-                                                    1}
-                                            </th>
-                                            <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                                                {memberData?.member?.JoinDate &&
-                                                    (() => {
-                                                        const joinDate = new Date(
-                                                            memberData?.member?.JoinDate
-                                                        );
-                                                        joinDate.setMonth(
-                                                            joinDate.getMonth() +
-                                                            (Object.keys(memberData?.receipt || {})
-                                                                ?.length || 0) +
-                                                            index
-                                                        );
-                                                        const formattedDate = `${joinDate.getDate()}-${joinDate.getMonth() + 1}-${joinDate.getFullYear()}`;
-                                                        return formattedDate;
-                                                    })()}
-                                            </th>
-                                            <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                                                -
-                                            </th>
-                                            <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                                                -
-                                            </th>
-                                            <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                                                -
-                                            </th>
-                                            <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                                                -
-                                            </th>
-                                            <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                                                -
-                                            </th>
-                                            <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                                                -
-                                            </th>
-                                            <th className="py-[5px] sm:py-[10px] lg:py-[15px] px-[3px] sm:px-[6px] lg:px-[9px]">
-                                                {memberData?.scheme?.SchemeAmount}
-                                            </th>
-                                        </tr>
-                                    </>
-                                ))}
-                            </table>
-                        </div>
+            <div className="w-full grid grid-cols-4 gap-[7px] sm:gap-[14px] lg:gap-[20px]">
+              <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                  Scheme Amount
+                </p>
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    className="w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    value={
+                      (memberData &&
+                        memberData.receipt &&
+                        Object.keys(memberData.receipt).length) *
+                      (memberData &&
+                        memberData.scheme &&
+                        memberData.scheme.SchemeAmount)
+                    }
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                  Total Paid
+                </p>
+                <div className="flex-1">
+                  <input
+                    type="number"
+                    className="w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    value={
+                      memberData?.receipt?.reduce(
+                        (accumulator, currentItem) =>
+                          accumulator + currentItem.Amount,
+                        0
+                      ) || []
+                    }
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                <p className="flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                  Bal Amount
+                </p>
+                <div className="flex-1">
+                  <input
+                    type="number"
+                    className="w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    value={
+                      (memberData &&
+                        memberData.receipt &&
+                        Object.keys(memberData.receipt).length) *
+                        (memberData &&
+                          memberData.scheme &&
+                          memberData.scheme.SchemeAmount) -
+                      (memberData?.receipt?.reduce(
+                        (accumulator, currentItem) =>
+                          accumulator + currentItem.Amount,
+                        0
+                      ) || [])
+                    }
+                    readOnly
+                  />
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                <p className="flex-1 text-[12px] sm:text-[12px] text-[#182456] font-semibold">
+                  Tot.GoldWT
+                </p>
+                <div className="flex-1">
+                  <input
+                    type="number"
+                    className="w-full h-full py-[2px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    value={
+                      memberData?.receipt?.reduce(
+                        (accumulator, currentItem) =>
+                          accumulator + currentItem.GoldWt,
+                        0
+                      ) || []
+                    }
+                    readOnly
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="basis-[25%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[7px]">
+            <div className="flex flex-col gap-[2px] sm:gap-[4px] lg:gap-[6px]">
+              <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
+                <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[7px]">
+                  <div
+                    style={{
+                      background:
+                        "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                    }}
+                    className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                  >
+                    <p className="text-[12px] font-semibold">Member Name:</p>
+                    <p className="text-[12px]">
+                      {memberData?.member?.MemberName}
+                    </p>
+                  </div>
 
+                  <div
+                    style={{
+                      background:
+                        "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                    }}
+                    className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                  >
+                    <p className="text-[12px] font-semibold">Address:</p>
+                    <p className="text-[12px]">{memberData?.member?.Address}</p>
+                  </div>
 
-                        <div className='w-full grid grid-cols-4 gap-[7px] sm:gap-[14px] lg:gap-[20px]'>
-                            <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Scheme Amount</p>
-                                <div className='flex-1'>
-                                    <input type="text" className='w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
-                                        (memberData &&
-                                            memberData.receipt &&
-                                            Object.keys(memberData.receipt).length) *
-                                        (memberData &&
-                                            memberData.scheme &&
-                                            memberData.scheme.SchemeAmount)
-                                    } readOnly />
-                                </div>
-                            </div>
-                            <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Total Paid</p>
-                                <div className='flex-1'>
-                                    <input type="number" className='w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
-                                        memberData?.receipt?.reduce(
-                                            (accumulator, currentItem) =>
-                                                accumulator + currentItem.Amount,
-                                            0
-                                        ) || []
-                                    } readOnly />
-                                </div>
-                            </div>
-                            <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Bal Amount</p>
-                                <div className='flex-1'>
-                                    <input type="number" className='w-full h-full py-[2px] focus:outline-none rounded-md border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
-                                        (memberData &&
-                                            memberData.receipt &&
-                                            Object.keys(memberData.receipt).length) *
-                                        (memberData &&
-                                            memberData.scheme &&
-                                            memberData.scheme.SchemeAmount) -
-                                        (memberData?.receipt?.reduce(
-                                            (accumulator, currentItem) =>
-                                                accumulator + currentItem.Amount,
-                                            0
-                                        ) || [])
-                                    } readOnly />
-                                </div>
-                            </div>
-                            <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                <p className='flex-1 text-[12px] sm:text-[12px] text-[#182456] font-semibold'>Tot.GoldWT</p>
-                                <div className='flex-1'>
-                                    <input type="number" className='w-full h-full py-[2px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' value={
-                                        memberData?.receipt?.reduce(
-                                            (accumulator, currentItem) =>
-                                                accumulator + currentItem.GoldWt,
-                                            0
-                                        ) || []
-                                    } readOnly />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='basis-[25%] border-l-2 border-black flex flex-col gap-[10px] sm:gap-[13px] lg:gap-[7px]'>
-                        <div className='flex flex-col gap-[2px] sm:gap-[4px] lg:gap-[6px]'>
+                  <div
+                    style={{
+                      background:
+                        "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                    }}
+                    className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                  >
+                    <p className="text-[12px] font-semibold">Mobile No:</p>
+                    <p className="text-[12px]">
+                      {memberData?.member?.MobileNo}
+                    </p>
+                  </div>
 
-                            <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
-                                <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[7px]'>
-
-                                    <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                        <p className="text-[12px] font-semibold">Member Name:</p>
-                                        <p className="text-[12px]">{memberData?.member?.MemberName}</p>
-                                    </div>
-
-                                    <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                        <p className="text-[12px] font-semibold">Address:</p>
-                                        <p className="text-[12px]">{memberData?.member?.Address}</p>
-                                    </div>
-
-                                    <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                        <p className="text-[12px] font-semibold">Mobile No:</p>
-                                        <p className="text-[12px]">{memberData?.member?.MobileNo}</p>
-                                    </div>
-
-                                    {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                  {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                         <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Member Name</p>
                                         <div className='flex-1'>
                                             <input type="text"
@@ -445,50 +593,92 @@ const MemberDiscontinue = () => {
                                                 value={memberData?.member?.MobileNo} readOnly className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                         </div>
                                     </div> */}
-                                    {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                  {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                         <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Mobile No2</p>
                                         <div className='flex-1'>
                                             <input type="text" value={memberData?.member?.Mobile2} readOnly className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                         </div>
                                     </div> */}
-                                </div>
-                            </div>
-                            {/* <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
+                </div>
+              </div>
+              {/* <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
                                 <label htmlFor="droppers" className='text-[14px] sm:text-[16px] lg:text-[18px] font-semibold text-[#FABBFF]'>Droppers</label>
                                 <input type="checkbox" name="droppers" id="" />
                             </div> */}
-                        </div>
+            </div>
 
-                        <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[5px] px-[10px]'>
-                            <h1 className='text-[14px] sm:text-[14px] lg:text-[14px] underline font-bold text-[#182456]'>Scheme Details</h1>
-                            <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
+            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[5px] px-[10px]">
+              <h1 className="text-[14px] sm:text-[14px] lg:text-[14px] underline font-bold text-[#182456]">
+                Scheme Details
+              </h1>
+              <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
+                  <p className="text-[12px] font-semibold">No. Of Months:</p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeDuration}
+                  </p>
+                </div>
 
-                                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                    <p className="text-[12px] font-semibold">No. Of Months:</p>
-                                    <p className="text-[12px]">{memberData?.scheme?.SchemeDuration}</p>
-                                </div>
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
+                  <p className="text-[12px] font-semibold">Scheme Join Date:</p>
+                  <p className="text-[12px]">{memberData?.member?.JoinDate}</p>
+                </div>
 
-                                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                    <p className="text-[12px] font-semibold">Scheme Join Date:</p>
-                                    <p className="text-[12px]">{memberData?.member?.JoinDate}</p>
-                                </div>
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
+                  <p className="text-[12px] font-semibold">Amount:</p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeAmount}
+                  </p>
+                </div>
 
-                                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                    <p className="text-[12px] font-semibold">Amount:</p>
-                                    <p className="text-[12px]">{memberData?.scheme?.SchemeAmount}</p>
-                                </div>
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
+                  <p className="text-[12px] font-semibold">Scheme Value:</p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeValue}
+                  </p>
+                </div>
 
-                                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                    <p className="text-[12px] font-semibold">Scheme Value:</p>
-                                    <p className="text-[12px]">{memberData?.scheme?.SchemeValue}</p>
-                                </div>
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
+                  <p className="text-[12px] font-semibold">
+                    Total Scheme Amount:
+                  </p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeAmount +
+                      memberData?.scheme?.BonusAmount}
+                  </p>
+                </div>
 
-                                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                    <p className="text-[12px] font-semibold">Total Scheme Amount:</p>
-                                    <p className="text-[12px]">{memberData?.scheme?.SchemeAmount + memberData?.scheme?.BonusAmount}</p>
-                                </div>
-
-                                {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>No. of Months</p>
                                     <div className='flex-1'>
                                         <input value={memberData?.scheme?.SchemeDuration} readOnly type="text" className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
@@ -506,7 +696,7 @@ const MemberDiscontinue = () => {
                                         <input value={memberData?.scheme?.SchemeAmount} readOnly type="text" className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div> */}
-                                {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Scheme Value</p>
                                     <div className='flex-1'>
                                         <input value={memberData?.scheme?.SchemeValue} readOnly type="text" className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
@@ -518,24 +708,43 @@ const MemberDiscontinue = () => {
                                         <input readOnly value={memberData?.scheme?.SchemeAmount + memberData?.scheme?.BonusAmount} type="text" className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div> */}
-                            </div>
-                        </div>
+              </div>
+            </div>
 
-                        <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
-                            <h1 className='text-[14px] sm:text-[14px] lg:text-[14px] underline font-bold text-[#182456]'>Pending Dues</h1>
-                            <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]'>
+            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
+              <h1 className="text-[14px] sm:text-[14px] lg:text-[14px] underline font-bold text-[#182456]">
+                Pending Dues
+              </h1>
+              <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[10px]">
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
+                  <p className="text-[12px] font-semibold">Pending Dues:</p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeDuration -
+                      memberData?.receipt?.length}
+                  </p>
+                </div>
 
-                                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                    <p className="text-[12px] font-semibold">Pending Dues:</p>
-                                    <p className="text-[12px]">{memberData?.scheme?.SchemeDuration - memberData?.receipt?.length}</p>
-                                </div>
+                <div
+                  style={{
+                    background:
+                      "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                  }}
+                  className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+                >
+                  <p className="text-[12px] font-semibold">Balance Months:</p>
+                  <p className="text-[12px]">
+                    {memberData?.scheme?.SchemeDuration -
+                      memberData?.receipt?.length}
+                  </p>
+                </div>
 
-                                <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                                    <p className="text-[12px] font-semibold">Balance Months:</p>
-                                    <p className="text-[12px]">{memberData?.scheme?.SchemeDuration - memberData?.receipt?.length}</p>
-                                </div>
-
-                                {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
+                {/* <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
                                     <p className='flex-1 text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Pending Dues</p>
                                     <div className='flex-1'>
                                         <input readOnly value={memberData?.scheme?.SchemeDuration - memberData?.receipt?.length} type="text" className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
@@ -547,34 +756,59 @@ const MemberDiscontinue = () => {
                                         <input type="text" readOnly value={memberData?.scheme?.SchemeDuration - memberData?.receipt?.length} className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]' />
                                     </div>
                                 </div> */}
-                            </div>
-                        </div>
-
-                        <div className='flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]'>
-                            {/* <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Settlement Detail </h1> */}
-
-                            <div className='w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[7px]'>
-                                <div className='flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
-                                    <input type="checkbox" name="droppers" id="" />
-                                    <label htmlFor="droppers" onClick={() => { setSettled(false); setDiscontinue(true) }} className='text-[18px] sm:text-[22px] lg:text-[20px] font-semibold text-[#000]'>Discontinue</label>
-                                </div>
-                                <div className='w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]'>
-                                    <p className='basis-[30%] text-[12px] sm:text-[14px] text-[#182456] font-semibold'>Cause</p>
-                                    <div className='basis-[70%]'>
-                                        <textarea name="" id="" value={description} onChange={(e) => setDescription(e.target.value)} cols="15" rows="10" className='w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]'></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='flex w-full items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]'>
-                            <button onClick={() => pushDiscontinueMember(CardNo)} type="submit" className='bg-[#172561] rounded-md text-[12px] sm:text-[14px] font-bold px-[15px] sm:px-[20px] lg:px-[25px] py-[5px] sm:py-[5px] text-white '>SAVE</button>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
-        </div>
-    )
-}
 
-export default MemberDiscontinue
+            <div className="flex flex-col gap-[3px] sm:gap-[5px] lg:gap-[7px] px-[10px]">
+              {/* <h1 className='text-[14px] sm:text-[17px] lg:text-[20px] font-semibold text-[#182456]'>Settlement Detail </h1> */}
+
+              <div className="w-full flex flex-col items-center justify-start gap-[4px] sm:gap-[7px] lg:gap-[7px]">
+                <div className="flex items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
+                  <input type="checkbox" name="droppers" id="" />
+                  <label
+                    htmlFor="droppers"
+                    onClick={() => {
+                      setSettled(false);
+                      setDiscontinue(true);
+                    }}
+                    className="text-[18px] sm:text-[22px] lg:text-[20px] font-semibold text-[#000]"
+                  >
+                    Discontinue
+                  </label>
+                </div>
+                <div className="w-full flex items-center justify-center gap-[5px] sm:gap-[7px] lg:gap-[10px]">
+                  <p className="basis-[30%] text-[12px] sm:text-[14px] text-[#182456] font-semibold">
+                    Cause
+                  </p>
+                  <div className="basis-[70%]">
+                    <textarea
+                      name=""
+                      id=""
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      cols="15"
+                      rows="10"
+                      className="w-full h-[30px] focus:outline-none rounded-lg border border-[#000] px-[5px] sm:px-[10px] lg:px-[15px]"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex w-full items-center justify-center gap-[3px] sm:gap-[5px] lg:gap-[7px]">
+              <button
+                onClick={() => pushDiscontinueMember(CardNo)}
+                type="submit"
+                className="bg-[#172561] rounded-md text-[12px] sm:text-[14px] font-bold px-[15px] sm:px-[20px] lg:px-[25px] py-[5px] sm:py-[5px] text-white "
+              >
+                SAVE
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MemberDiscontinue;

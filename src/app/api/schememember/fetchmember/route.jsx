@@ -1,12 +1,26 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+import {
+  ReceiptSchema,
+  SchemenameSchema,
+  SchemesettlementSchema,
+  Schemeuserschema,
+  getPrismaClient,
+} from "@/components/db/Connection";
 
 export async function POST(request) {
-  const prisma = new PrismaClient();
+  // const prisma = new PrismaClient();
+  const tn = request.headers.get("tn");
+  const prisma = await getPrismaClient(tn);
   const body = await request.json();
   try {
+    await Schemeuserschema(prisma);
+    await ReceiptSchema(prisma);
+    await SchemenameSchema(prisma);
+    await SchemesettlementSchema(prisma);
+
     const member = await prisma.oRIGIN_SCHEME_USER.findUnique({
       where: {
         CardNo: body.cardno,

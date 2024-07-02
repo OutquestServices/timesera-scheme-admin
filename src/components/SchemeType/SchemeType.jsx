@@ -10,8 +10,8 @@ const SchemeType = () => {
     const [goldScheme, setGoldScheme] = useState("Cash Scheme");
 
     const [schemeTypes, setSchemeTypes] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState(null);
     const [editing, setEditing] = useState(false);
     const [editingId, setEditingId] = useState(null);
 
@@ -22,6 +22,7 @@ const SchemeType = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        tn: localStorage.getItem('tenantName'),
                     },
                 });
 
@@ -32,10 +33,11 @@ const SchemeType = () => {
                 const data = await response.json();
                 setSchemeTypes(data);
             } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
+                console.error(error.message);
+            } 
+            // finally {
+                // setLoading(false);
+            // }
         };
 
         fetchSchemeTypes();
@@ -47,6 +49,7 @@ const SchemeType = () => {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
+                    tn: localStorage.getItem('tenantName'),
                 },
                 body: JSON.stringify({ schemeType }),
             });
@@ -91,6 +94,7 @@ const SchemeType = () => {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",
+                            tn: localStorage.getItem("tenantName"),
                         },
                         body: JSON.stringify({ ...data, id: editingId }),
                     });
@@ -99,6 +103,7 @@ const SchemeType = () => {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
+                            tn: localStorage.getItem("tenantName"),
                         },
                         body: JSON.stringify(data),
                     });

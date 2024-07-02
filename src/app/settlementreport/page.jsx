@@ -109,6 +109,7 @@ const Page = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
+                        'tn': localStorage.getItem('tenantName'),
                     },
                 });
 

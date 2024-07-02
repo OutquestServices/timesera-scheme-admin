@@ -1,11 +1,15 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
+import { SchemesettlementSchema, getPrismaClient } from "@/components/db/Connection";
+// import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
-    const prisma = new PrismaClient();
+    // const prisma = new PrismaClient();
+    const tn = request.headers.get('tn');
+    const prisma = await getPrismaClient(tn);
     try {
+        await SchemesettlementSchema(prisma);
         // Count the number of rows in the ORIGIN_SCHEME_RECEIPT table
         const totalSettlements = await prisma.oRIGIN_SCHEME_USER_SETTLEMENT.count();
 

@@ -8,7 +8,6 @@ import { FaTrash } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 const ReceiptEntry = () => {
-
   const goldrate = 82.22;
 
   const cashDescRef = useRef(null);
@@ -30,21 +29,28 @@ const ReceiptEntry = () => {
     InchargeBtn: useRef(null),
     NarrationBtn: useRef(null),
     SubmitBtn: useRef(null),
-  }
+  };
 
   const [nextReceiptNumber, setNextReceiptNumber] = useState(null);
 
   useEffect(() => {
     const fetchNextReceiptNumber = async () => {
       try {
-        const response = await fetch('/api/receipt/generatereceiptno');
+        const response = await fetch("/api/receipt/generatereceiptno", {
+          headers: {
+            "Content-Type": "application/json",
+            tn: localStorage.getItem("tenantName"),
+          },
+        });
         if (!response.ok) {
-          throw new Error('Failed to fetch the next receipt number');
+          throw new Error("Failed to fetch the next receipt number");
         }
+        console.log("Response:", response);
+
         const data = await response.json();
         setNextReceiptNumber(data.nextReceiptNumber);
       } catch (error) {
-        console.error('Error fetching the next receipt number:', error);
+        console.error("Error fetching the next receipt number:", error);
       }
     };
 
@@ -60,7 +66,11 @@ const ReceiptEntry = () => {
   const [selectedOption, setSelectedOption] = useState(true);
   // const [paymentMode, setPaymentMode] = useState("");
   const [amount, setAmount] = useState(null);
-  const [GoldWt, setGoldWt] = useState(parseFloat(parseFloat(ShemeData?.scheme?.SchemeAmount) / parseFloat(goldrate)).toFixed(2));
+  const [GoldWt, setGoldWt] = useState(
+    parseFloat(
+      parseFloat(ShemeData?.scheme?.SchemeAmount) / parseFloat(goldrate)
+    ).toFixed(2)
+  );
   const [GoldAmount, setGoldAmount] = useState(null);
   const [Description, setDescription] = useState("");
   const [Incharge, setIncharge] = useState("");
@@ -75,7 +85,12 @@ const ReceiptEntry = () => {
 
   useEffect(() => {
     const fetchReceipts = async () => {
-      const response = await fetch('/api/receipt/getallreceipts');
+      const response = await fetch("/api/receipt/getallreceipts", {
+        headers: {
+          "Content-Type": "application/json",
+          tn: localStorage.getItem("tenantName"),
+        },
+      });
       const data = await response.json();
       setReceipts(data);
     };
@@ -88,7 +103,8 @@ const ReceiptEntry = () => {
       const response = await fetch("/api/memberdiscontinue/checkstatus", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          tn: localStorage.getItem("tenantName"),
         },
         body: JSON.stringify({
           cardno: CardNo,
@@ -137,7 +153,8 @@ const ReceiptEntry = () => {
         const fetchResponse = await fetch("/api/schememember/fetchmember", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            tn: localStorage.getItem("tenantName"),
           },
           body: JSON.stringify({
             cardno: CardNo,
@@ -145,7 +162,9 @@ const ReceiptEntry = () => {
         });
 
         if (!fetchResponse.ok) {
-          throw new Error(`Network response was not ok: ${fetchResponse.statusText}`);
+          throw new Error(
+            `Network response was not ok: ${fetchResponse.statusText}`
+          );
         }
 
         const memberData = await fetchResponse.json();
@@ -156,29 +175,28 @@ const ReceiptEntry = () => {
     }
   };
 
-
   const handleKeyDown = (event, mode) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       switch (mode) {
-        case 'Cash':
+        case "Cash":
           if (event.target === cashDescRef.current) {
             event.preventDefault();
             cashAmountRef.current.focus();
           } else if (event.target === cashAmountRef.current) {
             event.preventDefault();
-            handleAddEntry('Cash', '', '', cashdesc, cashamount);
+            handleAddEntry("Cash", "", "", cashdesc, cashamount);
           }
           break;
-        case 'Card':
+        case "Card":
           if (event.target === cardDescRef.current) {
             event.preventDefault();
             cardAmountRef.current.focus();
           } else if (event.target === cardAmountRef.current) {
             event.preventDefault();
-            handleAddEntry('Card', '', '', carddesc, cardamount);
+            handleAddEntry("Card", "", "", carddesc, cardamount);
           }
           break;
-        case 'Online':
+        case "Online":
           if (event.target === onlineParticularsRef.current) {
             event.preventDefault();
             onlineAccRef.current.focus();
@@ -193,10 +211,16 @@ const ReceiptEntry = () => {
           }
           if (event.target === onlineAmountRef.current) {
             event.preventDefault();
-            handleAddEntry('Online', onlineparticulars, onlineacc, onlinedesc, onlineamount);
+            handleAddEntry(
+              "Online",
+              onlineparticulars,
+              onlineacc,
+              onlinedesc,
+              onlineamount
+            );
           }
           break;
-        case 'UPI':
+        case "UPI":
           if (event.target === upiParticularsRef.current) {
             event.preventDefault();
             upiAccRef.current.focus();
@@ -211,7 +235,7 @@ const ReceiptEntry = () => {
           }
           if (event.target === upiAmountRef.current) {
             event.preventDefault();
-            handleAddEntry('UPI', upiparticulars, upiacc, upidesc, upiamount);
+            handleAddEntry("UPI", upiparticulars, upiacc, upidesc, upiamount);
           }
           break;
         default:
@@ -220,24 +244,28 @@ const ReceiptEntry = () => {
     }
   };
 
-
   useEffect(() => {
     const fetchPaymentMethods = async () => {
       try {
-        const response = await fetch('/api/payments/getpaymentmethods');
+        const response = await fetch("/api/payments/getpaymentmethods", {
+          headers: {
+            "Content-Type": "application/json",
+            tn: localStorage.getItem("tenantName"),
+          },
+        });
         const data = await response.json();
 
         // Segregate data based on PMODE
-        const cardData = data.filter(item => item.PMODE === 'CARD');
-        const onlineData = data.filter(item => item.PMODE === 'ONLINE');
-        const upiData = data.filter(item => item.PMODE === 'UPI');
+        const cardData = data.filter((item) => item.PMODE === "CARD");
+        const onlineData = data.filter((item) => item.PMODE === "ONLINE");
+        const upiData = data.filter((item) => item.PMODE === "UPI");
 
         // Update useStates
         setCards(cardData);
         setOnline(onlineData);
         setUpi(upiData);
       } catch (error) {
-        console.error('Error fetching payment methods:', error);
+        console.error("Error fetching payment methods:", error);
       }
     };
 
@@ -261,15 +289,14 @@ const ReceiptEntry = () => {
 
   const createReceipt = async () => {
     if (!amount || !GoldWt) {
-      alert('Please fill all the required fields');
+      alert("Please fill all the required fields");
       return;
     }
 
     if (amount > ShemeData?.scheme?.SchemeAmount) {
       alert("You have paid more than the scheme amount");
       return;
-    }
-    else if (amount < ShemeData?.scheme?.SchemeAmount) {
+    } else if (amount < ShemeData?.scheme?.SchemeAmount) {
       alert("You have paid less than the scheme amount");
       return;
     }
@@ -279,6 +306,7 @@ const ReceiptEntry = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          tn: localStorage.getItem("tenantName"),
         },
         body: JSON.stringify({
           rno: nextReceiptNumber.toString(),
@@ -304,7 +332,9 @@ const ReceiptEntry = () => {
           amount: parseFloat(amount),
           gamount: parseFloat(amount),
           incharge: "",
-          gweight: parseFloat((parseFloat(amount) / parseFloat(goldrate)).toFixed(2)),
+          gweight: parseFloat(
+            (parseFloat(amount) / parseFloat(goldrate)).toFixed(2)
+          ),
           months: ShemeData?.receipt?.length,
         }),
       });
@@ -353,15 +383,20 @@ const ReceiptEntry = () => {
     }
   };
 
-
   const handleDelete = async (receiptNo) => {
     const response = await fetch(`/api/receipt/${receiptNo}`, {
-      method: 'DELETE',
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        tn: localStorage.getItem("tenantName"),
+      },
     });
 
     if (response.ok) {
       alert("Deleted successfully");
-      setReceipts(receipts.filter(receipt => receipt.ReceiptNo !== receiptNo));
+      setReceipts(
+        receipts.filter((receipt) => receipt.ReceiptNo !== receiptNo)
+      );
     } else {
       const errorData = await response.json();
       console.error("Failed to delete receipt:", errorData.error);
@@ -396,25 +431,25 @@ const ReceiptEntry = () => {
 
       // Reset corresponding state variables based on the deleted entry
       switch (deletedEntry.mode) {
-        case 'Cash':
-          setCashdesc('');
+        case "Cash":
+          setCashdesc("");
           setCashamount(0);
           break;
-        case 'Card':
-          setCarddesc('');
+        case "Card":
+          setCarddesc("");
           setCardamount(0);
           break;
-        case 'Online':
-          setOnlinedesc('');
+        case "Online":
+          setOnlinedesc("");
           setOnlineamount(0);
-          setOnlineparticulars('');
-          setOnlineacc('');
+          setOnlineparticulars("");
+          setOnlineacc("");
           break;
-        case 'UPI':
-          setUpidesc('');
+        case "UPI":
+          setUpidesc("");
           setUpiamount(0);
-          setUpiparticulars('');
-          setUpiacc('');
+          setUpiparticulars("");
+          setUpiacc("");
           break;
         default:
           break;
@@ -424,9 +459,8 @@ const ReceiptEntry = () => {
     });
   };
 
-
   const handleAddEntry = (mode, particulars, acc, desc, amount) => {
-    const existingEntry = entries.find(entry => entry.mode === mode);
+    const existingEntry = entries.find((entry) => entry.mode === mode);
     if (existingEntry) {
       alert(`Entry for ${mode} already exists.`);
     } else {
@@ -437,7 +471,7 @@ const ReceiptEntry = () => {
 
   const handleKeyDown2 = (e, nextField) => {
     console.log(nextField);
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       if (inputRefs[nextField]) {
         inputRefs[nextField].current.focus();
@@ -446,7 +480,6 @@ const ReceiptEntry = () => {
   };
 
   // console.log(cashamount);
-
 
   // console.log(ShemeData?.receipt?.length)
 
@@ -464,9 +497,6 @@ const ReceiptEntry = () => {
   return (
     <div className="w-full max-h-[100000px]">
       <div className="w-full h-full flex flex-col gap-[10px] sm:gap-[15px] lg:gap-[5px]">
-
-
-
         <div className="px-[10px] sm:px-[20px] lg:px-[20px] py-[5px] sm:py-[10px] lg:py-[10px]">
           <div
             className="w-full h-full px-[15px] sm:px-[30px] lg:px-[45px] py-[10px] sm:py-[10px] lg:py-[10px] rounded-md flex items-center gap-[5px] sm:gap-[8px] lg:gap-[12px]"
@@ -489,19 +519,15 @@ const ReceiptEntry = () => {
                 </p>
               </div>
             </div>
-
           </div>
         </div>
-
-
 
         <div className="flex gap-[10px] w-full h-full px-[20px]">
           <div className="basis-[80%] w-full h-full flex flex-col">
             <div
               className="w-full h=full p-[3px] flex flex-col gap-[5px] sm:gap-[9px] lg:gap-[13px] items-center justify-center bg-center bg-cover bg-no-repeat"
               style={{
-                background:
-                  " url(/receiptbanner.png) ",
+                background: " url(/receiptbanner.png) ",
               }}
             >
               <div className="w-full flex items-center justify-center gap-[10px] sm:gap-[15px] lg:gap-[20px] text-[14px] sm:text-[16px] lg:text-[14px] font-semibold text-[#0D1327] px-[20px]">
@@ -517,8 +543,6 @@ const ReceiptEntry = () => {
                   />
                 </div>
 
-
-
                 <div className="basis-[33%]  w-full flex flex-col justify-start items-center text-start">
                   <h1 className=" pb-[2px] sm:px-[3px] lg:px-[4px]">
                     Rec Date
@@ -530,8 +554,6 @@ const ReceiptEntry = () => {
                     className="rounded-md focus:outline-none px-[5px] sm:px-[10px] lg:px-[15px] py-[2px] sm:py-[4px] lg:py-[4px] max-w-[150px] w-full"
                   />
                 </div>
-
-                
 
                 <div className="basis-[33%] flex flex-col text-[14px] sm:text-[16px] w-full lg:text-[14px] items-center justify-center gap-[0px] sm:gap-[10px] lg:gap-[0px]">
                   <p className="font-bold ">Installment No</p>
@@ -564,9 +586,6 @@ const ReceiptEntry = () => {
                     Card Details
                   </p>
                 </div>
-
-
-
               </div>
 
               <div className="w-full flex items-center justify-start gap-[2px] sm:gap-[5px]">
@@ -587,10 +606,7 @@ const ReceiptEntry = () => {
                 </button>
               </div>
 
-
-
               <div className="w-full grid grid-cols-3 items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[12px] pt-[0px]">
-
                 <div className="basis-[60%] flex flex-col text-[14px] sm:text-[16px] lg:text-[16px] items-start justify-between gap-[5px] sm:gap-[10px] lg:gap-[0px]">
                   <p className="text-[10px]">Member Name</p>
                   <input
@@ -613,7 +629,6 @@ const ReceiptEntry = () => {
                   </div>
                 </div>
 
-
                 <div className="flex w-full flex-col items-start justify-start">
                   <div className=" flex flex-col text-[14px] w-full items-start sm:text-[16px] lg:text-[14px] gap-[5px] sm:gap-[0px] lg:gap-[0px]">
                     <p className="text-[10px]">Address</p>
@@ -627,13 +642,8 @@ const ReceiptEntry = () => {
                     ></textarea>
                   </div>
                 </div>
-
               </div>
-
-
             </div>
-
-
 
             <div className="mt-[5px] flex flex-col gap-[2px]">
               <div className="flex items-center justify-start ">
@@ -641,14 +651,16 @@ const ReceiptEntry = () => {
                 <h1 className=" text-[20px] sm:text-[16px] lg:text-[16px] text-[#182456] font-semibold">
                   Payment Details
                 </h1>
-
-
               </div>
-              <div className='w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[5px]'>
-                {['Cash', 'Card', 'Online', 'UPI'].map((mode) => (
+              <div className="w-full grid grid-cols-4 gap-[5px] items-center justify-center mb-[5px]">
+                {["Cash", "Card", "Online", "UPI"].map((mode) => (
                   <button
                     key={mode}
-                    className={`border flex items-center justify-center gap-[5px] border-gray-500 p-[2px] text-[14px] ${selectedModes.includes(mode) ? 'bg-[#182456] text-white' : ''}`}
+                    className={`border flex items-center justify-center gap-[5px] border-gray-500 p-[2px] text-[14px] ${
+                      selectedModes.includes(mode)
+                        ? "bg-[#182456] text-white"
+                        : ""
+                    }`}
                     onClick={() => handleModeChange(mode)}
                   >
                     {mode}
@@ -657,89 +669,155 @@ const ReceiptEntry = () => {
                 ))}
               </div>
               <div className="flex flex-col gap-[2px] px-[0px]">
-                {selectedModes.includes('Cash') && (
+                {selectedModes.includes("Cash") && (
                   <div className="w-full h-full grid grid-cols-4 gap-[5px] items-center justify-center">
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Payment Mode</p>
-                      <input type="text" value="Cash" readOnly className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md" />
+                      <input
+                        type="text"
+                        value="Cash"
+                        readOnly
+                        className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md"
+                      />
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Description</p>
-                      <input type="text" value={cashdesc} onKeyDown={(e) => handleKeyDown(e, 'Cash')}
-                        ref={cashDescRef} onChange={(e) => setCashdesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md" />
+                      <input
+                        type="text"
+                        value={cashdesc}
+                        onKeyDown={(e) => handleKeyDown(e, "Cash")}
+                        ref={cashDescRef}
+                        onChange={(e) => setCashdesc(e.target.value)}
+                        className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md"
+                      />
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Amount</p>
                       <input
                         type="number"
                         value={cashamount}
-                        onKeyDown={(e) => handleKeyDown(e, 'Cash')}
+                        onKeyDown={(e) => handleKeyDown(e, "Cash")}
                         ref={cashAmountRef}
-                        onChange={(e) => setCashamount(parseInt(e.target.value, 10))}
+                        onChange={(e) =>
+                          setCashamount(parseInt(e.target.value, 10))
+                        }
                         className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md"
                       />
                     </div>
-                    <button onClick={() => handleAddEntry('Cash', '', '', cashdesc, cashamount)} className="border bg-[#182456] text-white border-black p-1 mt-2">
+                    <button
+                      onClick={() =>
+                        handleAddEntry("Cash", "", "", cashdesc, cashamount)
+                      }
+                      className="border bg-[#182456] text-white border-black p-1 mt-2"
+                    >
                       Add Entry
                     </button>
                   </div>
                 )}
 
-                {selectedModes.includes('Card') && (
+                {selectedModes.includes("Card") && (
                   <div className="w-full h-full grid grid-cols-4 gap-[5px] items-center justify-center">
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Payment Mode</p>
-                      <input type="text" value="Card" readOnly className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md" />
+                      <input
+                        type="text"
+                        value="Card"
+                        readOnly
+                        className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md"
+                      />
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Description</p>
-                      <input type="text" value={carddesc} onKeyDown={(e) => handleKeyDown(e, 'Card')}
-                        ref={cardDescRef} onChange={(e) => setCarddesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md" />
+                      <input
+                        type="text"
+                        value={carddesc}
+                        onKeyDown={(e) => handleKeyDown(e, "Card")}
+                        ref={cardDescRef}
+                        onChange={(e) => setCarddesc(e.target.value)}
+                        className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md"
+                      />
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Amount</p>
                       <input
                         type="number"
                         value={cardamount}
-                        onKeyDown={(e) => handleKeyDown(e, 'Card')}
+                        onKeyDown={(e) => handleKeyDown(e, "Card")}
                         ref={cardAmountRef}
-                        onChange={(e) => setCardamount(parseInt(e.target.value, 10))}
+                        onChange={(e) =>
+                          setCardamount(parseInt(e.target.value, 10))
+                        }
                         className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md"
                       />
                     </div>
-                    <button onClick={() => handleAddEntry('Card', '', '', carddesc, cardamount)} className="border border-gray-500 bg-[#182456] text-white p-1 mt-2">
+                    <button
+                      onClick={() =>
+                        handleAddEntry("Card", "", "", carddesc, cardamount)
+                      }
+                      className="border border-gray-500 bg-[#182456] text-white p-1 mt-2"
+                    >
                       Add Entry
                     </button>
                   </div>
                 )}
 
-                {selectedModes.includes('Online') && (
+                {selectedModes.includes("Online") && (
                   <div className="w-full h-full grid grid-cols-6 gap-[5px] items-center justify-center">
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Payment Mode</p>
-                      <input type="text" value="Online" readOnly className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md" />
+                      <input
+                        type="text"
+                        value="Online"
+                        readOnly
+                        className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-md"
+                      />
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Particulars</p>
-                      <select onChange={(e) => setOnlineparticulars(e.target.value)} ref={onlineParticularsRef} onKeyDown={(e) => handleKeyDown(e, 'Online')} name="online" id="online" className="text-[14px] focus:outline-none border border-gray-500 w-full rounded-md p-[3px]">
+                      <select
+                        onChange={(e) => setOnlineparticulars(e.target.value)}
+                        ref={onlineParticularsRef}
+                        onKeyDown={(e) => handleKeyDown(e, "Online")}
+                        name="online"
+                        id="online"
+                        className="text-[14px] focus:outline-none border border-gray-500 w-full rounded-md p-[3px]"
+                      >
                         <option value="">Select</option>
                         {online.map((option, index) => (
-                          <option key={index} value={option?.PAYMODE}>{option?.PAYMODE}</option>
+                          <option key={index} value={option?.PAYMODE}>
+                            {option?.PAYMODE}
+                          </option>
                         ))}
                       </select>
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Acc No</p>
-                      <select ref={onlineAccRef} onKeyDown={(e) => handleKeyDown(e, 'Online')} onChange={(e) => setOnlineacc(e.target.value)} name="accno" id="accno" className="text-[14px] focus:outline-none border border-gray-500 w-full rounded-lg p-[3px]">
+                      <select
+                        ref={onlineAccRef}
+                        onKeyDown={(e) => handleKeyDown(e, "Online")}
+                        onChange={(e) => setOnlineacc(e.target.value)}
+                        name="accno"
+                        id="accno"
+                        className="text-[14px] focus:outline-none border border-gray-500 w-full rounded-lg p-[3px]"
+                      >
                         <option value="">Select</option>
                         {online.map((option, index) => (
-                          <option key={index} value={option?.ACCNO}>{option?.ACCNO}</option>
+                          <option key={index} value={option?.ACCNO}>
+                            {option?.ACCNO}
+                          </option>
                         ))}
                       </select>
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Description</p>
-                      <input ref={onlineDescRef} onKeyDown={(e) => handleKeyDown(e, 'Online')} type="text" value={onlinedesc} onChange={(e) => setOnlinedesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-lg" />
+                      <input
+                        ref={onlineDescRef}
+                        onKeyDown={(e) => handleKeyDown(e, "Online")}
+                        type="text"
+                        value={onlinedesc}
+                        onChange={(e) => setOnlinedesc(e.target.value)}
+                        className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-lg"
+                      />
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Amount</p>
@@ -747,44 +825,87 @@ const ReceiptEntry = () => {
                         type="number"
                         value={onlineamount}
                         ref={onlineAmountRef}
-                        onKeyDown={(e) => handleKeyDown(e, 'Online')}
-                        onChange={(e) => setOnlineamount(parseInt(e.target.value, 10))}
+                        onKeyDown={(e) => handleKeyDown(e, "Online")}
+                        onChange={(e) =>
+                          setOnlineamount(parseInt(e.target.value, 10))
+                        }
                         className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-lg"
                       />
                     </div>
-                    <button onClick={() => handleAddEntry('Online', onlineparticulars, onlineacc, onlinedesc, onlineamount)} className="border border-gray-500 p-1 bg-[#182456] text-white mt-2">
+                    <button
+                      onClick={() =>
+                        handleAddEntry(
+                          "Online",
+                          onlineparticulars,
+                          onlineacc,
+                          onlinedesc,
+                          onlineamount
+                        )
+                      }
+                      className="border border-gray-500 p-1 bg-[#182456] text-white mt-2"
+                    >
                       Add Entry
                     </button>
                   </div>
                 )}
 
-                {selectedModes.includes('UPI') && (
+                {selectedModes.includes("UPI") && (
                   <div className="w-full h-full grid grid-cols-6 gap-[5px] items-center justify-center">
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Payment Mode</p>
-                      <input type="text" value="UPI" readOnly className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-lg" />
+                      <input
+                        type="text"
+                        value="UPI"
+                        readOnly
+                        className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-lg"
+                      />
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Particulars</p>
-                      <select ref={upiParticularsRef} onKeyDown={(e) => handleKeyDown(e, 'UPI')} onChange={(e) => setUpiparticulars(e.target.value)} name="upi" id="upi" className="text-[14px] focus:outline-none border border-gray-500 w-full rounded-lg p-[3px]">
+                      <select
+                        ref={upiParticularsRef}
+                        onKeyDown={(e) => handleKeyDown(e, "UPI")}
+                        onChange={(e) => setUpiparticulars(e.target.value)}
+                        name="upi"
+                        id="upi"
+                        className="text-[14px] focus:outline-none border border-gray-500 w-full rounded-lg p-[3px]"
+                      >
                         <option value="">Select</option>
                         {upi.map((option, index) => (
-                          <option key={index} value={option?.PAYMODE}>{option?.PAYMODE}</option>
+                          <option key={index} value={option?.PAYMODE}>
+                            {option?.PAYMODE}
+                          </option>
                         ))}
                       </select>
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Acc No.</p>
-                      <select ref={upiAccRef} onKeyDown={(e) => handleKeyDown(e, 'UPI')} onChange={(e) => setUpiacc(e.target.value)} name="upiacc" id="upiacc" className="text-[14px] focus:outline-none border border-gray-500 w-full rounded-lg p-[3px]">
+                      <select
+                        ref={upiAccRef}
+                        onKeyDown={(e) => handleKeyDown(e, "UPI")}
+                        onChange={(e) => setUpiacc(e.target.value)}
+                        name="upiacc"
+                        id="upiacc"
+                        className="text-[14px] focus:outline-none border border-gray-500 w-full rounded-lg p-[3px]"
+                      >
                         <option value="">Select</option>
                         {upi.map((option, index) => (
-                          <option key={index} value={option?.ACCNO}>{option?.ACCNO}</option>
+                          <option key={index} value={option?.ACCNO}>
+                            {option?.ACCNO}
+                          </option>
                         ))}
                       </select>
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Description</p>
-                      <input type="text" ref={upiDescRef} onKeyDown={(e) => handleKeyDown(e, 'UPI')} value={upidesc} onChange={(e) => setUpidesc(e.target.value)} className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-lg" />
+                      <input
+                        type="text"
+                        ref={upiDescRef}
+                        onKeyDown={(e) => handleKeyDown(e, "UPI")}
+                        value={upidesc}
+                        onChange={(e) => setUpidesc(e.target.value)}
+                        className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-lg"
+                      />
                     </div>
                     <div className="flex flex-col items-start justify-center text-left w-full">
                       <p className="text-[12px]">Amount</p>
@@ -792,12 +913,25 @@ const ReceiptEntry = () => {
                         type="number"
                         value={upiamount}
                         ref={upiAmountRef}
-                        onKeyDown={(e) => handleKeyDown(e, 'UPI')}
-                        onChange={(e) => setUpiamount(parseInt(e.target.value, 10))}
+                        onKeyDown={(e) => handleKeyDown(e, "UPI")}
+                        onChange={(e) =>
+                          setUpiamount(parseInt(e.target.value, 10))
+                        }
                         className="w-full text-[14px] focus:outline-none border border-gray-500 p-[3px] rounded-lg"
                       />
                     </div>
-                    <button onClick={() => handleAddEntry('UPI', upiparticulars, upiacc, upidesc, upiamount)} className="border border-gray-500 p-1 mt-2 bg-[#182456] text-white">
+                    <button
+                      onClick={() =>
+                        handleAddEntry(
+                          "UPI",
+                          upiparticulars,
+                          upiacc,
+                          upidesc,
+                          upiamount
+                        )
+                      }
+                      className="border border-gray-500 p-1 mt-2 bg-[#182456] text-white"
+                    >
                       Add Entry
                     </button>
                   </div>
@@ -827,7 +961,10 @@ const ReceiptEntry = () => {
                           <td className="p-[5px]">{entry.desc}</td>
                           <td className="p-[5px]">{entry.amount}</td>
                           <td className="p-[5px]">
-                            <button onClick={() => handleDeleteEntry(index)} className="text-red-500">
+                            <button
+                              onClick={() => handleDeleteEntry(index)}
+                              className="text-red-500"
+                            >
                               <FaTrash size={16} />
                             </button>
                           </td>
@@ -905,12 +1042,22 @@ const ReceiptEntry = () => {
                 <p className=" ">Gold Wt</p>
                 <input
                   type="text"
-                  value={parseFloat(parseFloat(ShemeData?.scheme?.SchemeAmount) / parseFloat(goldrate)).toFixed(2)}
+                  value={parseFloat(
+                    parseFloat(ShemeData?.scheme?.SchemeAmount) /
+                      parseFloat(goldrate)
+                  ).toFixed(2)}
                   ref={inputRefs.GoldWtBtn}
                   readOnly
-                  onKeyDown={(e) => handleKeyDown2(e, 'AmountBtn')}
+                  onKeyDown={(e) => handleKeyDown2(e, "AmountBtn")}
                   className="w-full bg-red-500 focus:outline-none px-[10px] sm:px-[15px] py-[3px] sm:py-[2px] lg:py-[2px] border border-gray-500 rounded-lg text-[14px] sm:text-[16px]"
-                  onChange={() => setGoldWt(parseFloat(parseFload(ShemeData?.scheme?.SchemeAmount) / parseFloat(goldrate)).toFixed(2))}
+                  onChange={() =>
+                    setGoldWt(
+                      parseFloat(
+                        parseFload(ShemeData?.scheme?.SchemeAmount) /
+                          parseFloat(goldrate)
+                      ).toFixed(2)
+                    )
+                  }
                 />
               </div>
 
@@ -921,7 +1068,7 @@ const ReceiptEntry = () => {
                   value={amount}
                   ref={inputRefs.AmountBtn}
                   readOnly
-                  onKeyDown={(e) => handleKeyDown2(e, 'InchargeBtn')}
+                  onKeyDown={(e) => handleKeyDown2(e, "InchargeBtn")}
                   className="bg-red-500 px-[3px] py-[3px] sm:py-[2px] focus:outline-none border border-gray-500 rounded-lg w-full"
                   onChange={(e) => setAmount(e.target.value)}
                 />
@@ -963,66 +1110,127 @@ const ReceiptEntry = () => {
               </p>
             </div>
             <div className="flex w-full flex-col gap-[4px]">
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
                 <p className="text-[12px] font-semibold">Scheme Type:</p>
                 <p className="text-[12px]">{ShemeData?.member?.SchemeType}</p>
               </div>
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
                 <p className="text-[12px] font-semibold">Scheme Name:</p>
                 <p className="text-[12px]">{ShemeData?.member?.SchemeName}</p>
               </div>
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
                 <p className="text-[12px] font-semibold">Scheme Amount:</p>
                 <p className="text-[12px]">{ShemeData?.scheme?.SchemeAmount}</p>
               </div>
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
                 <p className="text-[12px] font-semibold">Scheme Duration:</p>
-                <p className="text-[12px]">{ShemeData?.scheme?.SchemeDuration}</p>
+                <p className="text-[12px]">
+                  {ShemeData?.scheme?.SchemeDuration}
+                </p>
               </div>
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
                 <p className="text-[12px] font-semibold">Paid Amount:</p>
-                <p className="text-[12px]">{ShemeData?.receipt?.reduce(
-                  (accumulator, currentItem) =>
-                    accumulator + currentItem.Amount,
-                  0
-                ) || [0]}</p>
-              </div>
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                <p className="text-[12px] font-semibold">Scheme Value:</p>
-                <p className="text-[12px]">{ShemeData?.scheme?.SchemeValue}</p>
-              </div>
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                <p className="text-[12px] font-semibold">Join Date:</p>
-                <p className="text-[12px]">{ShemeData?.member?.JoinDate}</p>
-              </div>
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                <p className="text-[12px] font-semibold">Paid Months:</p>
-                <p className="text-[12px]">{ShemeData?.receipt?.length}</p>
-              </div>
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                <p className="text-[12px] font-semibold">Balance Months:</p>
-                <p className="text-[12px]">{ShemeData?.scheme?.SchemeDuration -
-                  ShemeData?.receipt?.length}</p>
-              </div>
-              <div style={{ background: "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)" }} className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]">
-                <p className="text-[12px] font-semibold">Balance Amount:</p>
-                <p className="text-[12px]">{ShemeData?.scheme?.SchemeValue -
-                  ShemeData?.receipt?.reduce(
+                <p className="text-[12px]">
+                  {ShemeData?.receipt?.reduce(
                     (accumulator, currentItem) =>
                       accumulator + currentItem.Amount,
                     0
-                  ) || [0]}</p>
+                  ) || [0]}
+                </p>
+              </div>
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
+                <p className="text-[12px] font-semibold">Scheme Value:</p>
+                <p className="text-[12px]">{ShemeData?.scheme?.SchemeValue}</p>
+              </div>
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
+                <p className="text-[12px] font-semibold">Join Date:</p>
+                <p className="text-[12px]">{ShemeData?.member?.JoinDate}</p>
+              </div>
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
+                <p className="text-[12px] font-semibold">Paid Months:</p>
+                <p className="text-[12px]">{ShemeData?.receipt?.length}</p>
+              </div>
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
+                <p className="text-[12px] font-semibold">Balance Months:</p>
+                <p className="text-[12px]">
+                  {ShemeData?.scheme?.SchemeDuration -
+                    ShemeData?.receipt?.length}
+                </p>
+              </div>
+              <div
+                style={{
+                  background:
+                    "radial-gradient(35.46% 49.1% at 49.1% 50%, #EEF2FF 0%, #DAE2FF 100%)",
+                }}
+                className="rounded-md flex flex-row items-center justify-between gap-[5px] border-gray-500 h-full w-full p-[4px]"
+              >
+                <p className="text-[12px] font-semibold">Balance Amount:</p>
+                <p className="text-[12px]">
+                  {ShemeData?.scheme?.SchemeValue -
+                    ShemeData?.receipt?.reduce(
+                      (accumulator, currentItem) =>
+                        accumulator + currentItem.Amount,
+                      0
+                    ) || [0]}
+                </p>
               </div>
             </div>
           </div>
         </div>
-
-
-
-
-
-
-
 
         <div className="w-full px-[20px] sm:px-[50px] lg:px-[20px] max-h-full mb-[0px]">
           {/* <div className="w-full h-full flex gap-[5px] sm:gap-[10px] lg:gap-[15px]">
@@ -1635,9 +1843,6 @@ const ReceiptEntry = () => {
             </div>
           </div> */}
 
-
-
-
           <div className="w-full max-h-full overflow-y-auto custom-scrollbar2 p-[10px] text-[12px]">
             <table className="w-full table-auto text-center max-w-[1250px] overflow-hidden mx-auto border border-black">
               <thead className="w-full border border-black text-[12px] bg-[#4FC997]">
@@ -1659,21 +1864,53 @@ const ReceiptEntry = () => {
               </thead>
               <tbody className="w-full border border-black">
                 {receipts?.map((receipt, index) => (
-                  <tr key={receipt.id} className={`px-1 text-[12px] ${(index % 2 == 0) ? "bg-white" : "bg-gray-100"} font-medium`}>
+                  <tr
+                    key={receipt.id}
+                    className={`px-1 text-[12px] ${
+                      index % 2 == 0 ? "bg-white" : "bg-gray-100"
+                    } font-medium`}
+                  >
                     <td className="border border-black p-2">{receipt.id}</td>
-                    <td className="border border-black p-2">{receipt.ReceiptNo}</td>
-                    <td className="border border-black p-2">{receipt.ReceiptDate}</td>
-                    <td className="border border-black p-2">{receipt.CardNo}</td>
-                    <td className="border border-black p-2">{receipt.SchemeName}</td>
-                    <td className="border border-black p-2">{receipt.SchemeCode}</td>
-                    <td className="border border-black p-2">{receipt.MobileNo}</td>
-                    <td className="border border-black p-2">{receipt.MemberName}</td>
-                    <td className="border border-black p-2">{receipt.Address}</td>
-                    <td className="border border-black p-2">{receipt.Amount}</td>
-                    <td className="border border-black p-2">{receipt.GoldWt}</td>
-                    <td className="border border-black p-2">{receipt.GoldAmount}</td>
+                    <td className="border border-black p-2">
+                      {receipt.ReceiptNo}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.ReceiptDate}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.CardNo}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.SchemeName}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.SchemeCode}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.MobileNo}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.MemberName}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.Address}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.Amount}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.GoldWt}
+                    </td>
+                    <td className="border border-black p-2">
+                      {receipt.GoldAmount}
+                    </td>
                     <td className="border border-black p-2 text-[14px]">
-                      <button className="text-red-700" onClick={() => handleDelete(receipt.ReceiptNo)}><MdDelete /></button>
+                      <button
+                        className="text-red-700"
+                        onClick={() => handleDelete(receipt.ReceiptNo)}
+                      >
+                        <MdDelete />
+                      </button>
                     </td>
                   </tr>
                 ))}

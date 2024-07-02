@@ -1,66 +1,74 @@
 "use server";
 
-import { PrismaClient } from '@prisma/client';
-import { NextResponse } from 'next/server';
+import {
+  ReceiptSchema,
+  getPrismaClient,
+} from "@/components/db/Connection";
+// import { PrismaClient } from '@prisma/client';
+import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 export async function GET(request) {
-    try {
-        const today = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
+  const tn = request.headers.get("tn");
+  const prisma = await getPrismaClient(tn);
 
-        const cashPayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
-            by: ['ReceiptDate'],
-            where: {
-                ReceiptDate: today,
-            },
-            _sum: {
-                CashAmount: true,
-            },
-        });
+  try {
+    await ReceiptSchema(prisma);
+    const today = new Date().toISOString().split("T")[0]; // Format as YYYY-MM-DD
 
-        const cardPayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
-            by: ['ReceiptDate'],
-            where: {
-                ReceiptDate: today,
-            },
-            _sum: {
-                CardAmount: true,
-            },
-        });
+    const cashPayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
+      by: ["ReceiptDate"],
+      where: {
+        ReceiptDate: today,
+      },
+      _sum: {
+        CashAmount: true,
+      },
+    });
 
-        const onlinePayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
-            by: ['ReceiptDate'],
-            where: {
-                ReceiptDate: today,
-            },
-            _sum: {
-                OnlineAmount: true,
-            },
-        });
+    const cardPayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
+      by: ["ReceiptDate"],
+      where: {
+        ReceiptDate: today,
+      },
+      _sum: {
+        CardAmount: true,
+      },
+    });
 
-        const upiPayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
-            by: ['ReceiptDate'],
-            where: {
-                ReceiptDate: today,
-            },
-            _sum: {
-                UPIAmount: true,
-            },
-        });
+    const onlinePayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
+      by: ["ReceiptDate"],
+      where: {
+        ReceiptDate: today,
+      },
+      _sum: {
+        OnlineAmount: true,
+      },
+    });
 
-        const result = {
-            cash: cashPayments[0]?._sum.CashAmount || 0,
-            card: cardPayments[0]?._sum.CardAmount || 0,
-            online: onlinePayments[0]?._sum.OnlineAmount || 0,
-            upi: upiPayments[0]?._sum.UPIAmount || 0,
-        };
+    const upiPayments = await prisma.oRIGIN_SCHEME_RECEIPT.groupBy({
+      by: ["ReceiptDate"],
+      where: {
+        ReceiptDate: today,
+      },
+      _sum: {
+        UPIAmount: true,
+      },
+    });
 
-        return NextResponse.json(result);
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    } finally {
-        await prisma.$disconnect();
-    }
+    const result = {
+      cash: cashPayments[0]?._sum.CashAmount || 0,
+      card: cardPayments[0]?._sum.CardAmount || 0,
+      online: onlinePayments[0]?._sum.OnlineAmount || 0,
+      upi: upiPayments[0]?._sum.UPIAmount || 0,
+    };
+
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
 }

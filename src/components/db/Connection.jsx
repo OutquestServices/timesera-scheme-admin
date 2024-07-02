@@ -240,7 +240,7 @@ export async function FeedbackSchema(prisma) {
     await prisma.$executeRawUnsafe(createTableQuery);
 }
 
-export async function TramsactionSchema(prisma) {
+export async function TransactionSchema(prisma) {
     const createTableQuery = `
         IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Transactions' and xtype='U')
         CREATE TABLE Transactions (

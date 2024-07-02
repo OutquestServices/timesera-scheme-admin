@@ -1,11 +1,18 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+import {
+  SchemetypeSchema,
+  getPrismaClient,
+} from "@/components/db/Connection";
 
 export async function POST(request) {
-  const prisma = new PrismaClient();
+  // const prisma = new PrismaClient();
+  const tn = request.headers.get("tn");
+  const prisma = await getPrismaClient(tn);
   try {
+    await SchemetypeSchema(prisma);
     const body = await request.json();
 
     const isExist = await prisma.oRIGIN_SCHEMETYPE.findUnique({

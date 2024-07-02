@@ -1,11 +1,20 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+import {
+  SchemenameSchema,
+  SchemetypeSchema,
+  getPrismaClient,
+} from "@/components/db/Connection";
 
 export async function POST(request) {
-  const prisma = new PrismaClient();
+  // const prisma = new PrismaClient();
+  const tn = request.headers.get("tn");
+  const prisma = await getPrismaClient(tn);
   try {
+    await SchemetypeSchema(prisma);
+    await SchemenameSchema(prisma);
     const body = await request.json();
 
     const isExist = await prisma.oRIGIN_SCHEMETYPE.findUnique({
@@ -26,7 +35,7 @@ export async function POST(request) {
           SchemeValue: body.svalue,
           Commper: body.commper,
           Commamt: body.commamt,
-          Continuous: body.continuous
+          Continuous: body.continuous,
         },
       });
       return NextResponse.json({ message: "Added succesfully" });

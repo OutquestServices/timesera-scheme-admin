@@ -5,8 +5,6 @@ import React, { useEffect, useState } from "react";
 
 const TodayReceipts = () => {
   const [receipts, setReceipts] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
   const [tenantName, setTenantName] = useState(null);
   const router = useRouter();
   useEffect(() => {
@@ -19,15 +17,12 @@ const TodayReceipts = () => {
   useEffect(() => {
     const fetchReceipts = async () => {
       try {
-        const response = await fetch(
-          `/api/receipt/fetchtodayreceipts`,
-          {
-            method: "GET",
-            headers: {
-              tn: tenantName,
-            },
-          }
-        );
+        const response = await fetch(`/api/receipt/fetchtodayreceipts`, {
+          method: "GET",
+          headers: {
+            tn: tenantName,
+          },
+        });
         if (!response.ok) {
           throw new Error(
             `Network response was not ok: ${response.statusText}`

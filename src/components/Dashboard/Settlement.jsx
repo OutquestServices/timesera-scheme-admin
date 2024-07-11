@@ -4,8 +4,6 @@ import React, { useEffect, useState } from "react";
 
 const Settlement = () => {
   const [settled, setSettled] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDuelist = async () => {
@@ -30,16 +28,10 @@ const Settlement = () => {
       } catch (err) {
         console.error(err.message);
       }
-      // finally {
-      // setLoading(false);
-      // }
     };
 
     fetchDuelist();
   }, []);
-
-  //if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="">

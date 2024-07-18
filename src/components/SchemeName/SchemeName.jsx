@@ -176,7 +176,6 @@ const SchemeName = () => {
       setCommAmt(0);
       setSchemeValue(0);
       setCode("");
-      window.location.reload();
     } catch (error) {
       console.error(error);
       setSchemeName("");

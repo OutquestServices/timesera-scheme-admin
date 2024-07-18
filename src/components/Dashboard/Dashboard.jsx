@@ -18,7 +18,7 @@ const Dashboard = () => {
       if (localStorage.getItem("tenantName")) {
         localStorage.removeItem("tenantName");
         alert("Logged Out!");
-        router.push("/reallogin");
+        router.push("/");
       } else {
         alert("Logout Failed");
       }
@@ -30,7 +30,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!localStorage.getItem("tenantName")) {
-      router.push("/reallogin");
+      router.push("/");
     }
   }, []);
 
@@ -38,9 +38,8 @@ const Dashboard = () => {
     <div className="flex w-full max-h-screen overflow-y-auto custom-scrollbar2 ">
       <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div
-        className={`flex-1 w-full transition-all duration-300 ${
-          isOpen ? "ml-52" : "ml-16"
-        }`}
+        className={`flex-1 w-full transition-all duration-300 ${isOpen ? "ml-52" : "ml-16"
+          }`}
       >
         <div className="p-[20px] w-full flex flex-col gap-[10px]">
           {/* Header */}

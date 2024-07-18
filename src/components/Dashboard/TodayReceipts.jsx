@@ -9,7 +9,7 @@ const TodayReceipts = () => {
   const router = useRouter();
   useEffect(() => {
     if (!localStorage.getItem("tenantName")) {
-      router.push("/reallogin");
+      router.push("/");
     }
     setTenantName(localStorage.getItem("tenantName"));
   }, []);
@@ -59,9 +59,8 @@ const TodayReceipts = () => {
         <tbody>
           {receipts.map((receipt, index) => (
             <tr
-              className={`px-1 text-[10px] ${
-                index % 2 == 0 ? "bg-white" : "bg-gray-100"
-              }`}
+              className={`px-1 text-[10px] ${index % 2 == 0 ? "bg-white" : "bg-gray-100"
+                }`}
               key={index}
             >
               {/* <td className='border  py-2'>{index + 1}</td> */}

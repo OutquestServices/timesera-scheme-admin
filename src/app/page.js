@@ -1,6 +1,6 @@
 "use client";
 
-import Dashboard from "@/components/Dashboard/Dashboard";
+import LoginV2 from "@/components/Login/LoginV2";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -9,13 +9,13 @@ export default function Home() {
 
   useEffect(() => {
     if (!localStorage.getItem("tenantName")) {
-      router.push("/reallogin");
+      router.push("/");
     }
   }, []);
 
   return (
     <div className="flex h-screen overflow-hidden custom-scrollbar2">
-      <Dashboard />
+      <LoginV2 />
     </div>
   );
 }

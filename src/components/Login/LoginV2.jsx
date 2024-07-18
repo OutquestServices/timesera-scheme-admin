@@ -59,7 +59,7 @@ const LoginV2 = () => {
                 localStorage.setItem('tenantName', data.tenantName);
 
                 // Redirect to dashboard or another page
-                router.push('/');
+                router.push('/dashboard');
             } else {
                 alert('Invalid credentials or tenantName is null.');
             }

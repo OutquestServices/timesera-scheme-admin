@@ -69,7 +69,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       </div>
       <div className="mt-4 w-full text-[14px]">
         <a
-          href={"/"}
+          href={"/dashboard"}
           className="flex items-center py-3 pl-4 hover:bg-gray-700 cursor-pointer"
         >
           <FaHome />

@@ -115,7 +115,6 @@ const SchemeType = () => {
           setSchemeType("");
           setEditing(false);
           setEditingId(null);
-          window.location.reload();
         } else {
           alert(result.error || "Failed to save data");
           setGoldScheme("Cash Scheme");

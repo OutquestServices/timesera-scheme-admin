@@ -304,7 +304,6 @@ const SchemeMember = () => {
       setJoindate(new Date().toISOString().split("T")[0]);
       setCollectionPoint("");
       setNextDateToPay("");
-      window.location.reload();
     } catch (error) {
       console.error(error);
       alert("Unable to add");

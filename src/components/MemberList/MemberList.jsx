@@ -12,7 +12,7 @@ const MemberList = () => {
   const router = useRouter();
   useEffect(() => {
     if (!localStorage.getItem("tenantName")) {
-      router.push("/reallogin");
+      router.push("/");
     }
   }, []);
 

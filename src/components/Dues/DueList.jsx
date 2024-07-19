@@ -12,7 +12,7 @@ const DueList = () => {
   const router = useRouter();
   useEffect(() => {
     if (!localStorage.getItem("tenantName")) {
-      router.push("/reallogin");
+      router.push("/");
     }
   }, [])
 
@@ -162,7 +162,7 @@ const DueList = () => {
             </div>
           </div>
 
-          
+
 
           <div className='w-full grid grid-cols-5 items-center justify-center gap-[10px] pt-[20px]'>
             <select onChange={(e) => setSchemeType(e.target.value)} value={schemeType} className='border border-black focus:outline-none p-2'>
@@ -264,7 +264,7 @@ export default DueList;
 //       });
 //   }, []);
 
-//   const inputRefs = { 
+//   const inputRefs = {
 //     schemeType: useRef(null),
 //     schemeGroup: useRef(null),
 //     schemeName: useRef(null),

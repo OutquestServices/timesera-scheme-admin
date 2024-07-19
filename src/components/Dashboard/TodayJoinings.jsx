@@ -4,8 +4,6 @@ import React, { useEffect, useState } from "react";
 
 const TodayJoinings = () => {
   const [data, setData] = useState({ totalJoinedToday: 0, users: [] });
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchJoinedUsers = async () => {
@@ -25,19 +23,12 @@ const TodayJoinings = () => {
         const result = await response.json();
         setData(result);
       } catch (err) {
-        // setError(err.message);
         console.error("Error fetching joined users:", err.message);
       }
-      // finally {
-      //     setLoading(false);
-      // }
     };
 
     fetchJoinedUsers();
   }, []);
-
-  // if (loading) return <p>Loading...</p>;
-  // if (error) return <p>Error: {error}</p>;
 
   return (
     <div className=" ">

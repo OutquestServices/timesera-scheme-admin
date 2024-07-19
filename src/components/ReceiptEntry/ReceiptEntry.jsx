@@ -343,7 +343,6 @@ const ReceiptEntry = () => {
 
       if (response.ok) {
         window.alert("Receipt Created Successfully");
-        window.location.reload();
 
         // Reset all state variables to their initial values
         setCashdesc("");

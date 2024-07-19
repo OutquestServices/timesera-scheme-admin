@@ -5,13 +5,11 @@ import React, { useEffect, useState } from "react";
 
 const TodayReceipts = () => {
   const [receipts, setReceipts] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
   const [tenantName, setTenantName] = useState(null);
   const router = useRouter();
   useEffect(() => {
     if (!localStorage.getItem("tenantName")) {
-      router.push("/reallogin");
+      router.push("/");
     }
     setTenantName(localStorage.getItem("tenantName"));
   }, []);
@@ -19,15 +17,12 @@ const TodayReceipts = () => {
   useEffect(() => {
     const fetchReceipts = async () => {
       try {
-        const response = await fetch(
-          `/api/receipt/fetchtodayreceipts`,
-          {
-            method: "GET",
-            headers: {
-              tn: tenantName,
-            },
-          }
-        );
+        const response = await fetch(`/api/receipt/fetchtodayreceipts`, {
+          method: "GET",
+          headers: {
+            tn: tenantName,
+          },
+        });
         if (!response.ok) {
           throw new Error(
             `Network response was not ok: ${response.statusText}`
@@ -64,9 +59,8 @@ const TodayReceipts = () => {
         <tbody>
           {receipts.map((receipt, index) => (
             <tr
-              className={`px-1 text-[10px] ${
-                index % 2 == 0 ? "bg-white" : "bg-gray-100"
-              }`}
+              className={`px-1 text-[10px] ${index % 2 == 0 ? "bg-white" : "bg-gray-100"
+                }`}
               key={index}
             >
               {/* <td className='border  py-2'>{index + 1}</td> */}

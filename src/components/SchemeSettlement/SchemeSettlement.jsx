@@ -105,7 +105,20 @@ const SchemeSettlement = () => {
       const ans = await response.json();
       alert("Settled Successfully");
 
-      window.location.reload();
+      setCardNo("");
+      setSchemeType("");
+      setSchemeName("");
+      setSchemeAmount("");
+      setPaidAmount("");
+      setBalanceAmount("");
+      setGoldWt("");
+      setGoldAmt("");
+      setSettled(true);
+      setDiscontinue(false);
+      setDescription("");
+      setVoucherNo("");
+      setMemberData({});
+
     } catch (error) {
       console.error(error);
     }
